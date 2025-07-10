@@ -1,11 +1,11 @@
 @extends('layout.guest')
 @section('seo_title', 'Login')
 @section('content')
-<div class="flex justify-center min-h-screen bg-limora">
+<div class="flex justify-center min-h-screen bg-white">
 
   <div class="hidden md:block w-1/2 overflow-hidden relative">
     <div class="absolute top-0 left-0 w-full h-full bg-black opacity-20 z-20"></div>
-    <img src="/img/splash/splash-@php echo rand(1,13) @endphp.jpg" width="1125" height="1500" alt="" class="block w-full h-full absolute top-0 left-0 object-cover">
+    <img src="/img/splash/splash.jpg" width="1125" height="1500" alt="" class="block w-full h-full absolute top-0 left-0 object-cover">
   </div>
 
   <div class="w-full md:w-1/2 flex flex-col justify-center">
@@ -56,6 +56,7 @@
       </x-auth.wrapper>
     </div>
   </div>
+  
 </div>
 @endsection
 

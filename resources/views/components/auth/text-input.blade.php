@@ -7,7 +7,7 @@
   @class([
     'w-full !ring-0 py-8 px-12 bg-transparent',
     'border-black',
-    'focus:!border-black focus:bg-white focus:text-black',
+    'focus:!border-black focus:bg-transparent focus:text-black',
     'focus:placeholder:text-black',
     'placeholder:text-black',
     'data-[error=true]:text-red-600',

@@ -2,7 +2,7 @@
   <div class="flex flex-col justify-between min-h-screen sticky top-0 border-r border-r-black">
     <div>
       <h1 class="text-md leading-[1.25] p-12">
-        Frau Müller
+        Dashboard<br>Frau Müller
       </h1>
       <nav class="mt-48">
         <ul class="border-t border-t-black">

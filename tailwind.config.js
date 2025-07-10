@@ -26,6 +26,9 @@ export default {
       colors: {
         'forava': '#386641',
         'limora': '#A7C957',
+        'asparagus': '#6A994E',
+        'parchment': '#F2E8CF',
+        'cravon': '#BC4749',
       },
 
       zIndex: {

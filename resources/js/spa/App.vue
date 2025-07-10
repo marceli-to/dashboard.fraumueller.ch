@@ -1,10 +1,10 @@
 <template>
   <template v-if="!isLoading">
     <div class="min-h-screen flex">
-      <div class="max-w-[240px] bg-limora">
+      <div class="w-[300px] bg-limora">
         <Navigation />
       </div>
-      <div class="w-full py-16 px-16 bg-white">
+      <div class="w-full py-16 px-16">
         <router-view v-slot="{ Component }">
           <component :is="Component" :key="route.fullPath" ref="pageComponent" />
         </router-view>
