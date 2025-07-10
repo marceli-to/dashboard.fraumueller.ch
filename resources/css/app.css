@@ -1,0 +1,109 @@
+@import "_webfonts.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --header-height-sm: 6rem;  /* 96 px */
+}
+
+* {
+  font-variant-ligatures: none;
+}
+
+[x-cloak] {
+  @apply hidden;
+}
+
+p:not(:last-child),
+ul:not(:last-child) {
+  @apply mb-20 xl:mb-30;
+}
+
+ul:not(nav ul) {
+  @apply list-disc list-outside pl-20 md:pl-25 xl:pl-30
+}
+
+ul li:not(nav ul li) {
+  @apply list-item;
+}
+
+/* Buildings */
+article.building-description {
+  @apply leading-[1.15];
+}
+
+article.building-description a {
+  @apply underline underline-offset-4 decoration-1 xl:decoration-2 hover:no-underline;
+}
+
+[data-slider-track] {
+  will-change: transform;
+  transform-style: preserve-3d;
+}
+
+[data-slider-track] > * {
+  will-change: auto;
+  backface-visibility: hidden;
+}
+
+/* Leaflet */
+.leaflet-control-container {
+  @apply  hidden;
+}
+
+.leaflet-popup-content-wrapper {
+  @apply !bg-transparent text-black !shadow-none;
+}
+
+.leaflet-popup-tip-container {
+  @apply hidden;
+}
+
+.leaflet-popup-close-button {
+  @apply hidden;
+}
+
+.leaflet-popup-content {
+  @apply !m-0 !text-sm !leading-[1.2];
+}
+
+
+/**
+ * Handle touch/non-touch stuff
+ */
+
+/* Slideshow buttons */
+.is-touch [data-slider-button] {
+  @apply !hidden;
+}
+
+/* Animation for comment icon */
+@keyframes draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Set initial state for lines */
+.line {
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+}
+
+/* Animation triggers on hover */
+.group:hover .line1 {
+  animation: draw 0.5s ease-in-out forwards;
+  animation-delay: 0.1s;
+}
+
+.group:hover .line2 {
+  animation: draw 0.5s ease-in-out forwards;
+  animation-delay: 0.3s;
+}
+
+.group:hover .line3 {
+  animation: draw 0.5s ease-in-out forwards;
+  animation-delay: 0.5s;
+}

@@ -1,0 +1,25 @@
+{
+  "resources/css/app.css": {
+    "file": "assets/app-a2471722.css",
+    "isEntry": true,
+    "src": "resources/css/app.css"
+  },
+  "resources/fonts/HelveticaNeue.woff": {
+    "file": "assets/HelveticaNeue-c890f674.woff",
+    "src": "resources/fonts/HelveticaNeue.woff"
+  },
+  "resources/fonts/HelveticaNeue.woff2": {
+    "file": "assets/HelveticaNeue-868b475a.woff2",
+    "src": "resources/fonts/HelveticaNeue.woff2"
+  },
+  "resources/js/app.js": {
+    "file": "assets/app-e508ae40.js",
+    "isEntry": true,
+    "src": "resources/js/app.js"
+  },
+  "resources/js/spa.js": {
+    "file": "assets/spa-25729b5a.js",
+    "isEntry": true,
+    "src": "resources/js/spa.js"
+  }
+}
