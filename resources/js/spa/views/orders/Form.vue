@@ -192,7 +192,7 @@
             id="notes"
             v-model="form.notes"
             rows="4"
-            class="appearance-none w-full px-12 py-8 border border-black focus:border-black !ring-0 focus:!ring-0 !outline-none "
+            class="appearance-none w-full px-12 py-8 border border-black focus:border-black !ring-0 focus:!ring-0 !outline-none placeholder:text-gray-500"
             placeholder="Zusätzliche Notizen zur Bestellung..."
           />
         </div>
@@ -215,94 +215,76 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { getOrder, updateOrder } from '@/services/api'
 import ButtonPrimary from '@/components/buttons/Primary.vue'
-import ButtonSecondary from '@/components/buttons/Secondary.vue'
 
-export default {
-  name: 'OrderForm',
-  components: {
-    ButtonPrimary,
-    ButtonSecondary
-  },
-  setup() {
-    const route = useRoute()
-    const router = useRouter()
-    const loading = ref(true)
-    const submitting = ref(false)
-    const error = ref(null)
+const route = useRoute()
+const router = useRouter()
+const loading = ref(true)
+const submitting = ref(false)
+const error = ref(null)
+
+const form = ref({
+  email: '',
+  phone: '',
+  billing_name: '',
+  billing_address_1: '',
+  billing_address_2: '',
+  billing_city: '',
+  billing_zip: '',
+  billing_country: '',
+  shipping_name: '',
+  shipping_address_1: '',
+  shipping_address_2: '',
+  shipping_city: '',
+  shipping_zip: '',
+  shipping_province: '',
+  shipping_country: '',
+  notes: ''
+})
+
+const loadOrder = async () => {
+  try {
+    loading.value = true
+    error.value = null
     
-    const form = ref({
-      email: '',
-      phone: '',
-      billing_name: '',
-      billing_address_1: '',
-      billing_address_2: '',
-      billing_city: '',
-      billing_zip: '',
-      billing_country: '',
-      shipping_name: '',
-      shipping_address_1: '',
-      shipping_address_2: '',
-      shipping_city: '',
-      shipping_zip: '',
-      shipping_province: '',
-      shipping_country: '',
-      notes: ''
-    })
-
-    const loadOrder = async () => {
-      try {
-        loading.value = true
-        error.value = null
-        
-        const orderId = route.params.id
-        const order = await getOrder(orderId)
-        
-        // Populate form with order data
-        Object.keys(form.value).forEach(key => {
-          if (order[key] !== undefined) {
-            form.value[key] = order[key] || ''
-          }
-        })
-        
-      } catch (err) {
-        error.value = 'Fehler beim Laden der Bestellung: ' + (err.response?.data?.message || err.message)
-      } finally {
-        loading.value = false
+    const orderId = route.params.id
+    const order = await getOrder(orderId)
+    
+    // Populate form with order data
+    Object.keys(form.value).forEach(key => {
+      if (order[key] !== undefined) {
+        form.value[key] = order[key] || ''
       }
-    }
-
-    const submitForm = async () => {
-      try {
-        submitting.value = true
-        error.value = null
-        
-        const orderId = route.params.id
-        await updateOrder(orderId, form.value)
-        
-        router.push('/dashboard/bestellungen')
-      } catch (err) {
-        error.value = 'Fehler beim Speichern: ' + (err.response?.data?.message || err.message)
-      } finally {
-        submitting.value = false
-      }
-    }
-
-    onMounted(() => {
-      loadOrder()
     })
-
-    return {
-      loading,
-      submitting,
-      error,
-      form,
-      submitForm
-    }
+    
+  } catch (err) {
+    error.value = 'Fehler beim Laden der Bestellung: ' + (err.response?.data?.message || err.message)
+  } finally {
+    loading.value = false
   }
 }
+
+const submitForm = async () => {
+  try {
+    submitting.value = true
+    error.value = null
+    
+    const orderId = route.params.id
+    await updateOrder(orderId, form.value)
+    
+    router.push('/dashboard/bestellungen')
+  } catch (err) {
+    error.value = 'Fehler beim Speichern: ' + (err.response?.data?.message || err.message)
+  } finally {
+    submitting.value = false
+  }
+}
+
+onMounted(() => {
+  loadOrder()
+})
 </script>

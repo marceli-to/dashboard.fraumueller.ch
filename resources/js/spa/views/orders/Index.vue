@@ -3,68 +3,60 @@
     Bestellungen
   </h1>
   <template v-if="!isLoading">
-    <div class="mt-48 max-w-6xl">
+    <div class="mt-16">
+      Total Bestellungen: {{ orders.length }}
+    </div>
+    <div class="mt-24 max-w-7xl">
       <div class="overflow-x-auto">
         <table class="w-auto text-xxs">
           <thead>
-            <tr class="border-b border-black">
-              <th class="py-12 pr-16 text-left">ID</th>
-              <th class="py-12 pr-16 text-left">Produkt</th>
-              <th class="py-12 pr-16 text-left">E-Mail</th>
-              <th class="py-12 pr-16 text-left">Zahlungsart</th>
-              <th class="py-12 pr-16 text-right">Betrag</th>
-              <th class="py-12 text-center pr-16 text-left">Status</th>
-              <th class="py-12 pr-16 text-right">Bezahlt am</th>
-              <th class="py-12 text-right">Aktionen</th>
+            <tr class="border-b border-black [&_th]:font-medium [&_th]:py-12 [&_th]:pr-12">
+              <th class="text-left">ID</th>
+              <th class="text-left">Produkt</th>
+              <th class="text-left">E-Mail</th>
+              <th class="text-left">Zahlungsart</th>
+              <th class="text-right">Betrag</th>
+              <th class="text-center">Status</th>
+              <th class="text-left">Bezahlt am</th>
+              <th class="text-right !pr-0"></th>
             </tr>
           </thead>
           <tbody class="divide-y divide-black">
-            <tr v-for="order in orders" :key="order.id">
-              <td class="py-12 pr-16">
+            <tr v-for="order in orders" :key="order.id" class="hover:bg-gray-100">
+              <td class="py-12 pr-12 tabular-nums">
                 {{ order.order_id }}
               </td>
-              <td class="py-12 pr-16 max-w-[400px]">
+              <td class="py-12 pr-12 max-w-[360px]">
                 {{ order.product_name }}
               </td>
-              <td class="py-12 pr-16 max-w-[320px]">
+              <td class="py-12 pr-12 max-w-[320px]">
                 {{ order.email }}
               </td>
-              <td class="py-12 pr-16 capitalize">
+              <td class="py-12 pr-12 capitalize">
                 {{ order.payment_method }}
               </td>
-              <td class="py-12 pr-16 text-right">
+              <td class="py-12 pr-12 text-right">
                 {{ order.total }}
               </td>
-              <td class="py-12 text-center pr-16">
+              <td class="py-12 text-center pr-12">
                 <span class="px-8 py-4 text-xxs rounded-full leading-none capitalize" :class="getStatusClass(order.financial_status)">
                   {{ order.financial_status }}
                 </span>
               </td>
-              <td class="py-12 pr-16 text-right tabular-nums">
+              <td class="py-12 pr-12 text-right tabular-nums">
                 {{ formatDate(order.paid_at) }}
               </td>
               <td class="py-12 text-right">
                 <router-link 
                   :to="{ name: 'orders.edit', params: { id: order.id } }"
-                  class="text-blue-600 hover:text-blue-800 text-xxs"
-                >
-                  Bearbeiten
+                  class="inline-block text-right hover:text-gray-500 transition-all">
+                  <IconEdit />
                 </router-link>
               </td>
             </tr>
           </tbody>
         </table>
       </div>
-      <!-- <div class="mt-16 p-4 bg-gray-50 rounded">
-        <div class="flex justify-between items-center">
-          <span class="font-bold">Gesamtanzahl Bestellungen:</span>
-          <span class="font-bold">{{ orders.length }}</span>
-        </div>
-        <div class="flex justify-between items-center mt-2">
-          <span class="font-bold">Gesamtumsatz:</span>
-          <span class="font-bold">{{ totalRevenue }} CHF</span>
-        </div>
-      </div> -->
     </div>
   </template>
 </template>
@@ -72,6 +64,8 @@
 import { ref, onMounted, computed } from 'vue';
 import { getOrders } from '@/services/api';
 import { usePageTitle } from '@/composables/usePageTitle';
+import IconEdit from '@/components/icons/Edit.vue';
+
 const { setTitle } = usePageTitle();
 setTitle('Bestellungen');
 
@@ -107,7 +101,7 @@ const getStatusClass = (status) => {
 const formatDate = (dateString) => {
   const date = new Date(dateString);
   return date.toLocaleDateString('de-CH', {
-    year: 'numeric',
+    year: '2-digit',
     month: '2-digit',
     day: '2-digit',
     hour: '2-digit',

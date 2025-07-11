@@ -8,7 +8,6 @@
     <div class="mt-48 max-w-3xl">
 
       <div class="mb-32">
-        <h2 class="text-md mb-32">Upload</h2>
 
         <p>Laden Sie CSV-Dateien hoch, um Bestellungen zu importieren:</p>
         
@@ -31,7 +30,7 @@
           
           <div v-else class="flex items-center justify-center">
             <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-            <span class="ml-8 text-sm text-gray-600">Uploading... {{ uploadProgress }}%</span>
+            <span class="ml-8 text-xs text-gray-600">Uploading... {{ uploadProgress }}%</span>
           </div>
           
           <input
@@ -53,11 +52,11 @@
               </svg>
             </div>
             <div class="ml-12">
-              <h3 class="text-sm font-medium text-red-800">Upload fehlgeschlagen</h3>
-              <p class="text-sm text-red-700 mt-4">
+              <h3 class="text-xs font-medium text-red-800">Upload fehlgeschlagen</h3>
+              <p class="text-xs text-red-700 mt-4">
                 Bitte versuchen Sie es erneut oder wenden Sie sich an den Support.
               </p>
-              <button @click="retryFailed" class="mt-8 text-sm text-red-600 hover:text-red-500 font-medium">
+              <button @click="retryFailed" class="mt-8 text-xs text-red-600 hover:text-red-500 font-medium">
                 Erneut versuchen
               </button>
             </div>
@@ -74,7 +73,7 @@
             class="flex items-center justify-between border-b border-gray-200 pb-12">
             <div class="flex items-center">
               <div>
-                <div class="text-sm font-medium">{{ file.original_name }}</div>
+                <div class="text-xs font-medium">{{ file.original_name }}</div>
                 <div class="text-xs">{{ formatFileSize(file.size) }}</div>
               </div>
             </div>
@@ -121,7 +120,7 @@
           
           <!-- Skipped Rows Details -->
           <div v-if="processingResults.skipped_rows.length > 0">
-            <h3 class="text-sm mb-16">Übersprungene Zeilen</h3>
+            <h3 class="text-xs mb-16">Übersprungene Zeilen</h3>
             <div class="max-h-[360px] overflow-y-auto border-y border-gray-100">
               <div 
                 v-for="(row, index) in processingResults.skipped_rows" 
@@ -135,7 +134,7 @@
           
           <!-- Errors Details -->
           <div v-if="processingResults.errors.length > 0" class="mt-16">
-            <h3 class="text-sm mb-8">Fehlerdetails:</h3>
+            <h3 class="text-xs mb-8">Fehlerdetails:</h3>
             <div class="max-h-48 overflow-y-auto">
               <div 
                 v-for="(error, index) in processingResults.errors" 
