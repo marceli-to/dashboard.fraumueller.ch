@@ -40,5 +40,11 @@ export const restoreComment = async (id) => {
 export const getOrders = async () => {
   const response = await api.get(`/orders`);
   return response.data;
+};
+
+// csv processing
+export const processCsv = async (filePath) => {
+  const response = await api.post(`/upload/process`, { file_path: filePath });
+  return response.data;
 }; 
 

@@ -23,15 +23,12 @@
         "vue-axios": "^3.4.1"
     },
     "dependencies": {
-        "@fingerprintjs/fingerprintjs": "^4.1.0",
         "@vitejs/plugin-vue": "^4.6.2",
         "alpinejs": "^3.13.0",
-        "gsap": "^3.13.0",
         "leaflet": "1.7.1",
         "pinia": "^2.3.1",
-        "proj4": "^2.17.0",
-        "proj4leaflet": "^1.0.2",
         "vue": "^3.2.36",
-        "vue-router": "^4.0.13"
+        "vue-router": "^4.0.13",
+        "vuedraggable": "^2.24.3"
     }
 }

@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import Home from '@/views/home/Index.vue';
 import Orders from '@/views/orders/Index.vue';
+import Import from '@/views/import/Index.vue';
 
 // Error pages
 import Error401 from '@/views/error/401.vue';
@@ -11,6 +12,7 @@ import Error419 from '@/views/error/419.vue';
 const routes = [
   { path: '/dashboard', name: 'home', component: Home },
   { path: '/dashboard/bestellungen', name: 'orders', component: Orders },
+  { path: '/dashboard/import', name: 'import', component: Import },
 
   // Error pages
   { path: '/error/401', name: '401', component: Error401 },

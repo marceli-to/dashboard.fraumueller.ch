@@ -1,27 +1,27 @@
 <template>
-  <div class="flex flex-col justify-between min-h-screen sticky top-0 border-r border-r-white">
+  <div class="flex flex-col justify-between min-h-screen sticky top-0 ">
     <div>
       <h1 class="text-md leading-[1.25] p-12 text-white">
         Dashboard<br>Frau Müller
       </h1>
       <nav class="mt-48">
-        <ul class="border-t border-t-white">
+        <ul class="flex flex-col gap-y-1">
           <li>
             <router-link
               :to="{ name: 'orders' }"
-              class="p-12 block border-b border-b-white w-full text-white hover:bg-white hover:text-white transition-colors duration-150"
-              :class="{ '!text-black bg-white': $route.name === 'orders' }">
+              class="p-12 block w-full text-white hover:bg-white hover:text-black transition-colors duration-150"
+              :class="{ '!text-black bg-white border-b-black': $route.name === 'orders' }">
               Bestellungen
             </router-link>
           </li>
-          <!-- <li>
+          <li>
             <router-link
-              :to="{ name: 'comments' }"
-              class="p-12 block border-b border-b-black w-full hover:bg-white hover:text-white transition-colors duration-150"
-              :class="{ 'text-white bg-white': $route.name === 'comments' }">
+              :to="{ name: 'import' }"
+              class="p-12 block w-full text-white hover:bg-white hover:text-black transition-colors duration-150"
+              :class="{ '!text-black bg-white border-b-black': $route.name === 'import' }">
               Import
             </router-link>
-          </li> -->
+          </li>
         </ul>
       </nav>
     </div>
