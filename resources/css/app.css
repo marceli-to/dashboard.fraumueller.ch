@@ -25,3 +25,8 @@ ul:not(nav ul) {
 ul li:not(nav ul li) {
   @apply list-item;
 }
+
+strong {
+  @apply font-bold;
+}
+  

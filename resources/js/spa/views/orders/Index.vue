@@ -4,13 +4,43 @@
   </h1>
   <template v-if="!isLoading">
     <div class="mt-16">
-      Total Bestellungen: {{ orders.length }}
+      Total <strong>{{ orders.length }}</strong> Bestellungen
     </div>
+
+    <!-- Multi-edit dropdown -->
+    <div v-if="selectedOrderIds.length > 0" class="mt-24 max-w-7xl">
+      <div class="bg-blue-50 border border-blue-200 rounded-sm px-12 py-16 mb-16 max-w-[430px]">
+        <div class="flex items-center justify-between gap-x-16">
+          <span class="text-xs text-blue-800">
+            <strong>{{ selectedOrderIds.length }}</strong> Bestellung{{ selectedOrderIds.length !== 1 ? 'en' : '' }} ausgewählt
+          </span>
+          <select 
+            v-model="selectedAction" 
+            @change="handleActionChange"
+            class="appearance-none accent-blue-500 rounded-sm bg-transparent px-8 py-4 border border-blue-300 !ring-0 focus:!ring-0 !outline-none text-xxs"
+          >
+            <option value="">Aktion wählen...</option>
+            <option value="status-open">Status open</option>
+            <option value="status-fulfilled">Status fulfilled</option>
+            <option value="generate-labels">Etiketten generieren</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
     <div class="mt-24 max-w-7xl">
-      <div class="overflow-x-auto">
+      <div class="overflow-x-scroll">
         <table class="w-auto text-xxs">
           <thead>
             <tr class="border-b border-gray-200 [&_th]:font-medium [&_th]:py-12 [&_th]:pr-12">
+              <th class="text-left pl-4 !pr-12">
+                <input 
+                  type="checkbox" 
+                  :checked="isAllSelected" 
+                  @change="toggleSelectAll"
+                  class="appearance-none rounded-sm size-14 border-gray-400 text-gray-400 accent-gray-400 focus:!ring-0 !ring-0 !outline-none"
+                />
+              </th>
               <th class="text-left !pr-24">ID</th>
               <th class="text-left">Produkt</th>
               <th class="text-left">E-Mail</th>
@@ -22,6 +52,14 @@
           <tbody class="divide-y divide-gray-200">
             <tr 
               v-for="order in orders" :key="order.id" class="hover:bg-gray-100">
+              <td class="py-12 pr-12 pl-4">
+                <input 
+                  type="checkbox" 
+                  :value="order.id" 
+                  v-model="selectedOrderIds"
+                  class="appearance-none rounded-sm size-14 border-gray-400 text-gray-400 accent-gray-400 focus:!ring-0 !ring-0 !outline-none opacity-100"
+                />
+              </td>
               <td class="py-12 pr-24 tabular-nums">
                 {{ order.order_id }}
               </td>
@@ -105,6 +143,10 @@ let isLoading = ref(true);
 const selectedOrder = ref(null);
 const newOrderStatus = ref('');
 
+// Multi-edit state
+const selectedOrderIds = ref([]);
+const selectedAction = ref('');
+
 onMounted(async () => {
   if (isLoading.value) {
     try {
@@ -119,6 +161,11 @@ onMounted(async () => {
 
 const totalRevenue = computed(() => {
   return orders.value.reduce((sum, order) => sum + parseFloat(order.total), 0).toFixed(2);
+});
+
+// Multi-edit computed properties
+const isAllSelected = computed(() => {
+  return orders.value.length > 0 && selectedOrderIds.value.length === orders.value.length;
 });
 
 const getStatusClass = (status) => {
@@ -184,5 +231,22 @@ const updateOrderStatus = async () => {
 
 const cancelStatusUpdate = () => {
   dialogStore.hide();
+};
+
+// Multi-edit handlers
+const toggleSelectAll = (event) => {
+  if (event.target.checked) {
+    selectedOrderIds.value = orders.value.map(order => order.id);
+  } else {
+    selectedOrderIds.value = [];
+  }
+};
+
+const handleActionChange = () => {
+  if (selectedAction.value) {
+    console.log('Selected action:', selectedAction.value, 'for orders:', selectedOrderIds.value);
+    // Reset the dropdown
+    selectedAction.value = '';
+  }
 };
 </script>
