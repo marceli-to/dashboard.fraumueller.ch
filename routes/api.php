@@ -1,9 +1,8 @@
 <?php
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\UploadController;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,7 +17,9 @@ use App\Http\Controllers\Api\UploadController;
 
 // Dashboard
 Route::middleware('auth:sanctum')->group(function () {
-  Route::get('/orders', [OrderController::class, 'get']);
-  Route::post('/upload', [UploadController::class, 'store']);
-  Route::post('/upload/process', [UploadController::class, 'process']);
+    Route::get('/orders', [OrderController::class, 'get']);
+    Route::get('/orders/{order}', [OrderController::class, 'show']);
+    Route::put('/orders/{order}', [OrderController::class, 'update']);
+    Route::post('/upload', [UploadController::class, 'store']);
+    Route::post('/upload/process', [UploadController::class, 'process']);
 });

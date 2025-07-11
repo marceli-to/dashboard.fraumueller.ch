@@ -1,14 +1,16 @@
 <template>
   <div>
+
     <h1 class="text-lg leading-[1.25]">
-      CSV Import
+      Import
     </h1>
     
-    <div class="mt-48 max-w-2xl">
+    <div class="mt-48 max-w-3xl">
+
       <div class="mb-32">
-        <p>
-          Laden Sie CSV-Dateien hoch, um Bestellungen zu importieren: 
-        </p>
+        <h2 class="text-md mb-32">Upload</h2>
+
+        <p>Laden Sie CSV-Dateien hoch, um Bestellungen zu importieren:</p>
         
         <!-- Upload Area -->
         <div 
@@ -65,61 +67,66 @@
       
       <!-- Uploaded Files -->
       <div v-if="uploadedFiles.length > 0" class="mb-32">
-        <div class="flex flex-col gap-y-16 border-t border-gray-200 pt-16">
+        <div class="flex flex-col gap-y-16 border-t border-gray-200 pt-12">
           <div 
             v-for="file in uploadedFiles" 
             :key="file.name"
-            class="flex items-center justify-between border-b border-gray-200 pb-16">
+            class="flex items-center justify-between border-b border-gray-200 pb-12">
             <div class="flex items-center">
               <div>
-                <div class="text-sm">{{ file.original_name }}</div>
-                <div class="text-xs text-gray-500">{{ formatFileSize(file.size) }}</div>
+                <div class="text-sm font-medium">{{ file.original_name }}</div>
+                <div class="text-xs">{{ formatFileSize(file.size) }}</div>
               </div>
             </div>
             <div class="flex items-center space-x-8">
-              <button
+              <ButtonPrimary
                 v-if="file.status === 'pending'"
-                @click="processFile(file)"
+                type="button"
+                :label="isProcessing ? 'Verarbeitung...' : 'Verarbeiten'"
                 :disabled="isProcessing"
-                class="inline-flex items-center px-12 py-8 border border-transparent text-xs font-medium text-white bg-black focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed">
-                <span v-if="!isProcessing">Verarbeiten</span>
-                <span v-else class="flex items-center">
-                  <div class="animate-spin rounded-full h-3 w-3 border-b-2 border-white mr-4"></div>
-                  Verarbeitung...
-                </span>
-              </button>
+                @click="processFile(file)"
+              />
             </div>
           </div>
         </div>
       </div>
       
       <!-- Processing Results -->
-      <div v-if="processingResults" class="mb-32 mt-48">
-        <h2 class="text-md font-medium mb-32">Verarbeitungsergebnisse</h2>
+      <div v-if="processingResults" class="mb-32 mt-64">
+        <h2 class="text-md mb-32">Verarbeitungsergebnisse</h2>
         <div class="bg-white">
           <div class="grid grid-cols-3 gap-16 mb-16">
             <div class="text-center">
-              <div class="text-3xl font-bold text-green-600">{{ processingResults.imported }}</div>
+              <div class="text-2xl font-bold text-green-600">{{ processingResults.imported }}</div>
               <div class="text-xs">Importiert</div>
             </div>
             <div class="text-center">
-              <div class="text-3xl font-bold text-yellow-600">{{ processingResults.skipped }}</div>
+              <div class="text-2xl font-bold text-yellow-600">{{ processingResults.skipped }}</div>
               <div class="text-xs">Übersprungen</div>
             </div>
             <div class="text-center">
-              <div class="text-3xl font-bold text-red-600">{{ processingResults.errors.length }}</div>
+              <div class="text-2xl font-bold text-red-600">{{ processingResults.errors.length }}</div>
               <div class="text-xs">Fehler</div>
             </div>
           </div>
+
+          <!-- Reset Button -->
+          <div v-if="uploadedFiles.length > 0 || processingResults" class="my-48">
+            <ButtonSecondary
+              type="button"
+              label="Zurücksetzen"
+              @click="resetUpload"
+            />
+          </div>
           
           <!-- Skipped Rows Details -->
-          <div v-if="processingResults.skipped_rows.length > 0" class="mt-32">
-            <h3 class="text-sm font-medium text-gray-900 mb-8">Übersprungene Zeilen:</h3>
-            <div class="max-h-[360px] overflow-y-auto">
+          <div v-if="processingResults.skipped_rows.length > 0">
+            <h3 class="text-sm mb-16">Übersprungene Zeilen</h3>
+            <div class="max-h-[360px] overflow-y-auto border-y border-gray-100">
               <div 
                 v-for="(row, index) in processingResults.skipped_rows" 
                 :key="index"
-                class="text-xs text-gray-600 py-8 border-b border-gray-100 last:border-b-0">
+                class="text-xxs py-12 border-b border-gray-100 last:border-b-0">
                 <span class="font-medium">{{ row.order_id }}</span> - {{ row.reason }}:
                 <span v-if="row.email !== 'N/A'" class="">{{ row.email }}</span>
               </div>
@@ -128,7 +135,7 @@
           
           <!-- Errors Details -->
           <div v-if="processingResults.errors.length > 0" class="mt-16">
-            <h3 class="text-sm font-medium text-gray-900 mb-8">Fehlerdetails:</h3>
+            <h3 class="text-sm mb-8">Fehlerdetails:</h3>
             <div class="max-h-48 overflow-y-auto">
               <div 
                 v-for="(error, index) in processingResults.errors" 
@@ -140,15 +147,7 @@
           </div>
         </div>
       </div>
-      
-      <!-- Reset Button -->
-      <div v-if="uploadedFiles.length > 0 || processingResults" class="mt-32">
-        <button 
-          @click="resetUpload"
-          class="inline-flex items-center px-16 py-8 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-          Zurücksetzen
-        </button>
-      </div>
+
     </div>
   </div>
 </template>
@@ -158,6 +157,8 @@ import { ref, onMounted } from 'vue';
 import { useFileUpload } from '@/components/upload/composable/useFileUpload';
 import { processCsv } from '@/services/api';
 import { usePageTitle } from '@/composables/usePageTitle';
+import ButtonPrimary from '@/components/buttons/Primary.vue';
+import ButtonSecondary from '@/components/buttons/Secondary.vue';
 
 const { setTitle } = usePageTitle();
 setTitle('CSV Import');

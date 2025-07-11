@@ -1,6 +1,7 @@
 <?php
-use Illuminate\Support\Facades\Route;
+
 use App\Http\Controllers\HomeController;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,17 +22,15 @@ require __DIR__.'/auth.php';
 /**
  * Frontend Routes
  */
-
 Route::get('/', [HomeController::class, 'index'])->name('page.home');
 
 /**
  * Backend Routes
  */
-
 Route::get('/dashboard/{any?}', function () {
-  return view('pages.dashboard');
+    return view('pages.dashboard');
 })->where('any', '.*')->middleware(['auth', 'verified'])->name('page.dashboard');
 
 Route::get('/error/{any?}', function () {
-  return view('pages.dashboard');
+    return view('pages.dashboard');
 })->where('any', '.*')->middleware(['auth', 'verified'])->name('page.dashboard');

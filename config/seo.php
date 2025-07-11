@@ -2,7 +2,7 @@
 
 return [
 
-  /*
+    /*
   |--------------------------------------------------------------------------
   | Seo title (General)
   |--------------------------------------------------------------------------
@@ -11,9 +11,9 @@ return [
   |
   */
 
-  'title' => env('APP_NAME', 'Dashboard Frau Müller'),
+    'title' => env('APP_NAME', 'Dashboard Frau Müller'),
 
-  /*
+    /*
   |--------------------------------------------------------------------------
   | Seo description (General)
   |--------------------------------------------------------------------------
@@ -22,9 +22,9 @@ return [
   |
   */
 
-  'description' => env('APP_DESCRIPTION', 'Dashboard Frau Müller'),   
+    'description' => env('APP_DESCRIPTION', 'Dashboard Frau Müller'),
 
-  /*
+    /*
   |--------------------------------------------------------------------------
   | Seo image (General)
   |--------------------------------------------------------------------------
@@ -33,6 +33,6 @@ return [
   |
   */
 
-  'image' => env('APP_IMAGE', '/media/gute-bauten-opengraph.jpg'),
+    'image' => env('APP_IMAGE', '/media/gute-bauten-opengraph.jpg'),
 
 ];

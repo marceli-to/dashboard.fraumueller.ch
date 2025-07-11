@@ -3,9 +3,9 @@
     Bestellungen
   </h1>
   <template v-if="!isLoading">
-    <div class="mt-48">
+    <div class="mt-48 max-w-6xl">
       <div class="overflow-x-auto">
-        <table class="w-auto">
+        <table class="w-auto text-xxs">
           <thead>
             <tr class="border-b border-black">
               <th class="py-12 pr-16 text-left">ID</th>
@@ -14,7 +14,8 @@
               <th class="py-12 pr-16 text-left">Zahlungsart</th>
               <th class="py-12 pr-16 text-right">Betrag</th>
               <th class="py-12 text-center pr-16 text-left">Status</th>
-              <th class="py-12 text-right">Bezahlt am</th>
+              <th class="py-12 pr-16 text-right">Bezahlt am</th>
+              <th class="py-12 text-right">Aktionen</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-black">
@@ -22,7 +23,7 @@
               <td class="py-12 pr-16">
                 {{ order.order_id }}
               </td>
-              <td class="py-12 pr-16 max-w-[480px]">
+              <td class="py-12 pr-16 max-w-[400px]">
                 {{ order.product_name }}
               </td>
               <td class="py-12 pr-16 max-w-[320px]">
@@ -39,8 +40,16 @@
                   {{ order.financial_status }}
                 </span>
               </td>
-              <td class="py-12 text-right tabular-nums">
+              <td class="py-12 pr-16 text-right tabular-nums">
                 {{ formatDate(order.paid_at) }}
+              </td>
+              <td class="py-12 text-right">
+                <router-link 
+                  :to="{ name: 'orders.edit', params: { id: order.id } }"
+                  class="text-blue-600 hover:text-blue-800 text-xxs"
+                >
+                  Bearbeiten
+                </router-link>
               </td>
             </tr>
           </tbody>

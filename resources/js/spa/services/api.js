@@ -42,6 +42,16 @@ export const getOrders = async () => {
   return response.data;
 };
 
+export const getOrder = async (id) => {
+  const response = await api.get(`/orders/${id}`);
+  return response.data;
+};
+
+export const updateOrder = async (id, orderData) => {
+  const response = await api.put(`/orders/${id}`, orderData);
+  return response.data;
+};
+
 // csv processing
 export const processCsv = async (filePath) => {
   const response = await api.post(`/upload/process`, { file_path: filePath });

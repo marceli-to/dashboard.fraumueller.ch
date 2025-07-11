@@ -18,7 +18,7 @@ class BuildingFactory extends Factory
     public function definition(): array
     {
         $title = fake()->words(3, true);
-        
+
         return [
             'slug' => Str::slug($title),
             'title' => $title,
@@ -29,7 +29,7 @@ class BuildingFactory extends Factory
             'maps' => json_encode([
                 'street' => fake()->streetAddress(),
                 'city' => 'Zürich',
-                'postal_code' => fake()->numberBetween(8000, 8099)
+                'postal_code' => fake()->numberBetween(8000, 8099),
             ]),
         ];
     }

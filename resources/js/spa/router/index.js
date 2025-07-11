@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import Home from '@/views/home/Index.vue';
 import Orders from '@/views/orders/Index.vue';
+import OrderForm from '@/views/orders/Form.vue';
 import Import from '@/views/import/Index.vue';
 
 // Error pages
@@ -12,6 +13,7 @@ import Error419 from '@/views/error/419.vue';
 const routes = [
   { path: '/dashboard', name: 'home', component: Home },
   { path: '/dashboard/bestellungen', name: 'orders', component: Orders },
+  { path: '/dashboard/bestellungen/bearbeiten/:id', name: 'orders.edit', component: OrderForm },
   { path: '/dashboard/import', name: 'import', component: Import },
 
   // Error pages

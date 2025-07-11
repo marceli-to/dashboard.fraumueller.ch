@@ -31,13 +31,13 @@ return new class extends Migration
         Schema::table('orders', function (Blueprint $table) {
             $table->dropColumn([
                 'shipping_name',
-                'shipping_address_1', 
+                'shipping_address_1',
                 'shipping_address_2',
                 'shipping_city',
                 'shipping_zip',
                 'shipping_province',
                 'shipping_country',
-                'shipping_phone'
+                'shipping_phone',
             ]);
         });
     }
