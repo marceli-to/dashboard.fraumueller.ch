@@ -26,7 +26,7 @@
     "src": "resources/js/app.js"
   },
   "resources/js/spa.js": {
-    "file": "assets/spa-625ad457.js",
+    "file": "assets/spa-67a09c2d.js",
     "isEntry": true,
     "src": "resources/js/spa.js"
   }
