@@ -36,6 +36,7 @@ class Order extends Model
         'product_sku',
         'product_price',
         'quantity',
+        'notes',
         'paid_at',
     ];
 

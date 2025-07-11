@@ -40,7 +40,9 @@ export default {
       },
 
       fontFamily: {
-        'sans': ['Helvetica-Neue', ...defaultTheme.fontFamily.sans],
+        'sans': ['Work Sans', ...defaultTheme.fontFamily.sans],
+        'chlorite-medium': ['Chlorite-Medium', ...defaultTheme.fontFamily.sans],
+        'sangbleu-italic': ['SangBleuKingdom-MediumItalic', ...defaultTheme.fontFamily.sans],
       },
 
       fontSize: {
@@ -50,10 +52,12 @@ export default {
         'sm': ['1.25rem', { lineHeight: '1.25' }],     // 20px/25px
         'md': ['1.5625rem', { lineHeight: '1.2' }],    // 25px/30px
         'lg': ['1.875rem', { lineHeight: '1.2' }],   // 30px/40px
-        'xl': ['2.1875rem', { lineHeight: '1.15' }],   // 35px
-        '2xl': ['2.5rem', { lineHeight: '1.125'}],    // 40px/45px
-        '3xl': ['2.8125rem', { lineHeight: '1.15' }], // 45px/55px
-        '4xl': ['3.75rem', { lineHeight: '1.15' }],   // 60px/70px
+        'xl': ['2.5rem', { lineHeight: '1.2' }],
+        '2xl': ['3rem', { lineHeight: '1.2' }], 
+        '3xl': ['4rem', { lineHeight: '1.2' }], 
+        '4xl': ['5rem', { lineHeight: '1.2' }], 
+        '5xl': ['6rem', { lineHeight: '1.2' }],
+        '6xl': ['8rem', { lineHeight: '1.2' }],   
       },
     },
 

@@ -1,7 +1,7 @@
 <template>
   <template v-if="!isLoading">
     <div class="min-h-screen flex">
-      <div class="w-[300px] bg-limora">
+      <div class="w-[240px] bg-black">
         <Navigation />
       </div>
       <div class="w-full py-16 px-16">

@@ -34,5 +34,11 @@ export const updateComment = async (id, comment) => {
 export const restoreComment = async (id) => {
   const response = await api.put(`/comments/restore/${id}`);
   return response.data;
+};
+
+// orders
+export const getOrders = async () => {
+  const response = await api.get(`/orders`);
+  return response.data;
 }; 
 

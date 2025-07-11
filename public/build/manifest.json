@@ -1,16 +1,24 @@
 {
   "resources/css/app.css": {
-    "file": "assets/app-774b00da.css",
+    "file": "assets/app-9c941d07.css",
     "isEntry": true,
     "src": "resources/css/app.css"
   },
-  "resources/fonts/HelveticaNeue.woff": {
-    "file": "assets/HelveticaNeue-c890f674.woff",
-    "src": "resources/fonts/HelveticaNeue.woff"
+  "resources/fonts/Chlorite-Medium.woff": {
+    "file": "assets/Chlorite-Medium-43e48b57.woff",
+    "src": "resources/fonts/Chlorite-Medium.woff"
   },
-  "resources/fonts/HelveticaNeue.woff2": {
-    "file": "assets/HelveticaNeue-868b475a.woff2",
-    "src": "resources/fonts/HelveticaNeue.woff2"
+  "resources/fonts/Chlorite-Medium.woff2": {
+    "file": "assets/Chlorite-Medium-78b48aca.woff2",
+    "src": "resources/fonts/Chlorite-Medium.woff2"
+  },
+  "resources/fonts/SangBleuKingdom-MediumItalic.woff": {
+    "file": "assets/SangBleuKingdom-MediumItalic-0164ad23.woff",
+    "src": "resources/fonts/SangBleuKingdom-MediumItalic.woff"
+  },
+  "resources/fonts/SangBleuKingdom-MediumItalic.woff2": {
+    "file": "assets/SangBleuKingdom-MediumItalic-45450773.woff2",
+    "src": "resources/fonts/SangBleuKingdom-MediumItalic.woff2"
   },
   "resources/js/app.js": {
     "file": "assets/app-e508ae40.js",
@@ -18,7 +26,7 @@
     "src": "resources/js/app.js"
   },
   "resources/js/spa.js": {
-    "file": "assets/spa-bc54b11f.js",
+    "file": "assets/spa-25e1f0a6.js",
     "isEntry": true,
     "src": "resources/js/spa.js"
   }

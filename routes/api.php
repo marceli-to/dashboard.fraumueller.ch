@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\VoteController;
 use App\Http\Controllers\Api\CommentController;
+use App\Http\Controllers\Api\OrderController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,4 +25,5 @@ Route::middleware('auth:sanctum')->group(function () {
   Route::put('/comments/restore/{id}', [CommentController::class, 'restore']);
   Route::put('/comments/toggle/{comment}', [CommentController::class, 'toggle']);
   Route::delete('/comments/{comment}', [CommentController::class, 'destroy']);
+  Route::get('/orders', [OrderController::class, 'get']);
 });
