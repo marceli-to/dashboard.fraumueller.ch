@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col justify-between min-h-screen sticky top-0 ">
     <div>
-      <h1 class="text-md leading-[1.25] p-12 text-white">
+      <h1 class="text-md leading-[1.25] p-12 text-white mt-8">
         Dashboard<br>Frau Müller
       </h1>
       <nav class="mt-48">

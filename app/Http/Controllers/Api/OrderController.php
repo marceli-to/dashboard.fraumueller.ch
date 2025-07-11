@@ -27,21 +27,11 @@ class OrderController extends Controller
   {
     $validated = $request->validate([
       'email' => 'sometimes|required|email|max:255',
-      'phone' => 'sometimes|string|max:255',
       'billing_name' => 'sometimes|required|string|max:255',
       'billing_address_1' => 'sometimes|required|string|max:255',
-      'billing_address_2' => 'sometimes|nullable|string|max:255',
       'billing_city' => 'sometimes|required|string|max:255',
       'billing_zip' => 'sometimes|required|string|max:255',
       'billing_country' => 'sometimes|string|max:255',
-      'shipping_name' => 'sometimes|string|max:255',
-      'shipping_address_1' => 'sometimes|string|max:255',
-      'shipping_address_2' => 'sometimes|nullable|string|max:255',
-      'shipping_city' => 'sometimes|string|max:255',
-      'shipping_zip' => 'sometimes|string|max:255',
-      'shipping_province' => 'sometimes|nullable|string|max:255',
-      'shipping_country' => 'sometimes|string|max:255',
-      'notes' => 'sometimes|nullable|string',
       'order_status' => 'sometimes|in:open,fulfilled',
     ]);
 

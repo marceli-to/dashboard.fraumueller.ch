@@ -10,7 +10,7 @@
       <div class="overflow-x-auto">
         <table class="w-auto text-xxs">
           <thead>
-            <tr class="border-b border-black [&_th]:font-medium [&_th]:py-12 [&_th]:pr-12">
+            <tr class="border-b border-gray-200 [&_th]:font-medium [&_th]:py-12 [&_th]:pr-12">
               <th class="text-left !pr-24">ID</th>
               <th class="text-left">Produkt</th>
               <th class="text-left">E-Mail</th>
@@ -19,7 +19,7 @@
               <th class="text-right !pr-0"></th>
             </tr>
           </thead>
-          <tbody class="divide-y divide-black">
+          <tbody class="divide-y divide-gray-200">
             <tr 
               v-for="order in orders" :key="order.id" class="hover:bg-gray-100">
               <td class="py-12 pr-24 tabular-nums">
@@ -66,7 +66,7 @@
         <select 
           id="order-status-select"
           v-model="newOrderStatus"
-          class="appearance-none w-full px-8 py-6 border border-black focus:border-black !ring-0 focus:!ring-0 !outline-none"
+          class="appearance-none w-full px-8 py-6 border border-gray-200 focus:border-black !ring-0 focus:!ring-0 !outline-none"
         >
           <option value="open">Open</option>
           <option value="fulfilled">Fulfilled</option>

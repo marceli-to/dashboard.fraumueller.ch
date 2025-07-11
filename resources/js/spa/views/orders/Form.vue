@@ -12,30 +12,30 @@
       {{ error }}
     </div>
     
-    <form v-else @submit.prevent="submitForm" class="flex flex-col gap-y-32 mt-48 max-w-2xl">
+    <form v-else @submit.prevent="submitForm" class="flex flex-col gap-y-48 mt-48 max-w-2xl">
       <!-- Contact Information -->
       <section>
-        <h2 class="text-sm font-medium mb-12">
+        <h2 class="text-sm font-medium mb-20">
           Kontaktinformationen
         </h2>
-        <div class="flex flex-col gap-y-16">
+        <div class="flex flex-col gap-y-20">
           <div>
-            <label for="email" class="block text-xs mb-4">E-Mail *</label>
+            <label for="email" class="block text-xs mb-8">E-Mail *</label>
             <input
               id="email"
               v-model="form.email"
               type="email"
               required
-              class="appearance-none w-full px-12 py-8 border border-black focus:border-black !ring-0 focus:!ring-0 !outline-none "
+              class="appearance-none w-full px-12 py-8 border border-gray-200 focus:border-black !ring-0 focus:!ring-0 !outline-none "
             />
           </div>
           <div>
-            <label for="phone" class="block text-xs mb-4">Telefon</label>
+            <label for="phone" class="block text-xs mb-8">Telefon</label>
             <input
               id="phone"
               v-model="form.phone"
               type="text"
-              class="appearance-none w-full px-12 py-8 border border-black focus:border-black !ring-0 focus:!ring-0 !outline-none "
+              class="appearance-none w-full px-12 py-8 border border-gray-200 focus:border-black !ring-0 focus:!ring-0 !outline-none "
             />
           </div>
         </div>
@@ -43,68 +43,68 @@
 
       <!-- Billing Information -->
       <section>
-        <h2 class="text-sm font-medium mb-12">
+        <h2 class="text-sm font-medium mb-20">
           Rechnungsadresse
         </h2>
-        <div class="flex flex-col gap-y-16">
+        <div class="flex flex-col gap-y-20">
           <div>
-            <label for="billing_name" class="block text-xs mb-4">Name *</label>
+            <label for="billing_name" class="block text-xs mb-8">Name *</label>
             <input
               id="billing_name"
               v-model="form.billing_name"
               type="text"
               required
-              class="appearance-none w-full px-12 py-8 border border-black focus:border-black !ring-0 focus:!ring-0 !outline-none "
+              class="appearance-none w-full px-12 py-8 border border-gray-200 focus:border-black !ring-0 focus:!ring-0 !outline-none "
             />
           </div>
           <div>
-            <label for="billing_address_1" class="block text-xs mb-4">Adresse 1 *</label>
+            <label for="billing_address_1" class="block text-xs mb-8">Adresse 1 *</label>
             <input
               id="billing_address_1"
               v-model="form.billing_address_1"
               type="text"
               required
-              class="appearance-none w-full px-12 py-8 border border-black focus:border-black !ring-0 focus:!ring-0 !outline-none "
+              class="appearance-none w-full px-12 py-8 border border-gray-200 focus:border-black !ring-0 focus:!ring-0 !outline-none "
             />
           </div>
           <div>
-            <label for="billing_address_2" class="block text-xs mb-4">Adresse 2</label>
+            <label for="billing_address_2" class="block text-xs mb-8">Adresse 2</label>
             <input
               id="billing_address_2"
               v-model="form.billing_address_2"
               type="text"
-              class="appearance-none w-full px-12 py-8 border border-black focus:border-black !ring-0 focus:!ring-0 !outline-none "
+              class="appearance-none w-full px-12 py-8 border border-gray-200 focus:border-black !ring-0 focus:!ring-0 !outline-none "
             />
           </div>
           <div class="grid grid-cols-2 gap-x-16">
             <div>
-              <label for="billing_zip" class="block text-xs mb-4">PLZ *</label>
+              <label for="billing_zip" class="block text-xs mb-8">PLZ *</label>
               <input
                 id="billing_zip"
                 v-model="form.billing_zip"
                 type="text"
                 required
-                class="appearance-none w-full px-12 py-8 border border-black focus:border-black !ring-0 focus:!ring-0 !outline-none "
+                class="appearance-none w-full px-12 py-8 border border-gray-200 focus:border-black !ring-0 focus:!ring-0 !outline-none "
               />
             </div>
             <div>
-              <label for="billing_city" class="block text-xs mb-4">Stadt *</label>
+              <label for="billing_city" class="block text-xs mb-8">Stadt *</label>
               <input
                 id="billing_city"
                 v-model="form.billing_city"
                 type="text"
                 required
-                class="appearance-none w-full px-12 py-8 border border-black focus:border-black !ring-0 focus:!ring-0 !outline-none "
+                class="appearance-none w-full px-12 py-8 border border-gray-200 focus:border-black !ring-0 focus:!ring-0 !outline-none "
               />
             </div>
           </div>
           <div>
-            <label for="billing_country" class="block text-xs mb-4">Land</label>
+            <label for="billing_country" class="block text-xs mb-8">Land</label>
             <input
               id="billing_country"
               v-model="form.billing_country"
               type="text"
-              class="appearance-none w-full px-12 py-8 border border-black focus:border-black !ring-0 focus:!ring-0 !outline-none "
+              class="appearance-none w-full px-12 py-8 border border-gray-200 focus:border-black !ring-0 focus:!ring-0 !outline-none "
             />
           </div>
         </div>
@@ -112,73 +112,73 @@
 
       <!-- Shipping Information -->
       <section>
-        <h2 class="text-sm font-medium mb-12">
+        <h2 class="text-sm font-medium mb-20">
           Lieferadresse
         </h2>
-        <div class="flex flex-col gap-y-16">
+        <div class="flex flex-col gap-y-20">
           <div>
-            <label for="shipping_name" class="block text-xs mb-4">Name</label>
+            <label for="shipping_name" class="block text-xs mb-8">Name</label>
             <input
               id="shipping_name"
               v-model="form.shipping_name"
               type="text"
-              class="appearance-none w-full px-12 py-8 border border-black focus:border-black !ring-0 focus:!ring-0 !outline-none "
+              class="appearance-none w-full px-12 py-8 border border-gray-200 focus:border-black !ring-0 focus:!ring-0 !outline-none "
             />
           </div>
           <div>
-            <label for="shipping_address_1" class="block text-xs mb-4">Adresse 1</label>
+            <label for="shipping_address_1" class="block text-xs mb-8">Adresse 1</label>
             <input
               id="shipping_address_1"
               v-model="form.shipping_address_1"
               type="text"
-              class="appearance-none w-full px-12 py-8 border border-black focus:border-black !ring-0 focus:!ring-0 !outline-none "
+              class="appearance-none w-full px-12 py-8 border border-gray-200 focus:border-black !ring-0 focus:!ring-0 !outline-none "
             />
           </div>
           <div>
-            <label for="shipping_address_2" class="block text-xs mb-4">Adresse 2</label>
+            <label for="shipping_address_2" class="block text-xs mb-8">Adresse 2</label>
             <input
               id="shipping_address_2"
               v-model="form.shipping_address_2"
               type="text"
-              class="appearance-none w-full px-12 py-8 border border-black focus:border-black !ring-0 focus:!ring-0 !outline-none "
+              class="appearance-none w-full px-12 py-8 border border-gray-200 focus:border-black !ring-0 focus:!ring-0 !outline-none "
             />
           </div>
           <div class="grid grid-cols-2 gap-x-16">
             <div>
-              <label for="shipping_zip" class="block text-xs mb-4">PLZ</label>
+              <label for="shipping_zip" class="block text-xs mb-8">PLZ</label>
               <input
                 id="shipping_zip"
                 v-model="form.shipping_zip"
                 type="text"
-                class="appearance-none w-full px-12 py-8 border border-black focus:border-black !ring-0 focus:!ring-0 !outline-none "
+                class="appearance-none w-full px-12 py-8 border border-gray-200 focus:border-black !ring-0 focus:!ring-0 !outline-none "
               />
             </div>
             <div>
-              <label for="shipping_city" class="block text-xs mb-4">Stadt</label>
+              <label for="shipping_city" class="block text-xs mb-8">Stadt</label>
               <input
                 id="shipping_city"
                 v-model="form.shipping_city"
                 type="text"
-                class="appearance-none w-full px-12 py-8 border border-black focus:border-black !ring-0 focus:!ring-0 !outline-none "
+                class="appearance-none w-full px-12 py-8 border border-gray-200 focus:border-black !ring-0 focus:!ring-0 !outline-none "
               />
             </div>
           </div>
           <div>
-            <label for="shipping_province" class="block text-xs mb-4">Kanton/Provinz</label>
+            <label for="shipping_province" class="block text-xs mb-8">Kanton/Provinz</label>
             <input
               id="shipping_province"
               v-model="form.shipping_province"
               type="text"
-              class="appearance-none w-full px-12 py-8 border border-black focus:border-black !ring-0 focus:!ring-0 !outline-none "
+              class="appearance-none w-full px-12 py-8 border border-gray-200 focus:border-black !ring-0 focus:!ring-0 !outline-none "
             />
           </div>
           <div>
-            <label for="shipping_country" class="block text-xs mb-4">Land</label>
+            <label for="shipping_country" class="block text-xs mb-8">Land</label>
             <input
               id="shipping_country"
               v-model="form.shipping_country"
               type="text"
-              class="appearance-none w-full px-12 py-8 border border-black focus:border-black !ring-0 focus:!ring-0 !outline-none "
+              class="appearance-none w-full px-12 py-8 border border-gray-200 focus:border-black !ring-0 focus:!ring-0 !outline-none "
             />
           </div>
         </div>
@@ -187,12 +187,12 @@
       <!-- Notes -->
       <section>
         <div>
-          <label for="notes" class="block text-xs mb-4">Notizen</label>
+          <label for="notes" class="block text-xs mb-8">Notizen</label>
           <textarea
             id="notes"
             v-model="form.notes"
             rows="4"
-            class="appearance-none w-full px-12 py-8 border border-black focus:border-black !ring-0 focus:!ring-0 !outline-none placeholder:text-gray-500"
+            class="appearance-none w-full px-12 py-8 border border-gray-200 focus:border-black !ring-0 focus:!ring-0 !outline-none placeholder:text-gray-500"
             placeholder="Zusätzliche Notizen zur Bestellung..."
           />
         </div>
@@ -206,7 +206,7 @@
         />
         <router-link
           to="/dashboard/bestellungen"
-          class="inline-flex items-center px-16 py-8 border border-black text-xs bg-white hover:bg-gray-50 focus:outline-none focus:!ring-0"
+          class="inline-flex items-center px-16 py-8 border border-gray-200 text-xs bg-white hover:bg-gray-50 focus:outline-none focus:!ring-0"
         >
           Abbrechen
         </router-link>
