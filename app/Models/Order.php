@@ -38,6 +38,7 @@ class Order extends Model
         'quantity',
         'notes',
         'paid_at',
+        'order_status',
     ];
 
     protected $casts = [

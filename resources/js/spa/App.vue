@@ -17,6 +17,7 @@
 import { ref, watchEffect, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import Navigation from '@/layout/Navigation.vue';
+import Toast from '@/components/toast/Toast.vue';
 
 const route = useRoute();
 const pageComponent = ref(null);

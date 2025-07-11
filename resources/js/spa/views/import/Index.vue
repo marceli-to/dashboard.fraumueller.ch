@@ -5,7 +5,7 @@
       Import
     </h1>
     
-    <div class="mt-48 max-w-3xl">
+    <div class="mt-48 max-w-2xl">
 
       <div class="mb-32">
 
@@ -66,7 +66,7 @@
       
       <!-- Uploaded Files -->
       <div v-if="uploadedFiles.length > 0" class="mb-32">
-        <div class="flex flex-col gap-y-16 border-t border-gray-200 pt-12">
+        <div class="flex flex-col gap-y-12 border-t border-gray-200 pt-12">
           <div 
             v-for="file in uploadedFiles" 
             :key="file.name"

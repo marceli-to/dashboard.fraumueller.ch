@@ -19,6 +19,7 @@ class OrderResource extends JsonResource
             'currency' => $this->currency,
             'financial_status' => $this->financial_status,
             'fulfillment_status' => $this->fulfillment_status,
+            'order_status' => $this->order_status,
             'billing_name' => $this->billing_name,
             'billing_address_1' => $this->billing_address_1,
             'billing_address_2' => $this->billing_address_2,

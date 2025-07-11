@@ -19,7 +19,7 @@
         <div class="flex min-h-full items-center justify-center p-4 relative">
           <div
             :class="[
-              'relative w-full transform overflow-hidden bg-white dark:text-black p-24 text-left shadow-xl transition-all',
+              'relative w-full transform overflow-hidden bg-white dark:text-black p-16 text-left shadow-xl transition-all',
               getSizeClass(content.size)
             ]"
             role="dialog"
@@ -29,9 +29,9 @@
             @click.stop>
             <a 
               href="javascript:;" 
-              class="absolute right-24 top-24"
+              class="absolute right-8 top-8"
               @click="isVisible = false">
-              <IconCross variant="small-bold" />
+              <IconCross />
             </a>
             <div class="flex flex-col gap-y-24 mx-auto">
 
@@ -66,7 +66,7 @@
               <!-- Actions -->
               <div v-if="!content.hideDefaultActions">
                 <slot name="actions">
-                  <ButtonGroup>
+                  <div>
                     <ButtonPrimary 
                       :label="content.confirmLabel || 'Speichern'"
                       type="button"
@@ -77,7 +77,7 @@
                       type="button"
                       @click="handleCancel"
                       v-if="content.onCancel" />
-                  </ButtonGroup>
+                  </div>
                 </slot>
               </div>
               <!-- ! Actions -->
@@ -95,7 +95,6 @@
 import { onMounted, onUnmounted } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useDialogStore } from '@/components/dialog/stores/dialog';
-import ButtonGroup from '@/components/buttons/Group.vue';
 import ButtonPrimary from '@/components/buttons/Primary.vue';
 import IconCross from '@/components/icons/Cross.vue';
 

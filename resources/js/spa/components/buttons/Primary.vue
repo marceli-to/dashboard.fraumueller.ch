@@ -39,7 +39,7 @@ const props = defineProps({
   }
 });
 
-const defaultClasses = 'inline-flex items-center px-12 py-8 border border-transparent text-xs font-medium text-white bg-black focus:outline-none focus:!ring-0 disabled:opacity-50 disabled:cursor-not-allowed';
+const defaultClasses = 'inline-flex items-center px-20 py-8 border border-transparent text-xs font-medium text-white bg-black focus:outline-none focus:!ring-0 disabled:opacity-50 disabled:cursor-not-allowed';
 const dangerClasses = '';
 
 const computedClasses = computed(() => {
