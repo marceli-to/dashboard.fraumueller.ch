@@ -26,7 +26,7 @@
               v-model="form.email"
               type="email"
               required
-              class="appearance-none w-full px-12 py-8 border border-gray-200 focus:border-black !ring-0 focus:!ring-0 !outline-none "
+              class="appearance-none w-full px-12 py-8 border border-gray-200 focus:border-black !ring-0 focus:!ring-0 !outline-none"
             />
           </div>
           <div>
@@ -35,7 +35,7 @@
               id="phone"
               v-model="form.phone"
               type="text"
-              class="appearance-none w-full px-12 py-8 border border-gray-200 focus:border-black !ring-0 focus:!ring-0 !outline-none "
+              class="appearance-none w-full px-12 py-8 border border-gray-200 focus:border-black !ring-0 focus:!ring-0 !outline-none"
             />
           </div>
         </div>
@@ -54,7 +54,7 @@
               v-model="form.billing_name"
               type="text"
               required
-              class="appearance-none w-full px-12 py-8 border border-gray-200 focus:border-black !ring-0 focus:!ring-0 !outline-none "
+              class="appearance-none w-full px-12 py-8 border border-gray-200 focus:border-black !ring-0 focus:!ring-0 !outline-none"
             />
           </div>
           <div>
@@ -64,7 +64,7 @@
               v-model="form.billing_address_1"
               type="text"
               required
-              class="appearance-none w-full px-12 py-8 border border-gray-200 focus:border-black !ring-0 focus:!ring-0 !outline-none "
+              class="appearance-none w-full px-12 py-8 border border-gray-200 focus:border-black !ring-0 focus:!ring-0 !outline-none"
             />
           </div>
           <div>
@@ -73,7 +73,7 @@
               id="billing_address_2"
               v-model="form.billing_address_2"
               type="text"
-              class="appearance-none w-full px-12 py-8 border border-gray-200 focus:border-black !ring-0 focus:!ring-0 !outline-none "
+              class="appearance-none w-full px-12 py-8 border border-gray-200 focus:border-black !ring-0 focus:!ring-0 !outline-none"
             />
           </div>
           <div class="grid grid-cols-2 gap-x-16">
@@ -84,7 +84,7 @@
                 v-model="form.billing_zip"
                 type="text"
                 required
-                class="appearance-none w-full px-12 py-8 border border-gray-200 focus:border-black !ring-0 focus:!ring-0 !outline-none "
+                class="appearance-none w-full px-12 py-8 border border-gray-200 focus:border-black !ring-0 focus:!ring-0 !outline-none"
               />
             </div>
             <div>
@@ -94,7 +94,7 @@
                 v-model="form.billing_city"
                 type="text"
                 required
-                class="appearance-none w-full px-12 py-8 border border-gray-200 focus:border-black !ring-0 focus:!ring-0 !outline-none "
+                class="appearance-none w-full px-12 py-8 border border-gray-200 focus:border-black !ring-0 focus:!ring-0 !outline-none"
               />
             </div>
           </div>
@@ -104,7 +104,7 @@
               id="billing_country"
               v-model="form.billing_country"
               type="text"
-              class="appearance-none w-full px-12 py-8 border border-gray-200 focus:border-black !ring-0 focus:!ring-0 !outline-none "
+              class="appearance-none w-full px-12 py-8 border border-gray-200 focus:border-black !ring-0 focus:!ring-0 !outline-none"
             />
           </div>
         </div>
@@ -122,7 +122,7 @@
               id="shipping_name"
               v-model="form.shipping_name"
               type="text"
-              class="appearance-none w-full px-12 py-8 border border-gray-200 focus:border-black !ring-0 focus:!ring-0 !outline-none "
+              class="appearance-none w-full px-12 py-8 border border-gray-200 focus:border-black !ring-0 focus:!ring-0 !outline-none"
             />
           </div>
           <div>
@@ -131,7 +131,7 @@
               id="shipping_address_1"
               v-model="form.shipping_address_1"
               type="text"
-              class="appearance-none w-full px-12 py-8 border border-gray-200 focus:border-black !ring-0 focus:!ring-0 !outline-none "
+              class="appearance-none w-full px-12 py-8 border border-gray-200 focus:border-black !ring-0 focus:!ring-0 !outline-none"
             />
           </div>
           <div>
@@ -140,7 +140,7 @@
               id="shipping_address_2"
               v-model="form.shipping_address_2"
               type="text"
-              class="appearance-none w-full px-12 py-8 border border-gray-200 focus:border-black !ring-0 focus:!ring-0 !outline-none "
+              class="appearance-none w-full px-12 py-8 border border-gray-200 focus:border-black !ring-0 focus:!ring-0 !outline-none"
             />
           </div>
           <div class="grid grid-cols-2 gap-x-16">
@@ -150,7 +150,7 @@
                 id="shipping_zip"
                 v-model="form.shipping_zip"
                 type="text"
-                class="appearance-none w-full px-12 py-8 border border-gray-200 focus:border-black !ring-0 focus:!ring-0 !outline-none "
+                class="appearance-none w-full px-12 py-8 border border-gray-200 focus:border-black !ring-0 focus:!ring-0 !outline-none"
               />
             </div>
             <div>
@@ -159,7 +159,7 @@
                 id="shipping_city"
                 v-model="form.shipping_city"
                 type="text"
-                class="appearance-none w-full px-12 py-8 border border-gray-200 focus:border-black !ring-0 focus:!ring-0 !outline-none "
+                class="appearance-none w-full px-12 py-8 border border-gray-200 focus:border-black !ring-0 focus:!ring-0 !outline-none"
               />
             </div>
           </div>
@@ -169,7 +169,7 @@
               id="shipping_province"
               v-model="form.shipping_province"
               type="text"
-              class="appearance-none w-full px-12 py-8 border border-gray-200 focus:border-black !ring-0 focus:!ring-0 !outline-none "
+              class="appearance-none w-full px-12 py-8 border border-gray-200 focus:border-black !ring-0 focus:!ring-0 !outline-none"
             />
           </div>
           <div>
@@ -178,7 +178,7 @@
               id="shipping_country"
               v-model="form.shipping_country"
               type="text"
-              class="appearance-none w-full px-12 py-8 border border-gray-200 focus:border-black !ring-0 focus:!ring-0 !outline-none "
+              class="appearance-none w-full px-12 py-8 border border-gray-200 focus:border-black !ring-0 focus:!ring-0 !outline-none"
             />
           </div>
         </div>

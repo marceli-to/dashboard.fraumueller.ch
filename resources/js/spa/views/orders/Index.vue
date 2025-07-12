@@ -8,7 +8,7 @@
     </div>
 
     <!-- Multi-edit dropdown -->
-    <div v-if="selectedOrderIds.length > 0" class="mt-24 max-w-7xl">
+    <div v-if="selectedOrderIds.length > 0" class="max-w-7xl absolute top-16 right-16">
       <div class="bg-blue-50 border border-blue-200 rounded-sm px-12 py-16 mb-16 max-w-[430px]">
         <div class="flex items-center justify-between gap-x-16">
           <span class="text-xs text-blue-800">
@@ -28,9 +28,9 @@
       </div>
     </div>
 
-    <div class="mt-24 max-w-7xl">
+    <div class="mt-24 w-full">
       <div class="overflow-x-scroll">
-        <table class="w-auto text-xxs">
+        <table class="w-full text-xxs">
           <thead>
             <tr class="border-b border-gray-200 [&_th]:font-medium [&_th]:py-12 [&_th]:pr-12">
               <th class="text-left pl-4 !pr-12">
@@ -38,7 +38,7 @@
                   type="checkbox" 
                   :checked="isAllSelected" 
                   @change="toggleSelectAll"
-                  class="appearance-none rounded-sm size-14 border-gray-400 text-gray-400 accent-gray-400 focus:!ring-0 !ring-0 !outline-none"
+                  class="appearance-none rounded-sm size-14 border-blue-500 text-blue-500 accent-blue-500 focus:!ring-0 !ring-0 !outline-none"
                 />
               </th>
               <th class="text-left !pr-24">ID</th>
@@ -57,11 +57,15 @@
                   type="checkbox" 
                   :value="order.id" 
                   v-model="selectedOrderIds"
-                  class="appearance-none rounded-sm size-14 border-gray-400 text-gray-400 accent-gray-400 focus:!ring-0 !ring-0 !outline-none opacity-100"
+                  class="appearance-none rounded-sm size-14 border-blue-500 text-blue-500 accent-blue-500 focus:!ring-0 !ring-0 !outline-none opacity-100"
                 />
               </td>
               <td class="py-12 pr-24 tabular-nums">
-                {{ order.order_id }}
+                <router-link 
+                  :to="{ name: 'orders.edit', params: { id: order.id } }"
+                  class="hover:text-blue-500 transition-all">
+                  {{ order.order_id }}
+                </router-link>
               </td>
               <td class="py-12 pr-12 max-w-[360px]">
                 {{ order.product_name }}
@@ -123,6 +127,7 @@
       </div>
     </div>
   </Dialog>
+
 </template>
 <script setup>
 import { ref, onMounted, computed } from 'vue';
