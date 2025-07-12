@@ -34,11 +34,9 @@
           <thead>
             <tr class="border-b border-gray-200 [&_th]:font-medium [&_th]:py-12 [&_th]:pr-12">
               <th class="text-left pl-4 !pr-12">
-                <input 
-                  type="checkbox" 
-                  :checked="isAllSelected" 
-                  @change="toggleSelectAll"
-                  class="appearance-none rounded-sm size-14 border-blue-500 text-blue-500 accent-blue-500 focus:!ring-0 !ring-0 !outline-none"
+                <Checkbox
+                  :model-value="isAllSelected"
+                  @update:model-value="toggleSelectAll"
                 />
               </th>
               <th class="text-left !pr-24">ID</th>
@@ -53,12 +51,9 @@
             <tr 
               v-for="order in orders" :key="order.id" class="hover:bg-gray-100">
               <td class="py-12 pr-12 pl-4">
-                <input 
-                  type="checkbox" 
-                  :value="order.id" 
-                  v-model="selectedOrderIds"
-                  class="appearance-none rounded-sm size-14 border-blue-500 text-blue-500 accent-blue-500 focus:!ring-0 !ring-0 !outline-none opacity-100"
-                />
+                <Checkbox
+                  :value="order.id"
+                  v-model="selectedOrderIds" />
               </td>
               <td class="py-12 pr-24 tabular-nums">
                 <router-link 
@@ -138,6 +133,7 @@ import IconEdit from '@/components/icons/Edit.vue';
 import Dialog from '@/components/dialog/Dialog.vue';
 import ButtonPrimary from '@/components/buttons/Primary.vue';
 import ButtonSecondary from '@/components/buttons/Secondary.vue';
+import Checkbox from '@/components/input/Checkbox.vue';
 
 const { setTitle } = usePageTitle();
 setTitle('Bestellungen');
@@ -239,8 +235,8 @@ const cancelStatusUpdate = () => {
 };
 
 // Multi-edit handlers
-const toggleSelectAll = (event) => {
-  if (event.target.checked) {
+const toggleSelectAll = (checked) => {
+  if (checked) {
     selectedOrderIds.value = orders.value.map(order => order.id);
   } else {
     selectedOrderIds.value = [];

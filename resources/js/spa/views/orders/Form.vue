@@ -20,22 +20,19 @@
         </h2>
         <div class="flex flex-col gap-y-20">
           <div>
-            <label for="email" class="block text-xs mb-8">E-Mail *</label>
-            <input
+            <Label for="email" label="E-Mail" :required="true" />
+            <Input
               id="email"
               v-model="form.email"
               type="email"
-              required
-              class="appearance-none w-full px-12 py-8 border border-gray-200 focus:border-black !ring-0 focus:!ring-0 !outline-none"
+              :required="true"
             />
           </div>
           <div>
-            <label for="phone" class="block text-xs mb-8">Telefon</label>
-            <input
+            <Label for="phone" label="Telefon" />
+            <Input
               id="phone"
               v-model="form.phone"
-              type="text"
-              class="appearance-none w-full px-12 py-8 border border-gray-200 focus:border-black !ring-0 focus:!ring-0 !outline-none"
             />
           </div>
         </div>
@@ -48,63 +45,51 @@
         </h2>
         <div class="flex flex-col gap-y-20">
           <div>
-            <label for="billing_name" class="block text-xs mb-8">Name *</label>
-            <input
+            <Label for="billing_name" label="Name" :required="true" />
+            <Input
               id="billing_name"
               v-model="form.billing_name"
-              type="text"
-              required
-              class="appearance-none w-full px-12 py-8 border border-gray-200 focus:border-black !ring-0 focus:!ring-0 !outline-none"
+              :required="true"
             />
           </div>
           <div>
-            <label for="billing_address_1" class="block text-xs mb-8">Adresse 1 *</label>
-            <input
+            <Label for="billing_address_1" label="Adresse 1" :required="true" />
+            <Input
               id="billing_address_1"
               v-model="form.billing_address_1"
-              type="text"
-              required
-              class="appearance-none w-full px-12 py-8 border border-gray-200 focus:border-black !ring-0 focus:!ring-0 !outline-none"
+              :required="true"
             />
           </div>
           <div>
-            <label for="billing_address_2" class="block text-xs mb-8">Adresse 2</label>
-            <input
+            <Label for="billing_address_2" label="Adresse 2" />
+            <Input
               id="billing_address_2"
               v-model="form.billing_address_2"
-              type="text"
-              class="appearance-none w-full px-12 py-8 border border-gray-200 focus:border-black !ring-0 focus:!ring-0 !outline-none"
             />
           </div>
           <div class="grid grid-cols-2 gap-x-16">
             <div>
-              <label for="billing_zip" class="block text-xs mb-8">PLZ *</label>
-              <input
+              <Label for="billing_zip" label="PLZ" :required="true" />
+              <Input
                 id="billing_zip"
                 v-model="form.billing_zip"
-                type="text"
-                required
-                class="appearance-none w-full px-12 py-8 border border-gray-200 focus:border-black !ring-0 focus:!ring-0 !outline-none"
+                :required="true"
               />
             </div>
             <div>
-              <label for="billing_city" class="block text-xs mb-8">Stadt *</label>
-              <input
+              <Label for="billing_city" label="Stadt" :required="true" />
+              <Input
                 id="billing_city"
                 v-model="form.billing_city"
-                type="text"
-                required
-                class="appearance-none w-full px-12 py-8 border border-gray-200 focus:border-black !ring-0 focus:!ring-0 !outline-none"
+                :required="true"
               />
             </div>
           </div>
           <div>
-            <label for="billing_country" class="block text-xs mb-8">Land</label>
-            <input
+            <Label for="billing_country" label="Land" />
+            <Input
               id="billing_country"
               v-model="form.billing_country"
-              type="text"
-              class="appearance-none w-full px-12 py-8 border border-gray-200 focus:border-black !ring-0 focus:!ring-0 !outline-none"
             />
           </div>
         </div>
@@ -117,68 +102,54 @@
         </h2>
         <div class="flex flex-col gap-y-20">
           <div>
-            <label for="shipping_name" class="block text-xs mb-8">Name</label>
-            <input
+            <Label for="shipping_name" label="Name" />
+            <Input
               id="shipping_name"
               v-model="form.shipping_name"
-              type="text"
-              class="appearance-none w-full px-12 py-8 border border-gray-200 focus:border-black !ring-0 focus:!ring-0 !outline-none"
             />
           </div>
           <div>
-            <label for="shipping_address_1" class="block text-xs mb-8">Adresse 1</label>
-            <input
+            <Label for="shipping_address_1" label="Adresse 1" />
+            <Input
               id="shipping_address_1"
               v-model="form.shipping_address_1"
-              type="text"
-              class="appearance-none w-full px-12 py-8 border border-gray-200 focus:border-black !ring-0 focus:!ring-0 !outline-none"
             />
           </div>
           <div>
-            <label for="shipping_address_2" class="block text-xs mb-8">Adresse 2</label>
-            <input
+            <Label for="shipping_address_2" label="Adresse 2" />
+            <Input
               id="shipping_address_2"
               v-model="form.shipping_address_2"
-              type="text"
-              class="appearance-none w-full px-12 py-8 border border-gray-200 focus:border-black !ring-0 focus:!ring-0 !outline-none"
             />
           </div>
           <div class="grid grid-cols-2 gap-x-16">
             <div>
-              <label for="shipping_zip" class="block text-xs mb-8">PLZ</label>
-              <input
+              <Label for="shipping_zip" label="PLZ" />
+              <Input
                 id="shipping_zip"
                 v-model="form.shipping_zip"
-                type="text"
-                class="appearance-none w-full px-12 py-8 border border-gray-200 focus:border-black !ring-0 focus:!ring-0 !outline-none"
               />
             </div>
             <div>
-              <label for="shipping_city" class="block text-xs mb-8">Stadt</label>
-              <input
+              <Label for="shipping_city" label="Stadt" />
+              <Input
                 id="shipping_city"
                 v-model="form.shipping_city"
-                type="text"
-                class="appearance-none w-full px-12 py-8 border border-gray-200 focus:border-black !ring-0 focus:!ring-0 !outline-none"
               />
             </div>
           </div>
           <div>
-            <label for="shipping_province" class="block text-xs mb-8">Kanton/Provinz</label>
-            <input
+            <Label for="shipping_province" label="Kanton/Provinz" />
+            <Input
               id="shipping_province"
               v-model="form.shipping_province"
-              type="text"
-              class="appearance-none w-full px-12 py-8 border border-gray-200 focus:border-black !ring-0 focus:!ring-0 !outline-none"
             />
           </div>
           <div>
-            <label for="shipping_country" class="block text-xs mb-8">Land</label>
-            <input
+            <Label for="shipping_country" label="Land" />
+            <Input
               id="shipping_country"
               v-model="form.shipping_country"
-              type="text"
-              class="appearance-none w-full px-12 py-8 border border-gray-200 focus:border-black !ring-0 focus:!ring-0 !outline-none"
             />
           </div>
         </div>
@@ -187,12 +158,11 @@
       <!-- Notes -->
       <section>
         <div>
-          <label for="notes" class="block text-xs mb-8">Notizen</label>
-          <textarea
+          <Label for="notes" label="Notizen" />
+          <Textarea
             id="notes"
             v-model="form.notes"
-            rows="4"
-            class="appearance-none w-full px-12 py-8 border border-gray-200 focus:border-black !ring-0 focus:!ring-0 !outline-none placeholder:text-gray-500"
+            :rows="4"
             placeholder="Zusätzliche Notizen zur Bestellung..."
           />
         </div>
@@ -220,6 +190,9 @@ import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { getOrder, updateOrder } from '@/services/api'
 import ButtonPrimary from '@/components/buttons/Primary.vue'
+import Label from '@/components/input/Label.vue'
+import Input from '@/components/input/Input.vue'
+import Textarea from '@/components/input/Textarea.vue'
 
 const route = useRoute()
 const router = useRouter()
