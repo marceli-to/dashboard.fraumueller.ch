@@ -34,6 +34,17 @@ class OrderController extends Controller
       'billing_zip' => 'sometimes|required|string|max:255',
       'billing_country' => 'sometimes|string|max:255',
       'order_status' => 'sometimes|in:open,fulfilled',
+      'product_id' => 'sometimes|required|exists:products,id',
+      'phone' => 'sometimes|nullable|string|max:255',
+      'billing_address_2' => 'sometimes|nullable|string|max:255',
+      'shipping_name' => 'sometimes|nullable|string|max:255',
+      'shipping_address_1' => 'sometimes|nullable|string|max:255',
+      'shipping_address_2' => 'sometimes|nullable|string|max:255',
+      'shipping_city' => 'sometimes|nullable|string|max:255',
+      'shipping_zip' => 'sometimes|nullable|string|max:255',
+      'shipping_province' => 'sometimes|nullable|string|max:255',
+      'shipping_country' => 'sometimes|nullable|string|max:255',
+      'notes' => 'sometimes|nullable|string',
     ]);
 
     $updatedOrder = (new UpdateOrderAction)->execute($order, $validated);

@@ -13,15 +13,18 @@
       @action-selected="handleActionChange" />
 
     <DataTable
-      :data="orders"
+      :data="sortedOrders"
       :columns="tableColumns"
       :actions="tableActions"
       :selectable="true"
       :selected-items="selectedOrderIds"
+      :sort-key="sortKey"
+      :sort-direction="sortDirection"
       @update:selected-items="selectedOrderIds = $event"
       @toggle-select-all="toggleSelectAll"
       @cell-click="handleCellClick"
-      @action-click="handleActionClick" />
+      @action-click="handleActionClick"
+      @sort="handleSort" />
 
   </template>
   
@@ -83,6 +86,10 @@ const newOrderStatus = ref('');
 const selectedOrderIds = ref([]);
 const selectedAction = ref('');
 
+// Sorting state
+const sortKey = ref('paid_at');
+const sortDirection = ref('desc');
+
 // Component configuration
 const summaryStats = computed(() => [
   {
@@ -91,6 +98,36 @@ const summaryStats = computed(() => [
     formatter: (value) => `${value} Bestellungen`
   }
 ]);
+
+const sortedOrders = computed(() => {
+  if (!sortKey.value) return orders.value;
+  
+  const sorted = [...orders.value].sort((a, b) => {
+    let aValue, bValue;
+    
+    if (sortKey.value === 'paid_at') {
+      aValue = a.paid_at ? new Date(a.paid_at) : new Date(0);
+      bValue = b.paid_at ? new Date(b.paid_at) : new Date(0);
+    } else if (sortKey.value === 'product_id') {
+      aValue = a.product_name?.toLowerCase() || '';
+      bValue = b.product_name?.toLowerCase() || '';
+    } else if (sortKey.value === 'order_status') {
+      // Sort order: open first, then fulfilled
+      const statusOrder = { 'open': 0, 'fulfilled': 1 };
+      aValue = statusOrder[a.order_status] ?? 999;
+      bValue = statusOrder[b.order_status] ?? 999;
+    } else {
+      aValue = a[sortKey.value];
+      bValue = b[sortKey.value];
+    }
+    
+    if (aValue < bValue) return sortDirection.value === 'asc' ? -1 : 1;
+    if (aValue > bValue) return sortDirection.value === 'asc' ? 1 : -1;
+    return 0;
+  });
+  
+  return sorted;
+});
 
 const bulkActions = [
   { value: 'status-open', label: 'Status offen' },
@@ -117,7 +154,9 @@ const tableColumns = [
   {
     key: 'product_name',
     label: 'Produkt',
-    cellClasses: 'pr-12 max-w-[360px]'
+    cellClasses: 'pr-12 max-w-[360px]',
+    sortable: true,
+    sortKey: 'product_id'
   },
   {
     key: 'email',
@@ -128,19 +167,23 @@ const tableColumns = [
     key: 'payment_info',
     label: 'Zahlung',
     cellClasses: 'pr-12 capitalize',
-    formatter: (value, item) => `${item.payment_method}, ${item.total}, ${formatDate(item.paid_at)}`
+    formatter: (value, item) => `${item.payment_method}, ${item.total}, ${formatDate(item.paid_at)}`,
+    sortable: true,
+    sortKey: 'paid_at'
   },
   {
     key: 'order_status',
     label: 'Status',
     align: 'center',
-    cellClasses: 'text-center pr-12',
+    cellClasses: 'text-center flex items-center',
     component: StatusBadge,
     componentProps: {
       statusType: 'order',
       clickable: true
     },
-    clickable: true
+    clickable: true,
+    sortable: true,
+    sortKey: 'order_status'
   }
 ];
 
@@ -272,6 +315,15 @@ const handleDeleteOrder = async (order) => {
       console.error('Error deleting order:', error);
       alert('Fehler beim Löschen der Bestellung');
     }
+  }
+};
+
+const handleSort = (column) => {
+  if (sortKey.value === column.sortKey) {
+    sortDirection.value = sortDirection.value === 'asc' ? 'desc' : 'asc';
+  } else {
+    sortKey.value = column.sortKey;
+    sortDirection.value = 'asc';
   }
 };
 </script>

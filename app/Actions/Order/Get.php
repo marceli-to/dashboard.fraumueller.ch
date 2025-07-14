@@ -12,6 +12,6 @@ class Get
      */
     public function execute(): Collection
     {
-        return Order::orderByDesc('paid_at')->get();
+        return Order::with('product')->orderByDesc('paid_at')->get();
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Actions\Csv;
 
 use App\Models\Order;
+use App\Models\Product;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -122,7 +123,7 @@ class Process
                     'shipping_zip' => $data['Shipping Zip'],
                     'shipping_province' => $data['Shipping Province'],
                     'shipping_country' => $data['Shipping Country'],
-                    'product_name' => $this->standardizeProductName($data['Lineitem name']),
+                    'product_id' => Product::findOrCreateByName($data['Lineitem name'])->id,
                     'product_sku' => $data['Lineitem sku'],
                     'product_price' => (float) $data['Lineitem price'],
                     'quantity' => (int) $data['Lineitem quantity'],
@@ -278,7 +279,7 @@ class Process
                     'billing_zip' => $data[16] ?? '',
                     'billing_country' => 'Switzerland',
                     'phone' => $data[19] ?? '',
-                    'product_name' => $this->standardizeProductName($data[20] ?? ''),
+                    'product_id' => Product::findOrCreateByName($data[20] ?? '')->id,
                     'quantity' => 1,
                     'paid_at' => Carbon::createFromFormat('Y.m.d H:i', $data[0].' '.$data[1]),
                     'created_at' => Carbon::createFromFormat('Y.m.d H:i', $data[0].' '.$data[1]),
@@ -299,33 +300,6 @@ class Process
         }
     }
 
-    protected function standardizeProductName(string $productName): string
-    {
-        $productName = trim($productName);
-
-        // Remove trailing quotes that appear in TWINT CSV data
-        $productName = rtrim($productName, '”');
-
-        // Define mapping from various names to standardized names
-        $mappings = [
-            // Single issue variants
-            'DIE ERSTE AUSGABE' => 'Erste Ausgabe',
-            'Die erste Ausgabe' => 'Erste Ausgabe',
-            'ErsteAusgabe' => 'Erste Ausgabe',
-            'Jahresabo2026' => 'Jahresabo 2026',
-
-            // Annual subscription variants
-            'JAHRESABO ERSTAUSGABE' => 'Jahresabo Erstausgabe',
-            'JahresaboErstausgabe' => 'Jahresabo Erstausgabe',
-            'JAHRESABO 2026' => 'Jahresabo 2026',
-            'JAHRESABO' => 'Jahresabo',
-
-            // Gift subscription
-            'Geschenk-Abo' => 'Geschenk-Abo',
-        ];
-
-        return $mappings[$productName] ?? $productName;
-    }
 
     protected function moveToProcessed(string $filePath): void
     {

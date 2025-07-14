@@ -7,7 +7,10 @@
           :selectable="selectable"
           :is-all-selected="isAllSelected"
           :has-actions="actions.length > 0"
+          :sort-key="sortKey"
+          :sort-direction="sortDirection"
           @toggle-select-all="handleToggleSelectAll"
+          @sort="handleSort"
         />
         <tbody class="divide-y divide-gray-200">
           <TableRow
@@ -62,10 +65,19 @@ const props = defineProps({
   selectableKey: {
     type: String,
     default: 'id'
+  },
+  sortKey: {
+    type: String,
+    default: null
+  },
+  sortDirection: {
+    type: String,
+    default: 'asc',
+    validator: (value) => ['asc', 'desc'].includes(value)
   }
 })
 
-const emit = defineEmits(['update:selectedItems', 'cell-click', 'action-click', 'toggle-select-all'])
+const emit = defineEmits(['update:selectedItems', 'cell-click', 'action-click', 'toggle-select-all', 'sort'])
 
 const isAllSelected = computed(() => {
   return props.data.length > 0 && props.selectedItems.length === props.data.length
@@ -79,5 +91,9 @@ const handleToggleSelectAll = (checked) => {
     emit('update:selectedItems', [])
   }
   emit('toggle-select-all', checked)
+}
+
+const handleSort = (column) => {
+  emit('sort', column)
 }
 </script>

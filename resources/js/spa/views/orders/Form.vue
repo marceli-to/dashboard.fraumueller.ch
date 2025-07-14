@@ -13,6 +13,25 @@
     </div>
     
     <form v-else @submit.prevent="submitForm" class="flex flex-col gap-y-48 mt-48 max-w-2xl">
+
+      <!-- Product -->
+      <section>
+        <h2 class="text-sm font-medium mb-20">
+          Produkt
+        </h2>
+        <div>
+          <Label for="product_id" label="Produkt" :required="true" />
+          <Select
+            id="product_id"
+            v-model="form.product_id"
+            :options="productOptions"
+            placeholder="Produkt wählen..."
+          />
+        </div>
+      </section>
+
+
+
       <!-- Contact Information -->
       <section>
         <h2 class="text-sm font-medium mb-20">
@@ -188,10 +207,11 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { getOrder, updateOrder } from '@/services/api'
+import { getOrder, updateOrder, getProducts } from '@/services/api'
 import ButtonPrimary from '@/components/buttons/Primary.vue'
 import Label from '@/components/input/Label.vue'
 import Input from '@/components/input/Input.vue'
+import Select from '@/components/input/Select.vue'
 import Textarea from '@/components/input/Textarea.vue'
 
 const route = useRoute()
@@ -199,6 +219,7 @@ const router = useRouter()
 const loading = ref(true)
 const submitting = ref(false)
 const error = ref(null)
+const productOptions = ref([])
 
 const form = ref({
   email: '',
@@ -216,6 +237,7 @@ const form = ref({
   shipping_zip: '',
   shipping_province: '',
   shipping_country: '',
+  product_id: '',
   notes: ''
 })
 
@@ -225,7 +247,13 @@ const loadOrder = async () => {
     error.value = null
     
     const orderId = route.params.id
-    const order = await getOrder(orderId)
+    const [order, products] = await Promise.all([
+      getOrder(orderId),
+      getProducts()
+    ])
+    
+    // Set product options
+    productOptions.value = products.data
     
     // Populate form with order data
     Object.keys(form.value).forEach(key => {

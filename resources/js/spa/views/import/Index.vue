@@ -83,7 +83,7 @@
                   v-model="file.merchant"
                   :options="merchantOptions"
                   placeholder="Typ wählen..."
-                  class="w-160"
+                  class="w-145 shrink-0"
                 />
                 <ButtonPrimary
                   type="button"

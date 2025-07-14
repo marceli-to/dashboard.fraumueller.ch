@@ -35,7 +35,7 @@ class Order extends Model
         'shipping_zip',
         'shipping_province',
         'shipping_country',
-        'product_name',
+        'product_id',
         'product_sku',
         'product_price',
         'quantity',
@@ -69,5 +69,10 @@ class Order extends Model
     public function scopePending($query)
     {
         return $query->where('financial_status', 'pending');
+    }
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
     }
 }

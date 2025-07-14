@@ -12,7 +12,15 @@
         :key="column.key"
         :class="getColumnClasses(column)"
       >
-        {{ column.label }}
+        <button
+          v-if="column.sortable"
+          @click="handleSort(column)"
+          class="flex items-center gap-x-4 hover:text-gray-600 transition-colors group"
+        >
+          {{ column.label }}
+          <CaretUpDown class="text-gray-400 group-hover:text-gray-600" />
+        </button>
+        <span v-else>{{ column.label }}</span>
       </th>
       <th v-if="hasActions" class="text-right !pr-0"></th>
     </tr>
@@ -22,6 +30,7 @@
 <script setup>
 import { computed } from 'vue'
 import Checkbox from '@/components/input/Checkbox.vue'
+import CaretUpDown from '@/components/icons/CaretUpDown.vue'
 
 const props = defineProps({
   columns: {
@@ -46,10 +55,18 @@ const props = defineProps({
   hasActions: {
     type: Boolean,
     default: false
+  },
+  sortKey: {
+    type: String,
+    default: null
+  },
+  sortDirection: {
+    type: String,
+    default: 'asc'
   }
 })
 
-defineEmits(['toggle-select-all'])
+const emit = defineEmits(['toggle-select-all', 'sort'])
 
 const getColumnClasses = (column) => {
   const baseClasses = ['text-left']
@@ -63,5 +80,9 @@ const getColumnClasses = (column) => {
   }
   
   return baseClasses.join(' ')
+}
+
+const handleSort = (column) => {
+  emit('sort', column)
 }
 </script>

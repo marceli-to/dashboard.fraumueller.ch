@@ -57,6 +57,11 @@ export const deleteOrder = async (id) => {
   return response.data;
 };
 
+export const getProducts = async () => {
+  const response = await api.get('/products');
+  return response.data;
+};
+
 
 // csv processing
 export const processCsv = async (filePath, merchant) => {
