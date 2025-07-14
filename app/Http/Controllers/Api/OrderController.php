@@ -19,6 +19,54 @@ class OrderController extends Controller
     );
   }
 
+  public function store(Request $request)
+  {
+    $validated = $request->validate([
+      'product_id' => 'required|exists:products,id',
+      'email' => 'required|email|max:255',
+      'phone' => 'nullable|string|max:255',
+      'payment_method' => 'required|in:stripe,paypal,twint,invoice,creditcard',
+      'merchant' => 'required|in:twint,squarespace,other',
+      'total' => 'required|numeric|min:0',
+      'paid_at' => 'nullable|date',
+      'billing_name' => 'required|string|max:255',
+      'billing_address_1' => 'required|string|max:255',
+      'billing_address_2' => 'nullable|string|max:255',
+      'billing_city' => 'required|string|max:255',
+      'billing_zip' => 'required|string|max:255',
+      'billing_country' => 'nullable|string|max:255',
+      'shipping_name' => 'nullable|string|max:255',
+      'shipping_address_1' => 'nullable|string|max:255',
+      'shipping_address_2' => 'nullable|string|max:255',
+      'shipping_city' => 'nullable|string|max:255',
+      'shipping_zip' => 'nullable|string|max:255',
+      'shipping_province' => 'nullable|string|max:255',
+      'shipping_country' => 'nullable|string|max:255',
+      'notes' => 'nullable|string',
+    ]);
+
+    // Generate order_id for manually created orders
+    $lastInternalOrder = Order::where('order_id', 'LIKE', 'IN%')->orderBy('order_id', 'desc')->first();
+    
+    if ($lastInternalOrder) {
+        // Extract the numeric part and increment
+        $lastNumber = (int)substr($lastInternalOrder->order_id, 2);
+        $nextNumber = $lastNumber + 1;
+    } else {
+        // Start with 1 if no internal orders exist
+        $nextNumber = 1;
+    }
+    
+    $validated['order_id'] = 'IN' . str_pad($nextNumber, 5, '0', STR_PAD_LEFT);
+
+    // Set default status
+    $validated['order_status'] = OrderStatus::OPEN;
+
+    $order = Order::create($validated);
+
+    return response()->json(new OrderResource($order), 201);
+  }
+
   public function show(Order $order)
   {
     return response()->json(new OrderResource($order));

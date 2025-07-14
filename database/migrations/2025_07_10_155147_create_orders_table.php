@@ -42,7 +42,7 @@ return new class extends Migration
 
             // Financial details
             $table->string('currency', 3)->default('CHF');
-            $table->decimal('subtotal', 8, 2);
+            $table->decimal('subtotal', 8, 2)->default(0.00);
             $table->decimal('taxes', 8, 2)->default(0.00);
             $table->decimal('shipping', 8, 2)->default(0.00);
             $table->decimal('total', 8, 2);
@@ -54,9 +54,6 @@ return new class extends Migration
 
             // Payment references
             $table->string('payment_reference')->nullable();
-
-
-
 
             // Product information
             $table->string('product_name')->nullable();

@@ -71,19 +71,19 @@
             v-for="file in uploadedFiles" 
             :key="file.name"
             class="flex items-center justify-between border-b border-gray-200 pb-12">
-            <div class="flex items-center">
+            <div class="inline-flex items-center w-auto">
               <div>
                 <div class="text-xs font-medium">{{ file.original_name }}</div>
                 <div class="text-xs">{{ formatFileSize(file.size) }}</div>
               </div>
             </div>
-            <div class="flex items-center space-x-8">
-              <div v-if="file.status === 'pending'" class="flex items-center space-x-8">
+            <div class="inline-flex items-center justify-end space-x-8">
+              <template v-if="file.status === 'pending'">
                 <Select
                   v-model="file.merchant"
                   :options="merchantOptions"
                   placeholder="Typ wählen..."
-                  class="w-145 shrink-0"
+                  class="!w-165 shrink-0"
                 />
                 <ButtonPrimary
                   type="button"
@@ -91,7 +91,7 @@
                   :disabled="isProcessing || !file.merchant"
                   @click="processFile(file)"
                 />
-              </div>
+              </template>
             </div>
           </div>
         </div>

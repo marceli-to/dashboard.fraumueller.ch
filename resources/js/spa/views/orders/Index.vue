@@ -1,9 +1,23 @@
 <template>
-  <h1 class="text-lg leading-[1.25]">
-    Bestellungen
-  </h1>
 
   <template v-if="!isLoading">
+    <h1 class="text-lg leading-[1.25]">
+      Bestellungen
+    </h1>
+    <div class="absolute right-16 top-16 flex gap-x-16">
+      <FilterSidebar
+        :filters="filters"
+        :result-count="filteredAndSortedOrders.length"
+        @update:filters="updateFilters"
+      />
+      <router-link
+        to="/dashboard/bestellungen/erstellen"
+        class="flex items-center gap-x-8 px-12 py-10 border border-black rounded-sm text-xs bg-white hover:bg-gray-50 focus:outline-none focus:!ring-0 disabled:opacity-50 disabled:cursor-not-allowed">
+        <IconPlus />
+        Erfassen
+      </router-link>
+    </div>
+    
     <SummaryStats :stats="summaryStats" />
 
     <MultiEditPanel
@@ -13,7 +27,7 @@
       @action-selected="handleActionChange" />
 
     <DataTable
-      :data="sortedOrders"
+      :data="filteredAndSortedOrders"
       :columns="tableColumns"
       :actions="tableActions"
       :selectable="true"
@@ -64,6 +78,7 @@ import { usePageTitle } from '@/composables/usePageTitle';
 import { useDialogStore } from '@/components/dialog/stores/dialog';
 import IconEdit from '@/components/icons/Edit.vue';
 import IconTrash from '@/components/icons/Trash.vue';
+import IconPlus from '@/components/icons/Plus.vue';
 import Dialog from '@/components/dialog/Dialog.vue';
 import ButtonPrimary from '@/components/buttons/Primary.vue';
 import ButtonSecondary from '@/components/buttons/Secondary.vue';
@@ -71,6 +86,7 @@ import SummaryStats from '@/components/ui/SummaryStats.vue';
 import MultiEditPanel from '@/components/ui/MultiEditPanel.vue';
 import DataTable from '@/components/ui/DataTable.vue';
 import StatusBadge from '@/components/ui/StatusBadge.vue';
+import FilterSidebar from '@/components/ui/FilterSidebar.vue';
 import Select from '@/components/input/Select.vue';
 
 const { setTitle } = usePageTitle();
@@ -90,19 +106,42 @@ const selectedAction = ref('');
 const sortKey = ref('paid_at');
 const sortDirection = ref('desc');
 
+// Filter state
+const filters = ref({
+  order_status: '',
+  merchant: '',
+  product_id: ''
+});
+
 // Component configuration
 const summaryStats = computed(() => [
   {
     label: 'Total',
-    value: orders.value.length,
+    value: filteredAndSortedOrders.value.length,
     formatter: (value) => `${value} Bestellungen`
   }
 ]);
 
-const sortedOrders = computed(() => {
-  if (!sortKey.value) return orders.value;
+const filteredAndSortedOrders = computed(() => {
+  let filtered = [...orders.value];
   
-  const sorted = [...orders.value].sort((a, b) => {
+  // Apply filters
+  if (filters.value.order_status) {
+    filtered = filtered.filter(order => order.order_status === filters.value.order_status);
+  }
+  
+  if (filters.value.merchant) {
+    filtered = filtered.filter(order => order.merchant === filters.value.merchant);
+  }
+  
+  if (filters.value.product_id) {
+    filtered = filtered.filter(order => order.product_id == filters.value.product_id);
+  }
+  
+  // Apply sorting
+  if (!sortKey.value) return filtered;
+  
+  const sorted = filtered.sort((a, b) => {
     let aValue, bValue;
     
     if (sortKey.value === 'paid_at') {
@@ -325,5 +364,9 @@ const handleSort = (column) => {
     sortKey.value = column.sortKey;
     sortDirection.value = 'asc';
   }
+};
+
+const updateFilters = (newFilters) => {
+  filters.value = { ...newFilters };
 };
 </script>

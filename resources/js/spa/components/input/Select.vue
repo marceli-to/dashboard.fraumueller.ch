@@ -3,7 +3,7 @@
     :id="id"
     :value="modelValue"
     @change="$emit('update:modelValue', $event.target.value)"
-    class="appearance-none w-full px-8 py-6 border border-gray-200 focus:border-black !ring-0 focus:!ring-0 !outline-none"
+    class="appearance-none w-full px-8 py-8 border border-gray-200 rounded-sm focus:border-black !ring-0 focus:!ring-0 !outline-none"
     :class="additionalClasses"
   >
     <option v-if="placeholder" value="">{{ placeholder }}</option>
