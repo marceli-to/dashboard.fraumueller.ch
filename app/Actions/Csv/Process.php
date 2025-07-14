@@ -17,7 +17,7 @@ class Process
 
     protected array $errors = [];
 
-    public function execute(string $filePath): array
+    public function execute(string $filePath, string $merchant = null): array
     {
         $this->resetCounters();
 
@@ -28,13 +28,24 @@ class Process
         $fullPath = Storage::disk('public')->path($filePath);
         $filename = basename($filePath);
 
-        // Determine file type and process
-        if (str_contains($filename, 'creditcard')) {
-            $this->processCreditCardFile($fullPath);
-        } elseif (str_contains($filename, 'twint')) {
-            $this->processTwintFile($fullPath);
+        // Determine processing method based on merchant parameter or filename
+        if ($merchant) {
+            if ($merchant === 'squarespace') {
+                $this->processCreditCardFile($fullPath, $merchant);
+            } elseif ($merchant === 'twint') {
+                $this->processTwintFile($fullPath, $merchant);
+            } else {
+                throw new \Exception("Unsupported merchant: {$merchant}");
+            }
         } else {
-            throw new \Exception('Unable to determine file type. Please ensure filename contains "creditcard" or "twint".');
+            // Fallback to filename-based detection for backward compatibility
+            if (str_contains($filename, 'creditcard')) {
+                $this->processCreditCardFile($fullPath, 'squarespace');
+            } elseif (str_contains($filename, 'twint')) {
+                $this->processTwintFile($fullPath, 'twint');
+            } else {
+                throw new \Exception('Unable to determine file type. Please ensure filename contains "creditcard" or "twint", or specify merchant parameter.');
+            }
         }
 
         // Move file to processed folder
@@ -59,7 +70,7 @@ class Process
         $this->errors = [];
     }
 
-    protected function processCreditCardFile(string $path): void
+    protected function processCreditCardFile(string $path, string $merchant): void
     {
         $handle = fopen($path, 'r');
 
@@ -118,6 +129,7 @@ class Process
                     'notes' => $data['Private Notes'] ?? null,
                     'paid_at' => $data['Paid at'] ? Carbon::parse($data['Paid at']) : null,
                     'created_at' => Carbon::parse($data['Created at']),
+                    'merchant' => $merchant,
                 ]);
 
                 $this->imported++;
@@ -135,7 +147,7 @@ class Process
         fclose($handle);
     }
 
-    protected function processTwintFile(string $path): void
+    protected function processTwintFile(string $path, string $merchant): void
     {
         $content = file_get_contents($path);
 
@@ -217,6 +229,7 @@ class Process
                     'quantity' => 1,
                     'paid_at' => Carbon::createFromFormat('Y.m.d H:i', $data[0].' '.$data[1]),
                     'created_at' => Carbon::createFromFormat('Y.m.d H:i', $data[0].' '.$data[1]),
+                    'merchant' => $merchant,
                 ]);
 
                 $this->imported++;

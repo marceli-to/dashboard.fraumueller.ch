@@ -53,8 +53,8 @@ export const updateOrder = async (id, orderData) => {
 };
 
 // csv processing
-export const processCsv = async (filePath) => {
-  const response = await api.post(`/upload/process`, { file_path: filePath });
+export const processCsv = async (filePath, merchant) => {
+  const response = await api.post(`/upload/process`, { file_path: filePath, merchant: merchant });
   return response.data;
 }; 
 

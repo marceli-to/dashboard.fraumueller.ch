@@ -20,10 +20,11 @@ class UploadController extends Controller
   {
     $request->validate([
       'file_path' => 'required|string',
+      'merchant' => 'nullable|string|in:twint,squarespace',
     ]);
 
     try {
-      $result = (new ProcessCsvAction)->execute($request->file_path);
+      $result = (new ProcessCsvAction)->execute($request->file_path, $request->merchant);
 
       return response()->json([
         'success' => true,

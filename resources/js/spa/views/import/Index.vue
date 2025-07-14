@@ -78,13 +78,20 @@
               </div>
             </div>
             <div class="flex items-center space-x-8">
-              <ButtonPrimary
-                v-if="file.status === 'pending'"
-                type="button"
-                :label="isProcessing ? 'Verarbeitung...' : 'Verarbeiten'"
-                :disabled="isProcessing"
-                @click="processFile(file)"
-              />
+              <div v-if="file.status === 'pending'" class="flex items-center space-x-8">
+                <Select
+                  v-model="selectedMerchant"
+                  :options="merchantOptions"
+                  placeholder="Typ wählen..."
+                  class="w-160"
+                />
+                <ButtonPrimary
+                  type="button"
+                  :label="isProcessing ? 'Verarbeitung...' : 'Verarbeiten'"
+                  :disabled="!isProcessing && !selectedMerchant"
+                  @click="processFile(file)"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -158,12 +165,19 @@ import { processCsv } from '@/services/api';
 import { usePageTitle } from '@/composables/usePageTitle';
 import ButtonPrimary from '@/components/buttons/Primary.vue';
 import ButtonSecondary from '@/components/buttons/Secondary.vue';
+import Select from '@/components/input/Select.vue';
 
 const { setTitle } = usePageTitle();
 setTitle('CSV Import');
 
 const isProcessing = ref(false);
 const processingResults = ref(null);
+const selectedMerchant = ref('');
+
+const merchantOptions = [
+  { value: 'twint', label: 'TWINT' },
+  { value: 'squarespace', label: 'Squarespace' }
+];
 
 // Configure useFileUpload for CSV files
 const {
@@ -190,11 +204,16 @@ const toggleDrag = (value) => {
 };
 
 const processFile = async (file) => {
+  if (!selectedMerchant.value) {
+    alert('Bitte wählen Sie einen Merchant aus.');
+    return;
+  }
+  
   isProcessing.value = true;
   processingResults.value = null;
   
   try {
-    const response = await processCsv(file.path);
+    const response = await processCsv(file.path, selectedMerchant.value);
     
     if (response.success) {
       processingResults.value = response.data;
@@ -217,6 +236,7 @@ const resetUpload = () => {
   reset();
   processingResults.value = null;
   isProcessing.value = false;
+  selectedMerchant.value = '';
 };
 
 const formatFileSize = (bytes) => {
