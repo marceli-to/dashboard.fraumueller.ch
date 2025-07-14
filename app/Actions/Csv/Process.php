@@ -161,11 +161,38 @@ class Process
 
         // Skip header lines and find data start
         $dataStartIndex = 0;
+        $headerLine = '';
         foreach ($lines as $index => $line) {
             if (str_contains($line, '"2025.') && str_contains($line, '"Zahlung"')) {
                 $dataStartIndex = $index;
                 break;
             }
+            // Look for header line to understand column structure
+            if (str_contains($line, 'Status') && str_contains($line, 'Typ')) {
+                $headerLine = $line;
+            }
+        }
+        
+        // Parse header to find correct column indices
+        $statusIndex = 20; // default
+        $typeIndex = 2;    // default
+        if (!empty($headerLine)) {
+            $headers = str_getcsv($headerLine, ';');
+            foreach ($headers as $index => $header) {
+                $trimmedHeader = trim($header, '"');
+                if ($trimmedHeader === 'Status') {
+                    $statusIndex = $index;
+                }
+                if ($trimmedHeader === 'Typ') {
+                    $typeIndex = $index;
+                }
+            }
+            // Log the detected indices for debugging
+            Log::info("TWINT CSV column indices detected", [
+                'statusIndex' => $statusIndex,
+                'typeIndex' => $typeIndex,
+                'headerLine' => $headerLine
+            ]);
         }
 
         for ($i = $dataStartIndex; $i < count($lines); $i++) {
@@ -185,6 +212,32 @@ class Process
                         'email' => 'N/A',
                     ];
 
+                    continue;
+                }
+
+                // Skip rows with status 'Fehlgeschlagen' using dynamic column index
+                $status = $data[$statusIndex] ?? '';
+                if (trim($status) == 'Fehlgeschlagen') {
+                    $this->skipped++;
+                    $this->skippedRows[] = [
+                        'order_id' => 'TW'.str_pad($orderCounter, 5, '0', STR_PAD_LEFT),
+                        'reason' => 'Transaction failed (Status: Fehlgeschlagen)',
+                        'email' => $data[18] ?? 'N/A',
+                    ];
+                    $orderCounter++;
+                    continue;
+                }
+
+                // Skip rows with Typ that is not 'Zahlung' using dynamic column index
+                $type = $data[$typeIndex] ?? '';
+                if (trim($type) != 'Zahlung') {
+                    $this->skipped++;
+                    $this->skippedRows[] = [
+                        'order_id' => 'TW'.str_pad($orderCounter, 5, '0', STR_PAD_LEFT),
+                        'reason' => 'Not a payment transaction (Typ: ' . trim($type) . ')',
+                        'email' => $data[18] ?? 'N/A',
+                    ];
+                    $orderCounter++;
                     continue;
                 }
 

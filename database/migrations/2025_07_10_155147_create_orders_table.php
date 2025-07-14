@@ -17,9 +17,28 @@ return new class extends Migration
             // Order identification
             $table->string('order_id');
             $table->enum('payment_method', ['stripe', 'paypal', 'twint']);
+            $table->enum('merchant', ['twint', 'squarespace'])->nullable();
 
             // Customer information
             $table->string('email');
+            $table->string('phone', 50)->nullable();
+
+            // Customer details
+            $table->string('billing_name')->nullable();
+            $table->string('billing_address_1')->nullable();
+            $table->string('billing_address_2')->nullable();
+            $table->string('billing_city')->nullable();
+            $table->string('billing_zip', 20)->nullable();
+            $table->string('billing_country', 100)->nullable();
+            $table->string('shipping_name')->nullable();
+            $table->string('shipping_address_1')->nullable();
+            $table->string('shipping_address_2')->nullable();
+            $table->string('shipping_city')->nullable();
+            $table->string('shipping_zip', 20)->nullable();
+            $table->string('shipping_province')->nullable();
+            $table->string('shipping_country', 100)->nullable();
+
+            $table->text('notes')->nullable();
 
             // Financial details
             $table->string('currency', 3)->default('CHF');
@@ -31,18 +50,13 @@ return new class extends Migration
             // Order status
             $table->enum('financial_status', ['paid', 'pending', 'refunded', 'cancelled'])->default('pending');
             $table->enum('fulfillment_status', ['pending', 'fulfilled', 'cancelled'])->default('pending');
+            $table->enum('order_status', ['open', 'fulfilled'])->nullable()->default('open');
 
             // Payment references
             $table->string('payment_reference')->nullable();
 
-            // Customer details
-            $table->string('billing_name')->nullable();
-            $table->string('billing_address_1')->nullable();
-            $table->string('billing_address_2')->nullable();
-            $table->string('billing_city')->nullable();
-            $table->string('billing_zip', 20)->nullable();
-            $table->string('billing_country', 100)->nullable();
-            $table->string('billing_phone', 50)->nullable();
+
+
 
             // Product information
             $table->string('product_name')->nullable();
@@ -52,6 +66,7 @@ return new class extends Migration
 
             // Timestamps
             $table->timestamp('paid_at')->nullable();
+            $table->softDeletes();
             $table->timestamps();
 
             // Indexes

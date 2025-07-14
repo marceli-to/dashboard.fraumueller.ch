@@ -2,14 +2,14 @@
   <button 
     v-if="clickable"
     @click="$emit('click')"
-    class="px-8 py-4 text-tiny rounded-full leading-none capitalize transition-all hover:opacity-75 cursor-pointer" 
+    class="px-8 py-4 text-tiny rounded-full leading-none transition-all hover:opacity-75 cursor-pointer" 
     :class="statusClasses"
   >
     {{ displayStatus }}
   </button>
   <span 
     v-else
-    class="px-8 py-4 text-tiny rounded-full leading-none capitalize" 
+    class="px-8 py-4 text-tiny rounded-full leading-none" 
     :class="statusClasses"
   >
     {{ displayStatus }}
@@ -38,7 +38,23 @@ const props = defineProps({
 defineEmits(['click'])
 
 const displayStatus = computed(() => {
-  return props.status || (props.statusType === 'order' ? 'open' : 'pending')
+  const status = props.status || (props.statusType === 'order' ? 'open' : 'pending')
+  
+  if (props.statusType === 'order') {
+    const orderStatusLabels = {
+      'open': 'offen',
+      'fulfilled': 'erledigt'
+    }
+    return orderStatusLabels[status] || status
+  } else {
+    const paymentStatusLabels = {
+      'paid': 'bezahlt',
+      'pending': 'ausstehend',
+      'failed': 'fehlgeschlagen',
+      'cancelled': 'storniert'
+    }
+    return paymentStatusLabels[status] || status
+  }
 })
 
 const statusClasses = computed(() => {

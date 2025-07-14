@@ -80,7 +80,7 @@
             <div class="flex items-center space-x-8">
               <div v-if="file.status === 'pending'" class="flex items-center space-x-8">
                 <Select
-                  v-model="selectedMerchant"
+                  v-model="file.merchant"
                   :options="merchantOptions"
                   placeholder="Typ wählen..."
                   class="w-160"
@@ -88,7 +88,7 @@
                 <ButtonPrimary
                   type="button"
                   :label="isProcessing ? 'Verarbeitung...' : 'Verarbeiten'"
-                  :disabled="!isProcessing && !selectedMerchant"
+                  :disabled="isProcessing || !file.merchant"
                   @click="processFile(file)"
                 />
               </div>
@@ -159,7 +159,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import { useFileUpload } from '@/components/upload/composable/useFileUpload';
 import { processCsv } from '@/services/api';
 import { usePageTitle } from '@/composables/usePageTitle';
@@ -172,7 +172,6 @@ setTitle('CSV Import');
 
 const isProcessing = ref(false);
 const processingResults = ref(null);
-const selectedMerchant = ref('');
 
 const merchantOptions = [
   { value: 'twint', label: 'TWINT' },
@@ -203,8 +202,17 @@ const toggleDrag = (value) => {
   isDragging.value = value;
 };
 
+// Initialize merchant property on newly uploaded files
+watch(uploadedFiles, (newFiles, oldFiles) => {
+  newFiles.forEach(file => {
+    if (!file.hasOwnProperty('merchant')) {
+      file.merchant = '';
+    }
+  });
+}, { deep: true });
+
 const processFile = async (file) => {
-  if (!selectedMerchant.value) {
+  if (!file.merchant) {
     alert('Bitte wählen Sie einen Merchant aus.');
     return;
   }
@@ -213,7 +221,7 @@ const processFile = async (file) => {
   processingResults.value = null;
   
   try {
-    const response = await processCsv(file.path, selectedMerchant.value);
+    const response = await processCsv(file.path, file.merchant);
     
     if (response.success) {
       processingResults.value = response.data;
@@ -236,7 +244,6 @@ const resetUpload = () => {
   reset();
   processingResults.value = null;
   isProcessing.value = false;
-  selectedMerchant.value = '';
 };
 
 const formatFileSize = (bytes) => {

@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Enums\OrderStatus;
 
 class Order extends Model
 {
+    use SoftDeletes;
     protected $fillable = [
         'order_id',
         'payment_method',
@@ -39,6 +42,7 @@ class Order extends Model
         'notes',
         'paid_at',
         'order_status',
+        'merchant',
     ];
 
     protected $casts = [
@@ -49,6 +53,7 @@ class Order extends Model
         'product_price' => 'decimal:2',
         'quantity' => 'integer',
         'paid_at' => 'datetime',
+        'order_status' => OrderStatus::class,
     ];
 
     public function scopeByPaymentMethod($query, $method)

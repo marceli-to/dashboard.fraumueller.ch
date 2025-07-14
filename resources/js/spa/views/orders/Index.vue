@@ -42,11 +42,13 @@
         <ButtonPrimary
           type="button"
           label="Speichern"
-          @click="updateOrderStatus" />
+          @click="updateOrderStatus"
+          class="w-full justify-center" />
         <ButtonSecondary
           type="button"
           label="Abbrechen"
-          @click="cancelStatusUpdate" />
+          @click="cancelStatusUpdate"
+          class="w-full justify-center" />
       </div>
     </div>
   </Dialog>
@@ -54,10 +56,11 @@
 </template>
 <script setup>
 import { ref, onMounted, computed } from 'vue';
-import { getOrders, updateOrder } from '@/services/api';
+import { getOrders, updateOrder, deleteOrder } from '@/services/api';
 import { usePageTitle } from '@/composables/usePageTitle';
 import { useDialogStore } from '@/components/dialog/stores/dialog';
 import IconEdit from '@/components/icons/Edit.vue';
+import IconTrash from '@/components/icons/Trash.vue';
 import Dialog from '@/components/dialog/Dialog.vue';
 import ButtonPrimary from '@/components/buttons/Primary.vue';
 import ButtonSecondary from '@/components/buttons/Secondary.vue';
@@ -90,14 +93,14 @@ const summaryStats = computed(() => [
 ]);
 
 const bulkActions = [
-  { value: 'status-open', label: 'Status open' },
-  { value: 'status-fulfilled', label: 'Status fulfilled' },
+  { value: 'status-open', label: 'Status offen' },
+  { value: 'status-fulfilled', label: 'Status erledigt' },
   { value: 'generate-labels', label: 'Etiketten generieren' }
 ];
 
 const statusOptions = [
-  { value: 'open', label: 'Open' },
-  { value: 'fulfilled', label: 'Fulfilled' }
+  { value: 'open', label: 'offen' },
+  { value: 'fulfilled', label: 'erledigt' }
 ];
 
 const tableColumns = [
@@ -150,6 +153,14 @@ const tableActions = [
     },
     to: (item) => ({ name: 'orders.edit', params: { id: item.id } }),
     icon: IconEdit
+  },
+  {
+    key: 'delete',
+    component: 'button',
+    componentProps: {
+      class: 'inline-block text-right hover:text-red-500 transition-all ml-8'
+    },
+    icon: IconTrash
   }
 ];
 
@@ -238,6 +249,29 @@ const handleCellClick = ({ column, item }) => {
 const handleActionClick = ({ action, item }) => {
   if (action.key === 'edit') {
     // Router link will handle navigation
+  } else if (action.key === 'delete') {
+    handleDeleteOrder(item);
+  }
+};
+
+const handleDeleteOrder = async (order) => {
+  if (confirm(`Möchten Sie die Bestellung #${order.order_id} wirklich löschen?`)) {
+    try {
+      await deleteOrder(order.id);
+      
+      // Remove the order from the local array
+      const orderIndex = orders.value.findIndex(o => o.id === order.id);
+      if (orderIndex !== -1) {
+        orders.value.splice(orderIndex, 1);
+      }
+      
+      // Remove from selected items if it was selected
+      selectedOrderIds.value = selectedOrderIds.value.filter(id => id !== order.id);
+      
+    } catch (error) {
+      console.error('Error deleting order:', error);
+      alert('Fehler beim Löschen der Bestellung');
+    }
   }
 };
 </script>

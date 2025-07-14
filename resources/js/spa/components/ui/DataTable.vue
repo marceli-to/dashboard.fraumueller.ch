@@ -1,6 +1,6 @@
 <template>
   <div class="mt-24 w-full">
-    <div class="overflow-x-scroll">
+    <div class="overflow-x-auto" v-if="data.length > 0">
       <table class="w-full text-xxs">
         <TableHeader
           :columns="columns"

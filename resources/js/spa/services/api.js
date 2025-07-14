@@ -52,6 +52,12 @@ export const updateOrder = async (id, orderData) => {
   return response.data;
 };
 
+export const deleteOrder = async (id) => {
+  const response = await api.delete(`/orders/${id}`);
+  return response.data;
+};
+
+
 // csv processing
 export const processCsv = async (filePath, merchant) => {
   const response = await api.post(`/upload/process`, { file_path: filePath, merchant: merchant });

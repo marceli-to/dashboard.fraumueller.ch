@@ -5,6 +5,7 @@ use App\Actions\Order\Update as UpdateOrderAction;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\OrderResource;
 use App\Models\Order;
+use App\Enums\OrderStatus;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
@@ -39,4 +40,15 @@ class OrderController extends Controller
 
     return response()->json(new OrderResource($updatedOrder));
   }
+
+  public function destroy(Order $order)
+  {
+    $order->delete();
+
+    return response()->json([
+      'success' => true,
+      'message' => 'Order deleted successfully'
+    ]);
+  }
+
 }
