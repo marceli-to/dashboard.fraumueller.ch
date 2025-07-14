@@ -40,6 +40,7 @@ class OrderResource extends JsonResource
             'notes' => $this->notes,
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
             'paid_at' => $this->paid_at ? $this->paid_at->format('Y-m-d H:i:s') : null,
+            'confirmed_at' => $this->confirmed_at ? $this->confirmed_at->format('d.m.Y H:i:s') : null,
         ];
     }
 }

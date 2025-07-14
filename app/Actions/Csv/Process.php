@@ -129,6 +129,7 @@ class Process
                     'quantity' => (int) $data['Lineitem quantity'],
                     'notes' => $data['Private Notes'] ?? null,
                     'paid_at' => $data['Paid at'] ? Carbon::parse($data['Paid at']) : null,
+                    'confirmed_at' => now(),
                     'created_at' => Carbon::parse($data['Created at']),
                     'merchant' => $merchant,
                 ]);

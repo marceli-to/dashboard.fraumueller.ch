@@ -41,6 +41,7 @@ class Order extends Model
         'quantity',
         'notes',
         'paid_at',
+        'confirmed_at',
         'order_status',
         'merchant',
     ];
@@ -53,6 +54,7 @@ class Order extends Model
         'product_price' => 'decimal:2',
         'quantity' => 'integer',
         'paid_at' => 'datetime',
+        'confirmed_at' => 'datetime',
         'order_status' => OrderStatus::class,
     ];
 

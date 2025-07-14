@@ -115,11 +115,15 @@
         </div>
         <div>
           <Label for="email" label="E-Mail" class="!mb-4" />
-         <div>{{ selectedOrder.email || '-' }}</div>
+          <div>{{ selectedOrder.email || '-' }}</div>
         </div>
         <div>
           <Label for="phone" label="Telefon" class="!mb-4" />
-         <div>{{ selectedOrder.phone || '-' }}</div>
+          <div>{{ selectedOrder.phone || '-' }}</div>
+        </div>
+        <div>
+          <Label for="confirmed_at" label="Bestätigt am" class="!mb-4" />
+          <div>{{ selectedOrder.confirmed_at || '-' }}</div>
         </div>
       </div>
       
