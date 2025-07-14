@@ -71,10 +71,16 @@
           <!-- Clear Filters Button -->
           <div class="!mt-32">
             <ButtonPrimary 
-              label="Zurücksetzen"
+              label="Anzeigen"
               type="button"
               class="!w-full !flex !justify-center"
-              @click="clearFilters" />
+              @click="closeSidebar" />
+              <a 
+                href="javascript:;" 
+                class="text-xs mt-16 block underline underline-offset-2 text-center hover:no-underline" 
+                @click="clearFilters">
+                Zurücksetzen
+              </a>
           </div>
         </div>
       </div>

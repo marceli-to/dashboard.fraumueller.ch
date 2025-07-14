@@ -57,8 +57,23 @@ export const createOrder = async (orderData) => {
   return response.data;
 };
 
+export const bulkUpdateOrders = async (orderIds, orderStatus) => {
+  const response = await api.post('/orders/bulk-update', {
+    order_ids: orderIds,
+    order_status: orderStatus
+  });
+  return response.data;
+};
+
 export const deleteOrder = async (id) => {
   const response = await api.delete(`/orders/${id}`);
+  return response.data;
+};
+
+export const exportOrdersCsv = async (orderIds) => {
+  const response = await api.post('/export/orders/csv', {
+    order_ids: orderIds
+  });
   return response.data;
 };
 

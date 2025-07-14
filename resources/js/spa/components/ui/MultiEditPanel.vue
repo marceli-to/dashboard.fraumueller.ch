@@ -1,18 +1,14 @@
 <template>
-  <div v-if="selectedCount > 0" class="max-w-7xl absolute top-16 right-16">
-    <div class="bg-blue-50 border border-blue-200 rounded-sm px-12 py-16 mb-16 max-w-[500px]">
-      <div class="flex items-center justify-between gap-x-16">
-        <span class="text-xs text-blue-800 shrink-0">
-          <strong>{{ selectedCount }}</strong> {{ entityLabel }} ausgewählt
-        </span>
-        <Select
-          :options="actions"
-          :model-value="selectedAction"
-          @update:model-value="handleActionChange"
-          placeholder="Aktion wählen..."
-          additional-classes="accent-blue-500 rounded-sm bg-transparent border-blue-300 text-xxs"
-        />
-      </div>
+  <div v-if="selectedCount > 0">
+    <div class="flex flex-col gap-y-16">
+      <span class="text-sm">
+        Aktion für <strong>{{ selectedCount }}</strong> {{ entityLabel }} wählen:
+      </span>
+      <Select
+        :options="actions"
+        :model-value="selectedAction"
+        @update:model-value="handleActionChange"
+        placeholder="Aktion wählen..." />
     </div>
   </div>
 </template>

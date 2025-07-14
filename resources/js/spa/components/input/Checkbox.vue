@@ -4,7 +4,7 @@
     :checked="isChecked"
     :value="value"
     @change="handleChange"
-    class="appearance-none rounded-sm size-14 border-blue-500 text-blue-500 accent-blue-500 focus:!ring-0 !ring-0 !outline-none"
+    class="appearance-none size-14 border-black text-black focus:!ring-0 !ring-0 !outline-none !shadow-none"
     :class="additionalClasses"
   />
 </template>

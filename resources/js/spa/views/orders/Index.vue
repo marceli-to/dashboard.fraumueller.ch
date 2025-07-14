@@ -5,6 +5,14 @@
       Bestellungen
     </h1>
     <div class="absolute right-16 top-16 flex gap-x-16">
+      <button
+        v-if="selectedOrderIds.length > 0"
+        @click="toggleMultiEditDialog"
+        class="flex items-center gap-x-8 px-12 py-10 border border-black rounded-sm text-xs bg-white hover:bg-gray-50 focus:outline-none focus:!ring-0"
+      >
+        <IconCopy />
+        Bearbeiten ({{ selectedOrderIds.length }})
+      </button>
       <FilterSidebar
         :filters="filters"
         :result-count="filteredAndSortedOrders.length"
@@ -19,12 +27,6 @@
     </div>
     
     <SummaryStats :stats="summaryStats" />
-
-    <MultiEditPanel
-      :selected-count="selectedOrderIds.length"
-      :actions="bulkActions"
-      :selected-action="selectedAction"
-      @action-selected="handleActionChange" />
 
     <DataTable
       :data="filteredAndSortedOrders"
@@ -43,10 +45,11 @@
   </template>
   
   <Dialog>
-    <div v-if="selectedOrder" class="flex flex-col gap-y-20">
+    <!-- Order Status Update Dialog -->
+    <div v-if="selectedOrder && !showOrderDetail && !showMultiEditDialog" class="flex flex-col gap-y-20">
       <div>
         <label for="order-status-select" class="block text-xs mb-16">
-          Status für Bestellung #{{ selectedOrder.order_id }}
+          Bestellung Nr. {{ selectedOrder.order_id }}
         </label>
         <Select
           id="order-status-select"
@@ -54,7 +57,6 @@
           :options="statusOptions"
         />
       </div>
-      
       <div class="flex gap-x-16">
         <ButtonPrimary
           type="button"
@@ -68,17 +70,95 @@
           class="w-full justify-center" />
       </div>
     </div>
+
+    <!-- Multi-Edit Dialog -->
+    <div v-if="showMultiEditDialog" class="flex flex-col gap-y-20">
+      <template v-if="exportResult">
+        <div class="text-xs">{{ exportResult.message }}</div>
+        <a
+          :href="exportResult.download_url"
+          :download="exportResult.filename"
+          target="_blank"
+          class="inline-flex items-center justify-center px-20 py-10 border border-transparent rounded-sm text-xs font-medium text-white bg-black focus:outline-none focus:!ring-0 disabled:opacity-50 disabled:cursor-not-allowed">
+          Datei herunterladen
+        </a>
+      </template>
+      <template v-else>
+        <MultiEditPanel
+          :selected-count="selectedOrderIds.length"
+          :actions="bulkActions"
+          :selected-action="selectedAction"
+          @action-selected="selectedAction = $event" />
+        
+        <div class="flex gap-x-16">
+          <ButtonPrimary
+            type="button"
+            label="Anwenden"
+            @click="applyBulkAction"
+            :disabled="!selectedAction"
+            class="w-full justify-center" />
+          <ButtonSecondary
+            type="button"
+            label="Abbrechen"
+            @click="closeMultiEditDialog"
+            class="w-full justify-center" />
+        </div>
+      </template>
+    </div>
+
+    <!-- Order Detail Dialog -->
+    <div v-if="showOrderDetail && selectedOrder" class="space-y-24 text-xs">
+      <div class="space-y-16">
+        <div>
+          <Label for="product" label="Produkt" class="!mb-4" />
+          <div>{{ selectedOrder.product_name || '-' }}</div>
+        </div>
+        <div>
+          <Label for="email" label="E-Mail" class="!mb-4" />
+         <div>{{ selectedOrder.email || '-' }}</div>
+        </div>
+        <div>
+          <Label for="phone" label="Telefon" class="!mb-4" />
+         <div>{{ selectedOrder.phone || '-' }}</div>
+        </div>
+      </div>
+      
+      <div class="border-t pt-16">
+        <div class="font-medium mb-4">Rechnungsadresse</div>
+        <div class="leading-relaxed">
+          <div>{{ selectedOrder.billing_name || '-' }}</div>
+          <div v-if="selectedOrder.billing_address_1">{{ selectedOrder.billing_address_1 }}</div>
+          <div v-if="selectedOrder.billing_address_2">{{ selectedOrder.billing_address_2 }}</div>
+          <div>{{ [selectedOrder.billing_zip, selectedOrder.billing_city].filter(Boolean).join(' ') }}</div>
+          <div v-if="selectedOrder.billing_country">{{ selectedOrder.billing_country }}</div>
+        </div>
+      </div>
+      
+      <div class="border-t pt-16">
+        <div class="font-medium mb-4">Lieferadresse</div>
+        <div class="leading-relaxed">
+          <div>{{ selectedOrder.shipping_name || '-' }}</div>
+          <div v-if="selectedOrder.shipping_address_1">{{ selectedOrder.shipping_address_1 }}</div>
+          <div v-if="selectedOrder.shipping_address_2">{{ selectedOrder.shipping_address_2 }}</div>
+          <div>{{ [selectedOrder.shipping_zip, selectedOrder.shipping_city].filter(Boolean).join(' ') }}</div>
+          <div v-if="selectedOrder.shipping_province">{{ selectedOrder.shipping_province }}</div>
+          <div v-if="selectedOrder.shipping_country">{{ selectedOrder.shipping_country }}</div>
+        </div>
+      </div>
+    </div>
   </Dialog>
 
 </template>
 <script setup>
-import { ref, onMounted, computed } from 'vue';
-import { getOrders, updateOrder, deleteOrder } from '@/services/api';
+import { ref, onMounted, computed, watch } from 'vue';
+import { getOrders, updateOrder, deleteOrder, bulkUpdateOrders, exportOrdersCsv } from '@/services/api';
 import { usePageTitle } from '@/composables/usePageTitle';
 import { useDialogStore } from '@/components/dialog/stores/dialog';
 import IconEdit from '@/components/icons/Edit.vue';
 import IconTrash from '@/components/icons/Trash.vue';
 import IconPlus from '@/components/icons/Plus.vue';
+import IconCopy from '@/components/icons/Copy.vue';
+import IconMagnifyingGlass from '@/components/icons/MagnifyingGlass.vue';
 import Dialog from '@/components/dialog/Dialog.vue';
 import ButtonPrimary from '@/components/buttons/Primary.vue';
 import ButtonSecondary from '@/components/buttons/Secondary.vue';
@@ -88,6 +168,7 @@ import DataTable from '@/components/ui/DataTable.vue';
 import StatusBadge from '@/components/ui/StatusBadge.vue';
 import FilterSidebar from '@/components/ui/FilterSidebar.vue';
 import Select from '@/components/input/Select.vue';
+import Label from '@/components/input/Label.vue';
 
 const { setTitle } = usePageTitle();
 setTitle('Bestellungen');
@@ -97,6 +178,9 @@ const orders = ref([]);
 let isLoading = ref(true);
 const selectedOrder = ref(null);
 const newOrderStatus = ref('');
+const showMultiEditDialog = ref(false);
+const showOrderDetail = ref(false);
+const exportResult = ref(null);
 
 // Multi-edit state
 const selectedOrderIds = ref([]);
@@ -171,7 +255,8 @@ const filteredAndSortedOrders = computed(() => {
 const bulkActions = [
   { value: 'status-open', label: 'Status offen' },
   { value: 'status-fulfilled', label: 'Status erledigt' },
-  { value: 'generate-labels', label: 'Etiketten generieren' }
+  { value: 'export-csv', label: 'Export CSV' },
+  // { value: 'generate-labels', label: 'Etiketten generieren' }
 ];
 
 const statusOptions = [
@@ -228,10 +313,18 @@ const tableColumns = [
 
 const tableActions = [
   {
+    key: 'show',
+    component: 'button',
+    componentProps: {
+      class: 'inline-block text-right hover:text-blue-500 transition-all'
+    },
+    icon: IconMagnifyingGlass
+  },
+  {
     key: 'edit',
     component: 'router-link',
     componentProps: {
-      class: 'inline-block text-right hover:text-gray-500 transition-all'
+      class: 'inline-block text-right hover:text-blue-500 transition-all'
     },
     to: (item) => ({ name: 'orders.edit', params: { id: item.id } }),
     icon: IconEdit
@@ -240,7 +333,7 @@ const tableActions = [
     key: 'delete',
     component: 'button',
     componentProps: {
-      class: 'inline-block text-right hover:text-red-500 transition-all ml-8'
+      class: 'inline-block text-right hover:text-red-500 transition-all'
     },
     icon: IconTrash
   }
@@ -272,6 +365,7 @@ const formatDate = (dateString) => {
 const openStatusDialog = (order) => {
   selectedOrder.value = order;
   newOrderStatus.value = order.order_status || 'open';
+  showMultiEditDialog.value = false; // Close multi-edit dialog if open
   
   dialogStore.show({
     title: 'Status ändern',
@@ -308,17 +402,58 @@ const cancelStatusUpdate = () => {
 // Multi-edit handlers
 const toggleSelectAll = (checked) => {
   if (checked) {
-    selectedOrderIds.value = orders.value.map(order => order.id);
+    selectedOrderIds.value = filteredAndSortedOrders.value.map(order => order.id);
   } else {
     selectedOrderIds.value = [];
   }
 };
 
-const handleActionChange = (action) => {
-  if (action) {
-    console.log('Selected action:', action, 'for orders:', selectedOrderIds.value);
-    // Reset the dropdown
-    selectedAction.value = '';
+const applyBulkAction = async () => {
+  if (!selectedAction.value || selectedOrderIds.value.length === 0) return;
+  
+  try {
+    if (selectedAction.value === 'export-csv') {
+      // Handle CSV export
+      const result = await exportOrdersCsv(selectedOrderIds.value);
+      
+      if (result.success) {
+        // Show download link instead of action buttons
+        exportResult.value = result;
+        selectedAction.value = '';
+      } else {
+        alert('Fehler beim Erstellen der CSV-Datei');
+      }
+    } else {
+      let newStatus = '';
+      
+      // Map action to status
+      if (selectedAction.value === 'status-open') {
+        newStatus = 'open';
+      } else if (selectedAction.value === 'status-fulfilled') {
+        newStatus = 'fulfilled';
+      }
+      
+      if (newStatus) {
+        // Use bulk update API
+        await bulkUpdateOrders(selectedOrderIds.value, newStatus);
+        
+        // Update the local order data
+        selectedOrderIds.value.forEach(orderId => {
+          const orderIndex = orders.value.findIndex(o => o.id === orderId);
+          if (orderIndex !== -1) {
+            orders.value[orderIndex].order_status = newStatus;
+          }
+        });
+        
+        // Clear selections and close dialog
+        selectedOrderIds.value = [];
+        selectedAction.value = '';
+        closeMultiEditDialog();
+      }
+    }
+  } catch (error) {
+    console.error('Error applying bulk action:', error);
+    alert('Fehler beim Anwenden der Massenbearbeitung');
   }
 };
 
@@ -329,7 +464,9 @@ const handleCellClick = ({ column, item }) => {
 };
 
 const handleActionClick = ({ action, item }) => {
-  if (action.key === 'edit') {
+  if (action.key === 'show') {
+    showOrderDetails(item);
+  } else if (action.key === 'edit') {
     // Router link will handle navigation
   } else if (action.key === 'delete') {
     handleDeleteOrder(item);
@@ -368,5 +505,64 @@ const handleSort = (column) => {
 
 const updateFilters = (newFilters) => {
   filters.value = { ...newFilters };
+};
+
+// Watch dialog store visibility to sync our local state
+watch(
+  () => dialogStore.isVisible,
+  (isVisible) => {
+    if (!isVisible) {
+      // When dialog is closed, reset our local states
+      showMultiEditDialog.value = false;
+      showOrderDetail.value = false;
+      selectedOrder.value = null;
+      exportResult.value = null;
+    }
+  }
+);
+
+// Manual toggle for multi-edit dialog
+const toggleMultiEditDialog = () => {
+  if (showMultiEditDialog.value) {
+    closeMultiEditDialog();
+  } else {
+    openMultiEditDialog();
+  }
+};
+
+const openMultiEditDialog = () => {
+  showMultiEditDialog.value = true;
+  selectedOrder.value = null; // Clear any selected order for status update
+  
+  dialogStore.show({
+    title: 'Bearbeiten',
+    size: 'medium',
+    hideDefaultActions: true,
+    component: null,
+    message: null
+  });
+};
+
+const closeMultiEditDialog = () => {
+  showMultiEditDialog.value = false;
+  selectedOrder.value = null; // Ensure status dialog state is also cleared
+  exportResult.value = null; // Clear export result
+  selectedOrderIds.value = []; // Clear selections
+  selectedAction.value = ''; // Clear action
+  dialogStore.hide();
+};
+
+const showOrderDetails = (order) => {
+  selectedOrder.value = order;
+  showOrderDetail.value = true;
+  showMultiEditDialog.value = false; // Close multi-edit dialog if open
+  
+  dialogStore.show({
+    title: `Bestellung Nr. ${order.order_id}`,
+    size: 'medium',
+    hideDefaultActions: true,
+    component: null,
+    message: null
+  });
 };
 </script>

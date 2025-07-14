@@ -25,7 +25,7 @@
         {{ getCellContent(column) }}
       </template>
     </td>
-    <td v-if="actions.length > 0" class="py-12 text-right">
+    <td v-if="actions.length > 0" class="py-12 text-right space-x-6 whitespace-nowrap">
       <component
         v-for="action in actions"
         :key="action.key"

@@ -75,16 +75,19 @@ class OrderController extends Controller
   public function update(Request $request, Order $order)
   {
     $validated = $request->validate([
+      'product_id' => 'sometimes|required|exists:products,id',
       'email' => 'sometimes|required|email|max:255',
+      'phone' => 'sometimes|nullable|string|max:255',
+      'payment_method' => 'sometimes|required|in:stripe,paypal,twint,invoice,creditcard',
+      'merchant' => 'sometimes|required|in:twint,squarespace,other',
+      'total' => 'sometimes|required|numeric|min:0',
+      'paid_at' => 'sometimes|nullable|date',
       'billing_name' => 'sometimes|required|string|max:255',
       'billing_address_1' => 'sometimes|required|string|max:255',
+      'billing_address_2' => 'sometimes|nullable|string|max:255',
       'billing_city' => 'sometimes|required|string|max:255',
       'billing_zip' => 'sometimes|required|string|max:255',
-      'billing_country' => 'sometimes|string|max:255',
-      'order_status' => 'sometimes|in:open,fulfilled',
-      'product_id' => 'sometimes|required|exists:products,id',
-      'phone' => 'sometimes|nullable|string|max:255',
-      'billing_address_2' => 'sometimes|nullable|string|max:255',
+      'billing_country' => 'sometimes|nullable|string|max:255',
       'shipping_name' => 'sometimes|nullable|string|max:255',
       'shipping_address_1' => 'sometimes|nullable|string|max:255',
       'shipping_address_2' => 'sometimes|nullable|string|max:255',
@@ -93,11 +96,37 @@ class OrderController extends Controller
       'shipping_province' => 'sometimes|nullable|string|max:255',
       'shipping_country' => 'sometimes|nullable|string|max:255',
       'notes' => 'sometimes|nullable|string',
+      'order_status' => 'sometimes|in:open,fulfilled',
     ]);
 
     $updatedOrder = (new UpdateOrderAction)->execute($order, $validated);
 
     return response()->json(new OrderResource($updatedOrder));
+  }
+
+  public function bulkUpdate(Request $request)
+  {
+    $validated = $request->validate([
+      'order_ids' => 'required|array|min:1',
+      'order_ids.*' => 'required|exists:orders,id',
+      'order_status' => 'required|in:open,fulfilled',
+    ]);
+
+    try {
+      $updatedCount = Order::whereIn('id', $validated['order_ids'])
+        ->update(['order_status' => $validated['order_status']]);
+
+      return response()->json([
+        'success' => true,
+        'message' => "Successfully updated {$updatedCount} orders",
+        'updated_count' => $updatedCount
+      ]);
+    } catch (\Exception $e) {
+      return response()->json([
+        'success' => false,
+        'message' => 'Failed to update orders'
+      ], 500);
+    }
   }
 
   public function destroy(Order $order)
