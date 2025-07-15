@@ -6,40 +6,44 @@ use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
-    protected $fillable = ['name'];
+  protected $fillable = ['name'];
 
-    public static function findOrCreateByName(string $rawProductName): self
-    {
-        $standardizedName = self::standardizeProductName($rawProductName);
-        
-        return self::firstOrCreate(['name' => $standardizedName]);
-    }
+  public function orders()
+  {
+    return $this->hasMany(Order::class);
+  }
 
-    protected static function standardizeProductName(string $productName): string
-    {
-        $productName = trim($productName);
+  public static function findOrCreateByName(string $rawProductName): self
+  {
+    $standardizedName = self::standardizeProductName($rawProductName);
+    return self::firstOrCreate(['name' => $standardizedName]);
+  }
 
-        // Remove trailing quotes that appear in TWINT CSV data
-        $productName = rtrim($productName, '”');
+  protected static function standardizeProductName(string $productName): string
+  {
+    $productName = trim($productName);
 
-        // Define mapping from various names to standardized names
-        $mappings = [
-            // Single issue variants
-            'DIE ERSTE AUSGABE' => 'Erste Ausgabe',
-            'Die erste Ausgabe' => 'Erste Ausgabe',
-            'ErsteAusgabe' => 'Erste Ausgabe',
-            'Jahresabo2026' => 'Jahresabo 2026',
+    // Remove trailing quotes that appear in TWINT CSV data
+    $productName = rtrim($productName, '”');
 
-            // Annual subscription variants
-            'JAHRESABO ERSTAUSGABE' => 'Jahresabo Erstausgabe',
-            'JahresaboErstausgabe' => 'Jahresabo Erstausgabe',
-            'JAHRESABO 2026' => 'Jahresabo 2026',
-            'JAHRESABO' => 'Jahresabo',
+    // Define mapping from various names to standardized names
+    $mappings = [
+      // Single issue variants
+      'DIE ERSTE AUSGABE' => 'Erste Ausgabe',
+      'Die erste Ausgabe' => 'Erste Ausgabe',
+      'ErsteAusgabe' => 'Erste Ausgabe',
+      'Jahresabo2026' => 'Jahresabo 2026',
 
-            // Gift subscription
-            'Geschenk-Abo' => 'Geschenk-Abo',
-        ];
+      // Annual subscription variants
+      'JAHRESABO ERSTAUSGABE' => 'Jahresabo Erstausgabe',
+      'JahresaboErstausgabe' => 'Jahresabo Erstausgabe',
+      'JAHRESABO 2026' => 'Jahresabo 2026',
+      'JAHRESABO' => 'Jahresabo',
 
-        return $mappings[$productName] ?? $productName;
-    }
+      // Gift subscription
+      'Geschenk-Abo' => 'Geschenk-Abo',
+    ];
+
+    return $mappings[$productName] ?? $productName;
+  }
 }

@@ -3,15 +3,16 @@
     <!-- Filter Toggle Button -->
     <button
       @click="toggleSidebar"
-      class="flex items-center gap-x-8 px-12 py-10 border border-black rounded-sm text-xs bg-white hover:bg-gray-50 focus:outline-none focus:!ring-0 disabled:opacity-50 disabled:cursor-not-allowed">
-      <IconFunnel />
+      class="relative flex items-center gap-x-6 px-12 py-10 border border-black rounded-sm text-xs bg-white hover:bg-gray-50 focus:outline-none focus:!ring-0 disabled:opacity-50 disabled:cursor-not-allowed"
+      :class="hasActiveFilters ? '!bg-blue-200 border-blue-600 text-blue-900' : ''">
+      <IconFunnel class="size-18" />
       Filter
     </button>
 
     <!-- Filter Sidebar -->
     <div
       v-if="isOpen"
-      class="fixed inset-y-0 right-0 w-[320px] bg-white  shadow-lg z-50 overflow-y-auto"
+      class="fixed inset-y-0 right-0 w-[320px] bg-white shadow-lg z-50 overflow-y-auto"
     >
       <div class="p-16">
         <div class="flex items-center justify-between mb-32">
@@ -28,7 +29,7 @@
             <Label for="filter-status" label="Status" />
             <Select
               id="filter-status"
-              v-model="localFilters.order_status"
+              v-model="filters.order_status"
               :options="[
                 { value: '', label: 'Alle' },
                 { value: 'open', label: 'Offen' },
@@ -44,7 +45,7 @@
             <Label for="filter-merchant" label="Anbieter" />
             <Select
               id="filter-merchant"
-              v-model="localFilters.merchant"
+              v-model="filters.merchant"
               :options="[
                 { value: '', label: 'Alle' },
                 { value: 'twint', label: 'TWINT' },
@@ -61,7 +62,7 @@
             <Label for="filter-product" label="Produkt" />
             <Select
               id="filter-product"
-              v-model="localFilters.product_id"
+              v-model="filters.product_id"
               :options="productOptions"
               placeholder="Produkt wählen..."
               @update:modelValue="updateFilters"
@@ -96,8 +97,9 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted, computed } from 'vue'
 import { getProducts } from '@/services/api'
+import { useFiltersStore } from '@/stores/filters'
 import Label from '@/components/input/Label.vue'
 import Select from '@/components/input/Select.vue'
 import IconCross from '@/components/icons/Cross.vue'
@@ -117,13 +119,16 @@ const props = defineProps({
 
 const emit = defineEmits(['update:filters'])
 
+const filtersStore = useFiltersStore()
 const isOpen = ref(false)
 const productOptions = ref([{ value: '', label: 'Alle' }])
 
-const localFilters = reactive({
-  order_status: props.filters.order_status || '',
-  merchant: props.filters.merchant || '',
-  product_id: props.filters.product_id || ''
+// Use store filters directly instead of local reactive copy
+const filters = computed(() => filtersStore.filters)
+
+// Computed property to check if any filters are active
+const hasActiveFilters = computed(() => {
+  return filters.value.order_status || filters.value.merchant || filters.value.product_id
 })
 
 const toggleSidebar = () => {
@@ -132,9 +137,7 @@ const toggleSidebar = () => {
 
 const closeSidebar = () => {
   // Check if filters are active and result in zero records
-  const hasActiveFilters = localFilters.order_status || localFilters.merchant || localFilters.product_id
-  
-  if (hasActiveFilters && props.resultCount === 0) {
+  if (hasActiveFilters.value && props.resultCount === 0) {
     clearFilters()
   }
   
@@ -142,13 +145,11 @@ const closeSidebar = () => {
 }
 
 const updateFilters = () => {
-  emit('update:filters', { ...localFilters })
+  emit('update:filters', { ...filters.value })
 }
 
 const clearFilters = () => {
-  localFilters.order_status = ''
-  localFilters.merchant = ''
-  localFilters.product_id = ''
+  filtersStore.clearFilters()
   updateFilters()
 }
 

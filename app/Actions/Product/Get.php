@@ -7,13 +7,14 @@ use Illuminate\Support\Collection;
 
 class Get
 {
-    public function execute(): Collection
-    {
-        return Product::orderBy('name')
-            ->get()
-            ->map(fn($product) => [
-                'value' => $product->id,
-                'label' => $product->name
-            ]);
-    }
+  public function execute(): Collection
+  {
+    return Product::whereHas('orders')
+      ->orderBy('name')
+      ->get()
+      ->map(fn($product) => [
+        'value' => $product->id,
+        'label' => $product->name
+      ]);
+  }
 }

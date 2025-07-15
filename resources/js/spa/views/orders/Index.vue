@@ -20,8 +20,8 @@
       />
       <router-link
         to="/dashboard/bestellungen/erstellen"
-        class="flex items-center gap-x-8 px-12 py-10 border border-black rounded-sm text-xs bg-white hover:bg-gray-50 focus:outline-none focus:!ring-0 disabled:opacity-50 disabled:cursor-not-allowed">
-        <IconPlus />
+        class="flex items-center gap-x-6 px-12 py-10 border border-black rounded-sm text-xs bg-white hover:bg-gray-50 focus:outline-none focus:!ring-0 disabled:opacity-50 disabled:cursor-not-allowed">
+        <IconPlus class="size-18" />
         Erfassen
       </router-link>
     </div>
@@ -158,6 +158,7 @@ import { ref, onMounted, computed, watch } from 'vue';
 import { getOrders, updateOrder, deleteOrder, bulkUpdateOrders, exportOrdersCsv } from '@/services/api';
 import { usePageTitle } from '@/composables/usePageTitle';
 import { useDialogStore } from '@/components/dialog/stores/dialog';
+import { useFiltersStore } from '@/stores/filters';
 import IconEdit from '@/components/icons/Edit.vue';
 import IconTrash from '@/components/icons/Trash.vue';
 import IconPlus from '@/components/icons/Plus.vue';
@@ -178,6 +179,7 @@ const { setTitle } = usePageTitle();
 setTitle('Bestellungen');
 
 const dialogStore = useDialogStore();
+const filtersStore = useFiltersStore();
 const orders = ref([]);
 let isLoading = ref(true);
 const selectedOrder = ref(null);
@@ -194,12 +196,8 @@ const selectedAction = ref('');
 const sortKey = ref('paid_at');
 const sortDirection = ref('desc');
 
-// Filter state
-const filters = ref({
-  order_status: '',
-  merchant: '',
-  product_id: ''
-});
+// Use filters from store
+const filters = computed(() => filtersStore.filters);
 
 // Component configuration
 const summaryStats = computed(() => [
@@ -508,7 +506,7 @@ const handleSort = (column) => {
 };
 
 const updateFilters = (newFilters) => {
-  filters.value = { ...newFilters };
+  filtersStore.updateFilters(newFilters);
 };
 
 // Watch dialog store visibility to sync our local state
