@@ -243,81 +243,53 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
-import { createOrder, getProducts } from '@/services/api'
-import ButtonPrimary from '@/components/buttons/Primary.vue'
-import Label from '@/components/input/Label.vue'
-import Input from '@/components/input/Input.vue'
-import Select from '@/components/input/Select.vue'
-import Textarea from '@/components/input/Textarea.vue'
+import { onMounted } from 'vue';
+import { usePageTitle } from '@/composables/usePageTitle';
 
-const router = useRouter()
-const submitting = ref(false)
-const error = ref(null)
-const productOptions = ref([])
+// Composables
+import { useOrderForm } from '@/composables/useOrderForm';
+import { useOrderData } from '@/composables/useOrderData';
 
-const paymentMethodOptions = [
-  { value: 'twint', label: 'TWINT' },
-  { value: 'invoice', label: 'Rechnung' },
-  { value: 'creditcard', label: 'Kreditkarte' }
-]
+// Constants
+import { paymentMethodOptions, merchantOptions } from '@/constants/formConstants';
 
-const merchantOptions = [
-  { value: 'twint', label: 'TWINT' },
-  { value: 'squarespace', label: 'Squarespace' },
-  { value: 'other', label: 'Andere' }
-]
+// Components
+import ButtonPrimary from '@/components/buttons/Primary.vue';
+import Label from '@/components/input/Label.vue';
+import Input from '@/components/input/Input.vue';
+import Select from '@/components/input/Select.vue';
+import Textarea from '@/components/input/Textarea.vue';
 
-const form = ref({
-  product_id: '',
-  email: '',
-  phone: '',
-  payment_method: '',
-  merchant: '',
-  total: '',
-  paid_at: '',
-  billing_name: '',
-  billing_address_1: '',
-  billing_address_2: '',
-  billing_city: '',
-  billing_zip: '',
-  billing_country: '',
-  shipping_name: '',
-  shipping_address_1: '',
-  shipping_address_2: '',
-  shipping_city: '',
-  shipping_zip: '',
-  shipping_province: '',
-  shipping_country: '',
-  notes: ''
-})
+// Page setup
+const { setTitle } = usePageTitle();
+setTitle('Neue Bestellung erstellen');
 
-const loadProducts = async () => {
+// Initialize composables
+const { 
+  form, 
+  submitting, 
+  error, 
+  setError, 
+  handleSubmit 
+} = useOrderForm('create');
+
+const { 
+  productOptions, 
+  loadProducts, 
+  createNewOrder 
+} = useOrderData();
+
+// Load initial data
+onMounted(async () => {
   try {
-    const products = await getProducts()
-    productOptions.value = products.data
+    await loadProducts();
   } catch (err) {
-    error.value = 'Fehler beim Laden der Produkte: ' + (err.response?.data?.message || err.message)
+    setError(err.message);
   }
-}
+});
 
+// Form submission
 const submitForm = async () => {
-  try {
-    submitting.value = true
-    error.value = null
-    
-    await createOrder(form.value)
-    
-    router.push('/dashboard/bestellungen')
-  } catch (err) {
-    error.value = 'Fehler beim Erstellen der Bestellung: ' + (err.response?.data?.message || err.message)
-  } finally {
-    submitting.value = false
-  }
-}
-
-onMounted(() => {
-  loadProducts()
-})
+  await handleSubmit(createNewOrder);
+};
 </script>

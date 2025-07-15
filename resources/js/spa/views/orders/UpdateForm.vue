@@ -8,11 +8,11 @@
       Lädt...
     </div>
     
-    <div v-else-if="error" class="mt-48 text-red-600">
-      {{ error }}
-    </div>
-    
     <form v-else @submit.prevent="submitForm" class="flex flex-col gap-y-48 mt-48 max-w-2xl">
+
+      <div v-if="error" class="mt-48 text-red-600">
+        {{ error }}
+      </div>
 
       <!-- Product -->
       <section>
@@ -203,87 +203,56 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-import { getOrder, updateOrder, getProducts } from '@/services/api'
-import ButtonPrimary from '@/components/buttons/Primary.vue'
-import Label from '@/components/input/Label.vue'
-import Input from '@/components/input/Input.vue'
-import Select from '@/components/input/Select.vue'
-import Textarea from '@/components/input/Textarea.vue'
+import { onMounted } from 'vue';
+import { usePageTitle } from '@/composables/usePageTitle';
 
-const route = useRoute()
-const router = useRouter()
-const loading = ref(true)
-const submitting = ref(false)
-const error = ref(null)
-const productOptions = ref([])
+// Composables
+import { useOrderForm } from '@/composables/useOrderForm';
+import { useOrderData } from '@/composables/useOrderData';
 
-const form = ref({
-  email: '',
-  phone: '',
-  billing_name: '',
-  billing_address_1: '',
-  billing_address_2: '',
-  billing_city: '',
-  billing_zip: '',
-  billing_country: '',
-  shipping_name: '',
-  shipping_address_1: '',
-  shipping_address_2: '',
-  shipping_city: '',
-  shipping_zip: '',
-  shipping_province: '',
-  shipping_country: '',
-  product_id: '',
-  notes: ''
-})
+// Components
+import ButtonPrimary from '@/components/buttons/Primary.vue';
+import Label from '@/components/input/Label.vue';
+import Input from '@/components/input/Input.vue';
+import Select from '@/components/input/Select.vue';
+import Textarea from '@/components/input/Textarea.vue';
 
-const loadOrder = async () => {
+// Page setup
+const { setTitle } = usePageTitle();
+setTitle('Bestellung bearbeiten');
+
+// Initialize composables
+const { 
+  form, 
+  submitting, 
+  error, 
+  setError, 
+  populateForm, 
+  handleSubmit 
+} = useOrderForm('update');
+
+const { 
+  loading,
+  productOptions, 
+  loadOrder, 
+  updateExistingOrder,
+  getOrderId
+} = useOrderData();
+
+// Load order data
+onMounted(async () => {
   try {
-    loading.value = true
-    error.value = null
-    
-    const orderId = route.params.id
-    const [order, products] = await Promise.all([
-      getOrder(orderId),
-      getProducts()
-    ])
-    
-    // Set product options
-    productOptions.value = products.data
-    
-    // Populate form with order data
-    Object.keys(form.value).forEach(key => {
-      if (order[key] !== undefined) {
-        form.value[key] = order[key] || ''
-      }
-    })
-    
+    const orderId = getOrderId();
+    const orderData = await loadOrder(orderId);
+    populateForm(orderData);
   } catch (err) {
-    error.value = 'Fehler beim Laden der Bestellung: ' + (err.response?.data?.message || err.message)
-  } finally {
-    loading.value = false
+    setError(err.message);
   }
-}
+});
 
+// Form submission
 const submitForm = async () => {
-  try {
-    submitting.value = true
-    error.value = null
-    
-    const orderId = route.params.id
-    await updateOrder(orderId, form.value)
-    
-    router.push('/dashboard/bestellungen')
-  } catch (err) {
-    error.value = 'Fehler beim Speichern: ' + (err.response?.data?.message || err.message)
-  } finally {
-    submitting.value = false
-  }
-}
-
-onMounted(() => {
-  loadOrder()
-})
+  const orderId = getOrderId();
+  await handleSubmit((formData) => updateExistingOrder(orderId, formData));
+};
 </script>

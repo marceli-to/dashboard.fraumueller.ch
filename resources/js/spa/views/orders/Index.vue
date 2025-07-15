@@ -1,5 +1,4 @@
 <template>
-
   <template v-if="!isLoading">
     <h1 class="text-lg leading-[1.25]">
       Bestellungen
@@ -37,7 +36,7 @@
       :sort-key="sortKey"
       :sort-direction="sortDirection"
       @update:selected-items="selectedOrderIds = $event"
-      @toggle-select-all="toggleSelectAll"
+      @toggle-select-all="handleToggleSelectAll"
       @cell-click="handleCellClick"
       @action-click="handleActionClick"
       @sort="handleSort" />
@@ -95,7 +94,7 @@
           <ButtonPrimary
             type="button"
             label="Speichern"
-            @click="applyBulkAction"
+            @click="handleApplyBulkAction"
             :disabled="!selectedAction"
             class="w-full justify-center" />
           <ButtonSecondary
@@ -150,203 +149,93 @@
             <div v-if="selectedOrder.shipping_country">{{ selectedOrder.shipping_country }}</div>
           </div>
         </div>
-
       </div>
-
     </div>
   </Dialog>
 
 </template>
+
 <script setup>
-import { ref, onMounted, computed, watch } from 'vue';
-import { getOrders, updateOrder, deleteOrder, bulkUpdateOrders, exportOrdersCsv } from '@/services/api';
+import { ref, onMounted } from 'vue';
+import { getOrders } from '@/services/api';
 import { usePageTitle } from '@/composables/usePageTitle';
-import { useDialogStore } from '@/components/dialog/stores/dialog';
 import { useFiltersStore } from '@/stores/filters';
-import IconEdit from '@/components/icons/Edit.vue';
-import IconTrash from '@/components/icons/Trash.vue';
+
+// Composables
+import { useOrdersTable } from '@/composables/useOrdersTable';
+import { useOrdersFiltering } from '@/composables/useOrdersFiltering';
+import { useOrdersMultiEdit } from '@/composables/useOrdersMultiEdit';
+import { useOrdersDialogs } from '@/composables/useOrdersDialogs';
+
+// Constants
+import { bulkActions, statusOptions } from '@/constants/orderConstants';
+
+// Components
 import IconPlus from '@/components/icons/Plus.vue';
 import IconCopy from '@/components/icons/Copy.vue';
-import IconMagnifyingGlass from '@/components/icons/MagnifyingGlass.vue';
 import Dialog from '@/components/dialog/Dialog.vue';
 import ButtonPrimary from '@/components/buttons/Primary.vue';
 import ButtonSecondary from '@/components/buttons/Secondary.vue';
 import SummaryStats from '@/components/ui/SummaryStats.vue';
 import MultiEditPanel from '@/components/ui/MultiEditPanel.vue';
 import DataTable from '@/components/ui/DataTable.vue';
-import StatusBadge from '@/components/ui/StatusBadge.vue';
 import FilterSidebar from '@/components/ui/FilterSidebar.vue';
 import Select from '@/components/input/Select.vue';
 import Label from '@/components/input/Label.vue';
 
+// Page setup
 const { setTitle } = usePageTitle();
 setTitle('Bestellungen');
 
-const dialogStore = useDialogStore();
-const filtersStore = useFiltersStore();
+// Core state
 const orders = ref([]);
-let isLoading = ref(true);
-const selectedOrder = ref(null);
-const newOrderStatus = ref('');
-const showMultiEditDialog = ref(false);
-const showOrderDetail = ref(false);
-const exportResult = ref(null);
+const isLoading = ref(true);
+const filtersStore = useFiltersStore();
 
-// Multi-edit state
-const selectedOrderIds = ref([]);
-const selectedAction = ref('');
-const notesValue = ref('');
+// Initialize composables
+const { 
+  sortKey, 
+  sortDirection, 
+  tableColumns, 
+  tableActions, 
+  handleSort 
+} = useOrdersTable();
 
-// Sorting state
-const sortKey = ref('paid_at');
-const sortDirection = ref('desc');
+const { 
+  filters, 
+  filteredAndSortedOrders, 
+  summaryStats, 
+  updateFilters 
+} = useOrdersFiltering(orders, sortKey, sortDirection);
 
-// Use filters from store
-const filters = computed(() => filtersStore.filters);
+const { 
+  selectedOrderIds, 
+  selectedAction, 
+  notesValue, 
+  exportResult, 
+  toggleSelectAll, 
+  clearMultiEditState, 
+  applyBulkAction 
+} = useOrdersMultiEdit(orders);
 
-// Component configuration
-const summaryStats = computed(() => [
-  {
-    label: 'Total',
-    value: filteredAndSortedOrders.value.length,
-    formatter: (value) => `${value} Bestellungen`
-  }
-]);
+const { 
+  selectedOrder, 
+  newOrderStatus, 
+  showMultiEditDialog, 
+  showOrderDetail, 
+  openStatusDialog, 
+  updateOrderStatus, 
+  cancelStatusUpdate, 
+  openMultiEditDialog, 
+  closeMultiEditDialog, 
+  toggleMultiEditDialog, 
+  showOrderDetails, 
+  handleDeleteOrder, 
+  handleCellClick, 
+  handleActionClick: dialogHandleActionClick 
+} = useOrdersDialogs(orders);
 
-const filteredAndSortedOrders = computed(() => {
-  let filtered = [...orders.value];
-  
-  // Apply filters
-  if (filters.value.order_status) {
-    filtered = filtered.filter(order => order.order_status === filters.value.order_status);
-  }
-  
-  if (filters.value.merchant) {
-    filtered = filtered.filter(order => order.merchant === filters.value.merchant);
-  }
-  
-  if (filters.value.product_id) {
-    filtered = filtered.filter(order => order.product_id == filters.value.product_id);
-  }
-  
-  // Apply sorting
-  if (!sortKey.value) return filtered;
-  
-  const sorted = filtered.sort((a, b) => {
-    let aValue, bValue;
-    
-    if (sortKey.value === 'paid_at') {
-      aValue = a.paid_at ? new Date(a.paid_at) : new Date(0);
-      bValue = b.paid_at ? new Date(b.paid_at) : new Date(0);
-    } else if (sortKey.value === 'product_id') {
-      aValue = a.product_name?.toLowerCase() || '';
-      bValue = b.product_name?.toLowerCase() || '';
-    } else if (sortKey.value === 'order_status') {
-      // Sort order: open first, then fulfilled
-      const statusOrder = { 'open': 0, 'fulfilled': 1 };
-      aValue = statusOrder[a.order_status] ?? 999;
-      bValue = statusOrder[b.order_status] ?? 999;
-    } else {
-      aValue = a[sortKey.value];
-      bValue = b[sortKey.value];
-    }
-    
-    if (aValue < bValue) return sortDirection.value === 'asc' ? -1 : 1;
-    if (aValue > bValue) return sortDirection.value === 'asc' ? 1 : -1;
-    return 0;
-  });
-  
-  return sorted;
-});
-
-const bulkActions = [
-  { value: 'status-open', label: 'Status offen' },
-  { value: 'status-fulfilled', label: 'Status erledigt' },
-  { value: 'notes', label: 'Bemerkungen' },
-  { value: 'export-csv', label: 'Export CSV' },
-  // { value: 'generate-labels', label: 'Etiketten generieren' }
-];
-
-const statusOptions = [
-  { value: 'open', label: 'offen' },
-  { value: 'fulfilled', label: 'erledigt' }
-];
-
-const tableColumns = [
-  {
-    key: 'order_id',
-    label: 'ID',
-    component: 'router-link',
-    componentProps: {
-      class: 'hover:text-blue-500 transition-all'
-    },
-    to: (item) => ({ name: 'orders.edit', params: { id: item.id } }),
-    cellClasses: 'pr-24 tabular-nums'
-  },
-  {
-    key: 'product_name',
-    label: 'Produkt',
-    cellClasses: 'pr-12 max-w-[360px]',
-    sortable: true,
-    sortKey: 'product_id'
-  },
-  {
-    key: 'email',
-    label: 'E-Mail',
-    cellClasses: 'pr-12 max-w-[320px]'
-  },
-  {
-    key: 'payment_info',
-    label: 'Zahlung',
-    cellClasses: 'pr-12 capitalize',
-    formatter: (value, item) => `${item.payment_method}, ${item.total}, ${formatDate(item.paid_at)}`,
-    sortable: true,
-    sortKey: 'paid_at'
-  },
-  {
-    key: 'order_status',
-    label: 'Status',
-    align: 'center',
-    cellClasses: 'text-center flex items-center',
-    component: StatusBadge,
-    componentProps: {
-      statusType: 'order',
-      clickable: true
-    },
-    clickable: true,
-    sortable: true,
-    sortKey: 'order_status'
-  }
-];
-
-const tableActions = [
-  {
-    key: 'show',
-    component: 'button',
-    componentProps: {
-      class: 'inline-block text-right hover:text-blue-500 transition-all'
-    },
-    icon: IconMagnifyingGlass
-  },
-  {
-    key: 'edit',
-    component: 'router-link',
-    componentProps: {
-      class: 'inline-block text-right hover:text-blue-500 transition-all'
-    },
-    to: (item) => ({ name: 'orders.edit', params: { id: item.id } }),
-    icon: IconEdit
-  },
-  {
-    key: 'delete',
-    component: 'button',
-    componentProps: {
-      class: 'inline-block text-right hover:text-red-500 transition-all'
-    },
-    icon: IconTrash
-  }
-];
-
+// Load orders on mount
 onMounted(async () => {
   if (isLoading.value) {
     try {
@@ -362,241 +251,29 @@ onMounted(async () => {
   }
 });
 
-const formatDate = (dateString) => {
-  const date = new Date(dateString);
-  return date.toLocaleDateString('de-CH', {
-    year: '2-digit',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit'
-  });
+// Event handlers
+const handleToggleSelectAll = (checked) => {
+  toggleSelectAll(checked, filteredAndSortedOrders.value);
 };
 
-const openStatusDialog = (order) => {
-  selectedOrder.value = order;
-  newOrderStatus.value = order.order_status || 'open';
-  showMultiEditDialog.value = false; // Close multi-edit dialog if open
-  
-  dialogStore.show({
-    title: 'Status ändern',
-    size: 'small',
-    hideDefaultActions: true,
-    component: null,
-    message: null
-  });
-};
-
-const updateOrderStatus = async () => {
+const handleApplyBulkAction = async () => {
   try {
-    await updateOrder(selectedOrder.value.id, {
-      order_status: newOrderStatus.value
-    });
-    
-    // Update the order in the local array
-    const orderIndex = orders.value.findIndex(o => o.id === selectedOrder.value.id);
-    if (orderIndex !== -1) {
-      orders.value[orderIndex].order_status = newOrderStatus.value;
-    }
-    
-    dialogStore.hide();
-  } catch (error) {
-    console.error('Error updating order status:', error);
-    alert('Fehler beim Aktualisieren des Status');
-  }
-};
-
-const cancelStatusUpdate = () => {
-  dialogStore.hide();
-};
-
-// Multi-edit handlers
-const toggleSelectAll = (checked) => {
-  if (checked) {
-    selectedOrderIds.value = filteredAndSortedOrders.value.map(order => order.id);
-  } else {
-    selectedOrderIds.value = [];
-  }
-};
-
-const applyBulkAction = async () => {
-  if (!selectedAction.value || selectedOrderIds.value.length === 0) return;
-  
-  try {
-    if (selectedAction.value === 'export-csv') {
-      // Handle CSV export
-      const result = await exportOrdersCsv(selectedOrderIds.value);
-      
-      if (result.success) {
-        // Show download link instead of action buttons
-        exportResult.value = result;
-        selectedAction.value = '';
-      } else {
-        alert('Fehler beim Erstellen der CSV-Datei');
-      }
-    } else if (selectedAction.value === 'notes') {
-      // Handle notes update
-      await bulkUpdateOrders(selectedOrderIds.value, { notes: notesValue.value });
-      
-      // Update the local order data
-      selectedOrderIds.value.forEach(orderId => {
-        const orderIndex = orders.value.findIndex(o => o.id === orderId);
-        if (orderIndex !== -1) {
-          const existingNotes = orders.value[orderIndex].notes;
-          if (existingNotes) {
-            orders.value[orderIndex].notes = notesValue.value + "\n" + existingNotes;
-          } else {
-            orders.value[orderIndex].notes = notesValue.value;
-          }
-        }
-      });
-      
-      // Clear selections and close dialog
-      selectedOrderIds.value = [];
-      selectedAction.value = '';
-      notesValue.value = '';
+    const result = await applyBulkAction();
+    if (result.success && result.type !== 'export') {
       closeMultiEditDialog();
-    } else {
-      let newStatus = '';
-      
-      // Map action to status
-      if (selectedAction.value === 'status-open') {
-        newStatus = 'open';
-      } else if (selectedAction.value === 'status-fulfilled') {
-        newStatus = 'fulfilled';
-      }
-      
-      if (newStatus) {
-        // Use bulk update API
-        await bulkUpdateOrders(selectedOrderIds.value, { order_status: newStatus });
-        
-        // Update the local order data
-        selectedOrderIds.value.forEach(orderId => {
-          const orderIndex = orders.value.findIndex(o => o.id === orderId);
-          if (orderIndex !== -1) {
-            orders.value[orderIndex].order_status = newStatus;
-          }
-        });
-        
-        // Clear selections and close dialog
-        selectedOrderIds.value = [];
-        selectedAction.value = '';
-        closeMultiEditDialog();
-      }
     }
   } catch (error) {
-    console.error('Error applying bulk action:', error);
     alert('Fehler beim Anwenden der Massenbearbeitung');
   }
 };
 
-const handleCellClick = ({ column, item }) => {
-  if (column.key === 'order_status') {
-    openStatusDialog(item);
-  }
-};
-
-const handleActionClick = ({ action, item }) => {
-  if (action.key === 'show') {
-    showOrderDetails(item);
-  } else if (action.key === 'edit') {
-    // Router link will handle navigation
-  } else if (action.key === 'delete') {
-    handleDeleteOrder(item);
-  }
-};
-
-const handleDeleteOrder = async (order) => {
-  if (confirm(`Möchten Sie die Bestellung #${order.order_id} wirklich löschen?`)) {
-    try {
-      await deleteOrder(order.id);
-      
-      // Remove the order from the local array
-      const orderIndex = orders.value.findIndex(o => o.id === order.id);
-      if (orderIndex !== -1) {
-        orders.value.splice(orderIndex, 1);
-      }
-      
-      // Remove from selected items if it was selected
-      selectedOrderIds.value = selectedOrderIds.value.filter(id => id !== order.id);
-      
-    } catch (error) {
-      console.error('Error deleting order:', error);
-      alert('Fehler beim Löschen der Bestellung');
-    }
-  }
-};
-
-const handleSort = (column) => {
-  if (sortKey.value === column.sortKey) {
-    sortDirection.value = sortDirection.value === 'asc' ? 'desc' : 'asc';
-  } else {
-    sortKey.value = column.sortKey;
-    sortDirection.value = 'asc';
-  }
-};
-
-const updateFilters = (newFilters) => {
-  filtersStore.updateFilters(newFilters);
-};
-
-// Watch dialog store visibility to sync our local state
-watch(
-  () => dialogStore.isVisible,
-  (isVisible) => {
-    if (!isVisible) {
-      // When dialog is closed, reset our local states
-      showMultiEditDialog.value = false;
-      showOrderDetail.value = false;
-      selectedOrder.value = null;
-      exportResult.value = null;
-    }
-  }
-);
-
-// Manual toggle for multi-edit dialog
-const toggleMultiEditDialog = () => {
-  if (showMultiEditDialog.value) {
-    closeMultiEditDialog();
-  } else {
-    openMultiEditDialog();
-  }
-};
-
-const openMultiEditDialog = () => {
-  showMultiEditDialog.value = true;
-  selectedOrder.value = null; // Clear any selected order for status update
+// Enhanced action click handler that handles deletion
+const handleActionClick = async ({ action, item }) => {
+  const result = await dialogHandleActionClick({ action, item });
   
-  dialogStore.show({
-    title: 'Bearbeiten',
-    size: 'medium',
-    hideDefaultActions: true,
-    component: null,
-    message: null
-  });
-};
-
-const closeMultiEditDialog = () => {
-  showMultiEditDialog.value = false;
-  selectedOrder.value = null; // Ensure status dialog state is also cleared
-  exportResult.value = null; // Clear export result
-  selectedOrderIds.value = []; // Clear selections
-  selectedAction.value = ''; // Clear action
-  notesValue.value = ''; // Clear notes
-  dialogStore.hide();
-};
-
-const showOrderDetails = (order) => {
-  selectedOrder.value = order;
-  showOrderDetail.value = true;
-  showMultiEditDialog.value = false; // Close multi-edit dialog if open
-  
-  dialogStore.show({
-    title: `Bestellung Nr. ${order.order_id}`,
-    size: 'large',
-    hideDefaultActions: true,
-    component: null,
-    message: null
-  });
+  // If order was deleted, remove it from selected items
+  if (result?.success && result.deletedOrderId) {
+    selectedOrderIds.value = selectedOrderIds.value.filter(id => id !== result.deletedOrderId);
+  }
 };
 </script>
