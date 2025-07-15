@@ -25,6 +25,10 @@ class Product extends Model
 
     // Remove trailing quotes that appear in TWINT CSV data
     $productName = rtrim($productName, '”');
+    // Handle empty product name
+    if (empty($productName)) {
+      return '[ohne Produkt]';
+    }
 
     // Define mapping from various names to standardized names
     $mappings = [

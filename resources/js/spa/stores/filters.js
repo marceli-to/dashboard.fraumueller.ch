@@ -1,12 +1,13 @@
 import { defineStore } from 'pinia';
 import { ref, watch } from 'vue';
+import { getProducts } from '@/services/api';
 
 export const useFiltersStore = defineStore('filters', () => {
   const STORAGE_KEY = 'orders_filters';
   
   // Default filter values
   const defaultFilters = {
-    order_status: 'open',
+    order_status: '',
     merchant: '',
     product_id: ''
   };
@@ -63,10 +64,32 @@ export const useFiltersStore = defineStore('filters', () => {
     filters.value[key] = value;
   };
   
+  // Validate that the saved product filter still exists
+  const validateProductFilter = async () => {
+    if (!filters.value.product_id) {
+      return; // No product filter set, nothing to validate
+    }
+    
+    try {
+      const products = await getProducts();
+      const productExists = products.data.some(product => product.value == filters.value.product_id);
+      
+      if (!productExists) {
+        console.warn('Saved product filter no longer exists, clearing it');
+        filters.value.product_id = '';
+      }
+    } catch (error) {
+      console.warn('Error validating product filter:', error);
+      // On error, clear the product filter to be safe
+      filters.value.product_id = '';
+    }
+  };
+  
   return {
     filters,
     updateFilters,
     clearFilters,
-    setFilter
+    setFilter,
+    validateProductFilter
   };
 });

@@ -35,7 +35,6 @@
                 { value: 'open', label: 'Offen' },
                 { value: 'fulfilled', label: 'Erledigt' }
               ]"
-              placeholder="Status wählen..."
               @update:modelValue="updateFilters"
             />
           </div>
@@ -52,7 +51,6 @@
                 { value: 'squarespace', label: 'Squarespace' },
                 { value: 'other', label: 'Andere' }
               ]"
-              placeholder="Anbieter wählen..."
               @update:modelValue="updateFilters"
             />
           </div>
@@ -64,7 +62,6 @@
               id="filter-product"
               v-model="filters.product_id"
               :options="productOptions"
-              placeholder="Produkt wählen..."
               @update:modelValue="updateFilters"
             />
           </div>

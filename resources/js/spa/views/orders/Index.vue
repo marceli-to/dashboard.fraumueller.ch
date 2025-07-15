@@ -344,6 +344,9 @@ const tableActions = [
 onMounted(async () => {
   if (isLoading.value) {
     try {
+      // Validate that saved product filter still exists
+      await filtersStore.validateProductFilter();
+      
       orders.value = await getOrders();
     } catch (error) {
       console.error(error);
