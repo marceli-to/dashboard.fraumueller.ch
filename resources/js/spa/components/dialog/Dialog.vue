@@ -14,7 +14,7 @@
         @click="handleBackdropClick"
       >
         <!-- Backdrop -->
-        <div class="fixed inset-0 bg-black/60 transition-opacity duration-200"></div>
+        <div class="fixed inset-0 bg-black/25 transition-opacity duration-200"></div>
         <!-- Dialog -->
         <div class="flex min-h-full items-center justify-center p-4 relative">
           <div
