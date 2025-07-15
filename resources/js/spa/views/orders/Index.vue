@@ -88,12 +88,13 @@
           :selected-count="selectedOrderIds.length"
           :actions="bulkActions"
           :selected-action="selectedAction"
-          @action-selected="selectedAction = $event" />
+          @action-selected="selectedAction = $event"
+          @notes-changed="notesValue = $event" />
         
         <div class="flex gap-x-16">
           <ButtonPrimary
             type="button"
-            label="Anwenden"
+            label="Speichern"
             @click="applyBulkAction"
             :disabled="!selectedAction"
             class="w-full justify-center" />
@@ -127,28 +128,31 @@
         </div>
       </div>
       
-      <div class="border-t pt-16">
-        <div class="font-medium mb-4">Rechnungsadresse</div>
-        <div class="leading-relaxed">
-          <div>{{ selectedOrder.billing_name || '-' }}</div>
-          <div v-if="selectedOrder.billing_address_1">{{ selectedOrder.billing_address_1 }}</div>
-          <div v-if="selectedOrder.billing_address_2">{{ selectedOrder.billing_address_2 }}</div>
-          <div>{{ [selectedOrder.billing_zip, selectedOrder.billing_city].filter(Boolean).join(' ') }}</div>
-          <div v-if="selectedOrder.billing_country">{{ selectedOrder.billing_country }}</div>
+      <div class="border-t pt-16 grid grid-cols-2 gap-x-20">
+        <div>
+          <div class="font-medium mb-4">Rechnungsadresse</div>
+          <div class="leading-relaxed">
+            <div>{{ selectedOrder.billing_name || '-' }}</div>
+            <div v-if="selectedOrder.billing_address_1">{{ selectedOrder.billing_address_1 }}</div>
+            <div v-if="selectedOrder.billing_address_2">{{ selectedOrder.billing_address_2 }}</div>
+            <div>{{ [selectedOrder.billing_zip, selectedOrder.billing_city].filter(Boolean).join(' ') }}</div>
+            <div v-if="selectedOrder.billing_country">{{ selectedOrder.billing_country }}</div>
+          </div>
         </div>
-      </div>
-      
-      <div class="border-t pt-16">
-        <div class="font-medium mb-4">Lieferadresse</div>
-        <div class="leading-relaxed">
-          <div>{{ selectedOrder.shipping_name || '-' }}</div>
-          <div v-if="selectedOrder.shipping_address_1">{{ selectedOrder.shipping_address_1 }}</div>
-          <div v-if="selectedOrder.shipping_address_2">{{ selectedOrder.shipping_address_2 }}</div>
-          <div>{{ [selectedOrder.shipping_zip, selectedOrder.shipping_city].filter(Boolean).join(' ') }}</div>
-          <div v-if="selectedOrder.shipping_province">{{ selectedOrder.shipping_province }}</div>
-          <div v-if="selectedOrder.shipping_country">{{ selectedOrder.shipping_country }}</div>
+        <div>
+          <div class="font-medium mb-4">Lieferadresse</div>
+          <div class="leading-relaxed">
+            <div>{{ selectedOrder.shipping_name || '-' }}</div>
+            <div v-if="selectedOrder.shipping_address_1">{{ selectedOrder.shipping_address_1 }}</div>
+            <div v-if="selectedOrder.shipping_address_2">{{ selectedOrder.shipping_address_2 }}</div>
+            <div>{{ [selectedOrder.shipping_zip, selectedOrder.shipping_city].filter(Boolean).join(' ') }}</div>
+            <div v-if="selectedOrder.shipping_province">{{ selectedOrder.shipping_province }}</div>
+            <div v-if="selectedOrder.shipping_country">{{ selectedOrder.shipping_country }}</div>
+          </div>
         </div>
+
       </div>
+
     </div>
   </Dialog>
 
@@ -191,6 +195,7 @@ const exportResult = ref(null);
 // Multi-edit state
 const selectedOrderIds = ref([]);
 const selectedAction = ref('');
+const notesValue = ref('');
 
 // Sorting state
 const sortKey = ref('paid_at');
@@ -257,6 +262,7 @@ const filteredAndSortedOrders = computed(() => {
 const bulkActions = [
   { value: 'status-open', label: 'Status offen' },
   { value: 'status-fulfilled', label: 'Status erledigt' },
+  { value: 'notes', label: 'Bemerkungen' },
   { value: 'export-csv', label: 'Export CSV' },
   // { value: 'generate-labels', label: 'Etiketten generieren' }
 ];
@@ -428,6 +434,28 @@ const applyBulkAction = async () => {
       } else {
         alert('Fehler beim Erstellen der CSV-Datei');
       }
+    } else if (selectedAction.value === 'notes') {
+      // Handle notes update
+      await bulkUpdateOrders(selectedOrderIds.value, { notes: notesValue.value });
+      
+      // Update the local order data
+      selectedOrderIds.value.forEach(orderId => {
+        const orderIndex = orders.value.findIndex(o => o.id === orderId);
+        if (orderIndex !== -1) {
+          const existingNotes = orders.value[orderIndex].notes;
+          if (existingNotes) {
+            orders.value[orderIndex].notes = notesValue.value + "\n" + existingNotes;
+          } else {
+            orders.value[orderIndex].notes = notesValue.value;
+          }
+        }
+      });
+      
+      // Clear selections and close dialog
+      selectedOrderIds.value = [];
+      selectedAction.value = '';
+      notesValue.value = '';
+      closeMultiEditDialog();
     } else {
       let newStatus = '';
       
@@ -440,7 +468,7 @@ const applyBulkAction = async () => {
       
       if (newStatus) {
         // Use bulk update API
-        await bulkUpdateOrders(selectedOrderIds.value, newStatus);
+        await bulkUpdateOrders(selectedOrderIds.value, { order_status: newStatus });
         
         // Update the local order data
         selectedOrderIds.value.forEach(orderId => {
@@ -554,6 +582,7 @@ const closeMultiEditDialog = () => {
   exportResult.value = null; // Clear export result
   selectedOrderIds.value = []; // Clear selections
   selectedAction.value = ''; // Clear action
+  notesValue.value = ''; // Clear notes
   dialogStore.hide();
 };
 
@@ -564,7 +593,7 @@ const showOrderDetails = (order) => {
   
   dialogStore.show({
     title: `Bestellung Nr. ${order.order_id}`,
-    size: 'medium',
+    size: 'large',
     hideDefaultActions: true,
     component: null,
     message: null

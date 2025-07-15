@@ -109,12 +109,48 @@ class OrderController extends Controller
     $validated = $request->validate([
       'order_ids' => 'required|array|min:1',
       'order_ids.*' => 'required|exists:orders,id',
-      'order_status' => 'required|in:open,fulfilled',
+      'order_status' => 'sometimes|in:open,fulfilled',
+      'notes' => 'sometimes|nullable|string',
     ]);
 
     try {
-      $updatedCount = Order::whereIn('id', $validated['order_ids'])
-        ->update(['order_status' => $validated['order_status']]);
+      $updateData = [];
+      
+      // Add fields to update based on what's provided
+      if (isset($validated['order_status'])) {
+        $updateData['order_status'] = $validated['order_status'];
+      }
+      
+      if (array_key_exists('notes', $validated)) {
+        // For notes, we need to append to existing content instead of overwriting
+        $newNote = $validated['notes'];
+        if (!empty($newNote)) {
+          // Update each order individually to append notes
+          Order::whereIn('id', $validated['order_ids'])->get()->each(function ($order) use ($newNote) {
+            $existingNotes = $order->notes;
+            if (!empty($existingNotes)) {
+              $order->notes = $newNote . "\n" . $existingNotes;
+            } else {
+              $order->notes = $newNote;
+            }
+            $order->save();
+          });
+          
+          // Remove notes from batch update data since we handled it individually
+          unset($updateData['notes']);
+        }
+      }
+      
+      $updatedCount = 0;
+      
+      // Only run batch update if there are fields to update
+      if (!empty($updateData)) {
+        $updatedCount = Order::whereIn('id', $validated['order_ids'])
+          ->update($updateData);
+      } else {
+        // If no batch update, count the orders for response
+        $updatedCount = count($validated['order_ids']);
+      }
 
       return response()->json([
         'success' => true,

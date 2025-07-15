@@ -57,10 +57,10 @@ export const createOrder = async (orderData) => {
   return response.data;
 };
 
-export const bulkUpdateOrders = async (orderIds, orderStatus) => {
+export const bulkUpdateOrders = async (orderIds, updateData) => {
   const response = await api.post('/orders/bulk-update', {
     order_ids: orderIds,
-    order_status: orderStatus
+    ...updateData
   });
   return response.data;
 };

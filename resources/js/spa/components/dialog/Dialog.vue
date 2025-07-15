@@ -119,9 +119,9 @@ const getSizeClass = (size) => {
     case 'medium':
       return 'max-w-md';
     case 'large':
-      return 'max-w-4xl';
+      return 'max-w-xl';
     case 'xlarge':
-      return 'max-w-5xl';
+      return 'max-w-3xl';
     default:
       return 'max-w-2xl';
   }
