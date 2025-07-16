@@ -148,6 +148,7 @@ const updateFilters = () => {
 const clearFilters = () => {
   filtersStore.clearFilters()
   updateFilters()
+  isOpen.value = false
 }
 
 const loadProducts = async () => {
