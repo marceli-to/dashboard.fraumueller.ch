@@ -29,6 +29,15 @@
         </tbody>
       </table>
     </div>
+    
+    <Pagination
+      v-if="pagination"
+      :current-page="pagination.current_page"
+      :total-pages="pagination.last_page"
+      :total="pagination.total"
+      :per-page="pagination.per_page"
+      @page-change="handlePageChange"
+    />
   </div>
 </template>
 
@@ -36,6 +45,7 @@
 import { computed } from 'vue'
 import TableHeader from './TableHeader.vue'
 import TableRow from './TableRow.vue'
+import Pagination from './Pagination.vue'
 
 const props = defineProps({
   data: {
@@ -74,10 +84,14 @@ const props = defineProps({
     type: String,
     default: 'asc',
     validator: (value) => ['asc', 'desc'].includes(value)
+  },
+  pagination: {
+    type: Object,
+    default: null
   }
 })
 
-const emit = defineEmits(['update:selectedItems', 'cell-click', 'action-click', 'toggle-select-all', 'sort'])
+const emit = defineEmits(['update:selectedItems', 'cell-click', 'action-click', 'toggle-select-all', 'sort', 'page-change'])
 
 const isAllSelected = computed(() => {
   return props.data.length > 0 && props.selectedItems.length === props.data.length
@@ -95,5 +109,9 @@ const handleToggleSelectAll = (checked) => {
 
 const handleSort = (column) => {
   emit('sort', column)
+}
+
+const handlePageChange = (page) => {
+  emit('page-change', page)
 }
 </script>

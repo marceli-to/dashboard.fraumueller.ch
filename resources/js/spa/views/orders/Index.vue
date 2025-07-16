@@ -28,18 +28,20 @@
     <SummaryStats :stats="summaryStats" />
 
     <DataTable
-      :data="filteredAndSortedOrders"
+      :data="paginatedOrders"
       :columns="tableColumns"
       :actions="tableActions"
       :selectable="true"
       :selected-items="selectedOrderIds"
       :sort-key="sortKey"
       :sort-direction="sortDirection"
+      :pagination="pagination"
       @update:selected-items="selectedOrderIds = $event"
       @toggle-select-all="handleToggleSelectAll"
       @cell-click="handleCellClick"
       @action-click="handleActionClick"
-      @sort="handleSort" />
+      @sort="handleSort"
+      @page-change="handlePageChange" />
 
   </template>
   
@@ -156,7 +158,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed, watch } from 'vue';
 import { getOrders } from '@/services/api';
 import { usePageTitle } from '@/composables/usePageTitle';
 import { useFiltersStore } from '@/stores/filters';
@@ -189,6 +191,8 @@ setTitle('Bestellungen');
 
 // Core state
 const orders = ref([]);
+const currentPage = ref(1);
+const perPage = 20;
 const isLoading = ref(true);
 const filtersStore = useFiltersStore();
 
@@ -235,6 +239,39 @@ const {
   handleActionClick: dialogHandleActionClick 
 } = useOrdersDialogs(orders);
 
+// Load orders function
+const loadOrders = async () => {
+  try {
+    isLoading.value = true;
+    const response = await getOrders();
+    orders.value = response;
+  } catch (error) {
+    console.error(error);
+    orders.value = [];
+  } finally {
+    isLoading.value = false;
+  }
+};
+
+// Client-side pagination computed properties
+const paginatedOrders = computed(() => {
+  const start = (currentPage.value - 1) * perPage;
+  const end = start + perPage;
+  return filteredAndSortedOrders.value.slice(start, end);
+});
+
+const pagination = computed(() => {
+  const total = filteredAndSortedOrders.value.length;
+  const lastPage = Math.ceil(total / perPage);
+  
+  return lastPage > 1 ? {
+    current_page: currentPage.value,
+    last_page: lastPage,
+    total: total,
+    per_page: perPage
+  } : null;
+});
+
 // Load orders on mount
 onMounted(async () => {
   if (isLoading.value) {
@@ -242,18 +279,16 @@ onMounted(async () => {
       // Validate that saved product filter still exists
       await filtersStore.validateProductFilter();
       
-      orders.value = await getOrders();
+      await loadOrders();
     } catch (error) {
       console.error(error);
-    } finally {
-      isLoading.value = false;
     }
   }
 });
 
 // Event handlers
 const handleToggleSelectAll = (checked) => {
-  toggleSelectAll(checked, filteredAndSortedOrders.value);
+  toggleSelectAll(checked, paginatedOrders.value);
 };
 
 const handleApplyBulkAction = async () => {
@@ -276,4 +311,14 @@ const handleActionClick = async ({ action, item }) => {
     selectedOrderIds.value = selectedOrderIds.value.filter(id => id !== result.deletedOrderId);
   }
 };
+
+// Handle page change
+const handlePageChange = (page) => {
+  currentPage.value = page;
+};
+
+// Reset pagination when filters change
+watch(filters, () => {
+  currentPage.value = 1;
+}, { deep: true });
 </script>
