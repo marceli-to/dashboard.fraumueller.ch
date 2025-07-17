@@ -24,6 +24,21 @@ export const useOrdersFiltering = (orders, sortKey, sortDirection) => {
       filtered = filtered.filter(order => order.product_id == filters.value.product_id);
     }
     
+    if (filters.value.search) {
+      const searchTerm = filters.value.search.toLowerCase();
+      filtered = filtered.filter(order => {
+        const email = order.email?.toLowerCase() || '';
+        const phone = order.phone?.toLowerCase() || '';
+        const product = order.product_name?.toLowerCase() || '';
+        const billingName = order.billing_name?.toLowerCase() || '';
+        
+        return email.includes(searchTerm) || 
+               phone.includes(searchTerm) || 
+               product.includes(searchTerm) ||
+               billingName.includes(searchTerm);
+      });
+    }
+    
     // Apply sorting
     if (!sortKey.value) return filtered;
     

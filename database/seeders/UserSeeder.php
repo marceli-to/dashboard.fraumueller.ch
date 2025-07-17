@@ -35,5 +35,21 @@ class UserSeeder extends Seeder
         'password' => \Hash::make('Fr@U-mU3l-d@sH-!48b'),
         'email_verified_at' => '2025-01-22 18:11:24',
       ]);
+
+      User::create([
+        'firstname' => 'Claudia',
+        'name' => 'Bleicher',
+        'email' => 'Claudia.bleicher@bluewin.ch',
+        'password' => \Hash::make('Fr@U-mU3l-d@sH-*f32K'),
+        'email_verified_at' => '2025-01-22 18:11:24',
+      ]);
+
+      User::create([
+        'firstname' => 'Sarah',
+        'name' => 'Pietrasanta',
+        'email' => 'ps@pietrasanta.ch',
+        'password' => \Hash::make('Fr@U-mU3l-d@sH-F$V9'),
+        'email_verified_at' => '2025-01-22 18:11:24',
+      ]);
     }
 }

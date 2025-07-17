@@ -30,6 +30,11 @@ export const useOrdersTable = () => {
       sortKey: 'product_id'
     },
     {
+      key: 'billing_name',
+      label: 'Name',
+      cellClasses: 'pr-12 max-w-[250px]'
+    },
+    {
       key: 'email',
       label: 'E-Mail',
       cellClasses: 'pr-12 max-w-[320px]'

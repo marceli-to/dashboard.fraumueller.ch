@@ -24,6 +24,16 @@
         </div>
 
         <div class="space-y-24">
+          <!-- Search field -->
+          <div>
+            <Label for="filter-search" label="Suche" />
+            <Input
+              id="filter-search"
+              v-model="filters.search"
+              type="text"
+              placeholder="Name, E-Mail, Produkt..."
+            />
+          </div>
           <!-- Order Status Filter -->
           <div>
             <Label for="filter-status" label="Status" />
@@ -99,6 +109,7 @@ import { getProducts } from '@/services/api'
 import { useFiltersStore } from '@/stores/filters'
 import Label from '@/components/input/Label.vue'
 import Select from '@/components/input/Select.vue'
+import Input from '@/components/input/Input.vue'
 import IconCross from '@/components/icons/Cross.vue'
 import IconFunnel from '@/components/icons/Funnel.vue'
 import ButtonPrimary from '@/components/buttons/Primary.vue'
@@ -125,7 +136,7 @@ const filters = computed(() => filtersStore.filters)
 
 // Computed property to check if any filters are active
 const hasActiveFilters = computed(() => {
-  return filters.value.order_status || filters.value.merchant || filters.value.product_id
+  return filters.value.order_status || filters.value.merchant || filters.value.product_id || filters.value.search
 })
 
 const toggleSidebar = () => {

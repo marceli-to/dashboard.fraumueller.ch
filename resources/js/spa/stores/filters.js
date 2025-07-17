@@ -9,7 +9,8 @@ export const useFiltersStore = defineStore('filters', () => {
   const defaultFilters = {
     order_status: '',
     merchant: '',
-    product_id: ''
+    product_id: '',
+    search: ''
   };
   
   // Load filters from localStorage
@@ -21,7 +22,8 @@ export const useFiltersStore = defineStore('filters', () => {
         return {
           order_status: parsed.order_status || defaultFilters.order_status,
           merchant: parsed.merchant || defaultFilters.merchant,
-          product_id: parsed.product_id || defaultFilters.product_id
+          product_id: parsed.product_id || defaultFilters.product_id,
+          search: parsed.search || defaultFilters.search
         };
       }
     } catch (error) {
