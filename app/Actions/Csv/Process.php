@@ -97,6 +97,18 @@ class Process
                     continue;
                 }
 
+                // Skip if financial status is refunded
+                if (strtolower($data['Financial Status']) === 'refunded') {
+                    $this->skipped++;
+                    $this->skippedRows[] = [
+                        'order_id' => $data['Order ID'],
+                        'reason' => 'Order refunded',
+                        'email' => $data['Email'] ?? 'N/A',
+                    ];
+
+                    continue;
+                }
+
                 Order::create([
                     'order_id' => $data['Order ID'],
                     'payment_method' => strtolower($data['Payment Method']),

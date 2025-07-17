@@ -88,21 +88,34 @@ const props = defineProps({
   pagination: {
     type: Object,
     default: null
+  },
+  filteredData: {
+    type: Array,
+    default: () => []
   }
 })
 
 const emit = defineEmits(['update:selectedItems', 'cell-click', 'action-click', 'toggle-select-all', 'sort', 'page-change'])
 
 const isAllSelected = computed(() => {
-  return props.data.length > 0 && props.selectedItems.length === props.data.length
+  const dataToCheck = props.filteredData.length > 0 ? props.filteredData : props.data
+  const allItemIds = dataToCheck.map(item => item[props.selectableKey])
+  return dataToCheck.length > 0 && allItemIds.every(id => props.selectedItems.includes(id))
 })
 
 const handleToggleSelectAll = (checked) => {
+  const dataToCheck = props.filteredData.length > 0 ? props.filteredData : props.data
+  
   if (checked) {
-    const allIds = props.data.map(item => item[props.selectableKey])
-    emit('update:selectedItems', allIds)
+    const allIds = dataToCheck.map(item => item[props.selectableKey])
+    // Merge with existing selections to preserve selections from other filters
+    const mergedIds = [...new Set([...props.selectedItems, ...allIds])]
+    emit('update:selectedItems', mergedIds)
   } else {
-    emit('update:selectedItems', [])
+    // Remove only the filtered items from selection
+    const filteredIds = dataToCheck.map(item => item[props.selectableKey])
+    const remainingIds = props.selectedItems.filter(id => !filteredIds.includes(id))
+    emit('update:selectedItems', remainingIds)
   }
   emit('toggle-select-all', checked)
 }

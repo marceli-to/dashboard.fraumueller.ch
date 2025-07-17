@@ -29,6 +29,7 @@
 
     <DataTable
       :data="paginatedOrders"
+      :filtered-data="filteredAndSortedOrders"
       :columns="tableColumns"
       :actions="tableActions"
       :selectable="true"
@@ -288,7 +289,7 @@ onMounted(async () => {
 
 // Event handlers
 const handleToggleSelectAll = (checked) => {
-  toggleSelectAll(checked, paginatedOrders.value);
+  toggleSelectAll(checked, filteredAndSortedOrders.value);
 };
 
 const handleApplyBulkAction = async () => {
