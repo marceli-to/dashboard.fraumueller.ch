@@ -19,7 +19,7 @@ class Confirmation
         ->whereNull('confirmed_at')
         ->where('merchant', 'twint')
         ->whereNotNull('email')
-        ->limit(100)
+        ->limit(3)
         ->get();
 
     foreach ($orders as $order) {

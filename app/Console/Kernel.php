@@ -12,7 +12,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        // $schedule->command('orders:send-confirmations --force')->everyMinute();
+        // $schedule->command('orders:send-confirmations')->everyMinute();
     }
 
     /**
