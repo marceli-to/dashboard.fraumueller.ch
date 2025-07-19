@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Log;
 
 class Confirmation
 {
-
   /**
    * Execute confirmation notifications for unconfirmed orders
    */
