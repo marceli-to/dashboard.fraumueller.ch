@@ -22,6 +22,14 @@
               Import
             </router-link>
           </li>
+          <li>
+            <router-link
+              :to="{ name: 'logs' }"
+              class="p-12 block w-full text-white hover:bg-white hover:text-black transition-colors duration-150"
+              :class="{ '!text-black bg-white border-b-black': $route.name === 'logs' }">
+              Log
+            </router-link>
+          </li>
         </ul>
       </nav>
     </div>

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\OrderController;
+use App\Http\Controllers\Api\OrderLogController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\UploadController;
 use App\Http\Controllers\Api\ExportController;
@@ -25,6 +26,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/orders/{order}', [OrderController::class, 'show']);
     Route::put('/orders/{order}', [OrderController::class, 'update']);
     Route::delete('/orders/{order}', [OrderController::class, 'destroy']);
+    Route::get('/order-logs', [OrderLogController::class, 'index']);
     Route::get('/products', [ProductController::class, 'index']);
     Route::post('/upload', [UploadController::class, 'store']);
     Route::post('/upload/process', [UploadController::class, 'process']);

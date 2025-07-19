@@ -82,6 +82,11 @@ export const getProducts = async () => {
   return response.data;
 };
 
+export const getOrderLogs = async () => {
+  const response = await api.get('/order-logs');
+  return response.data;
+};
+
 
 // csv processing
 export const processCsv = async (filePath, merchant) => {

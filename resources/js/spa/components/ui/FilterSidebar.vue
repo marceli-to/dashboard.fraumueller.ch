@@ -31,7 +31,7 @@
               id="filter-search"
               v-model="filters.search"
               type="text"
-              placeholder="Name, E-Mail, Produkt..."
+              placeholder="Bestellungs-ID, Name, E-Mail, Produkt..."
             />
           </div>
           <!-- Order Status Filter -->

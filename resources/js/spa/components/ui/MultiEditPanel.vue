@@ -21,12 +21,23 @@
           rows="4"
           @update:model-value="handleNotesChange" />
       </div>
+
+      <div v-if="selectedAction === 'update-product'">
+        <Label for="bulk-product" label="Produkt" />
+        <Select
+          id="bulk-product"
+          v-model="productValue"
+          :options="productOptions"
+          placeholder="Produkt wählen..."
+          @update:model-value="handleProductChange" />
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, ref, onMounted } from 'vue'
+import { getProducts } from '@/services/api'
 import Select from '@/components/input/Select.vue'
 import Label from '@/components/input/Label.vue'
 import Textarea from '@/components/input/Textarea.vue'
@@ -50,9 +61,11 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['action-selected', 'notes-changed'])
+const emit = defineEmits(['action-selected', 'notes-changed', 'product-changed'])
 
 const notesValue = ref('')
+const productValue = ref('')
+const productOptions = ref([])
 
 const entityLabel = computed(() => {
   return props.selectedCount !== 1 
@@ -67,10 +80,31 @@ const handleActionChange = (action) => {
     if (action !== 'notes') {
       notesValue.value = ''
     }
+    // Clear product when switching away from update-product action
+    if (action !== 'update-product') {
+      productValue.value = ''
+    }
   }
 }
 
 const handleNotesChange = (value) => {
   emit('notes-changed', value)
 }
+
+const handleProductChange = (value) => {
+  emit('product-changed', value)
+}
+
+const loadProducts = async () => {
+  try {
+    const products = await getProducts()
+    productOptions.value = products.data
+  } catch (err) {
+    console.error('Error loading products:', err)
+  }
+}
+
+onMounted(() => {
+  loadProducts()
+})
 </script>

@@ -14,9 +14,10 @@ class OrderConfirmation extends Notification
    *
    * @return void
    */
-  public function __construct($data = null)
+  public function __construct($data = null, $template = null)
   {
     $this->data = $data;
+    $this->template = $template;
   }
 
   /**
@@ -38,13 +39,19 @@ class OrderConfirmation extends Notification
    */
   public function toMail($notifiable)
   {
+    // Get subject from template or use default
+    $subject = $this->template['subject'] ?? config('order_confirmation.default_subject', 'Bestellbestätigung fraumueller.ch');
+    
     return (new MailMessage)
       ->from(env('MAIL_FROM_ADDRESS'))
       ->replyTo(env('MAIL_TO'))
-      ->subject('Bestellbestätigung fraumueller.ch')
-      ->markdown('mail.order.confirmation', ['data' => $this->data]);
+      ->subject($subject)
+      ->markdown('mail.order.confirmation', [
+        'data' => $this->data,
+        'template' => $this->template
+      ]);
   }
-
+  
   /**
    * Get the array representation of the notification.
    *

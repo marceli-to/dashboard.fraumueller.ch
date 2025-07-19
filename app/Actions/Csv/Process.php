@@ -313,7 +313,6 @@ class Process
         }
     }
 
-
     protected function moveToProcessed(string $filePath): void
     {
         $processedPath = str_replace('csv/pending', 'csv/processed', $filePath);

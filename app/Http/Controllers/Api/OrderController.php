@@ -99,6 +99,7 @@ class OrderController extends Controller
       'order_ids.*' => 'required|exists:orders,id',
       'order_status' => 'sometimes|in:open,fulfilled',
       'notes' => 'sometimes|nullable|string',
+      'product_id' => 'sometimes|required|exists:products,id',
     ]);
 
     try {
@@ -107,6 +108,10 @@ class OrderController extends Controller
       // Add fields to update based on what's provided
       if (isset($validated['order_status'])) {
         $updateData['order_status'] = $validated['order_status'];
+      }
+      
+      if (isset($validated['product_id'])) {
+        $updateData['product_id'] = $validated['product_id'];
       }
       
       if (array_key_exists('notes', $validated)) {

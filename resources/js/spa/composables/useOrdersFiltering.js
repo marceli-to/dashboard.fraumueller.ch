@@ -27,12 +27,14 @@ export const useOrdersFiltering = (orders, sortKey, sortDirection) => {
     if (filters.value.search) {
       const searchTerm = filters.value.search.toLowerCase();
       filtered = filtered.filter(order => {
+        const orderId = order.order_id?.toLowerCase() || '';
         const email = order.email?.toLowerCase() || '';
         const phone = order.phone?.toLowerCase() || '';
         const product = order.product_name?.toLowerCase() || '';
         const billingName = order.billing_name?.toLowerCase() || '';
         
-        return email.includes(searchTerm) || 
+        return orderId.includes(searchTerm) ||
+               email.includes(searchTerm) || 
                phone.includes(searchTerm) || 
                product.includes(searchTerm) ||
                billingName.includes(searchTerm);

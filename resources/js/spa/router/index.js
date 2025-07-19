@@ -4,6 +4,7 @@ import Orders from '@/views/orders/Index.vue';
 import UpdateForm from '@/views/orders/UpdateForm.vue';
 import CreateForm from '@/views/orders/CreateForm.vue';
 import Import from '@/views/import/Index.vue';
+import Logs from '@/views/log/Index.vue';
 
 // Error pages
 import Error401 from '@/views/error/401.vue';
@@ -17,6 +18,7 @@ const routes = [
   { path: '/dashboard/bestellungen/erstellen', name: 'orders.create', component: CreateForm },
   { path: '/dashboard/bestellungen/bearbeiten/:id', name: 'orders.edit', component: UpdateForm },
   { path: '/dashboard/import', name: 'import', component: Import },
+  { path: '/dashboard/log', name: 'logs', component: Logs },
 
   // Error pages
   { path: '/error/401', name: '401', component: Error401 },

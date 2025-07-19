@@ -91,7 +91,8 @@
           :actions="bulkActions"
           :selected-action="selectedAction"
           @action-selected="selectedAction = $event"
-          @notes-changed="notesValue = $event" />
+          @notes-changed="notesValue = $event"
+          @product-changed="productValue = $event" />
         
         <div class="flex gap-x-16">
           <ButtonPrimary
@@ -217,6 +218,7 @@ const {
   selectedOrderIds, 
   selectedAction, 
   notesValue, 
+  productValue,
   exportResult, 
   toggleSelectAll, 
   clearMultiEditState, 
@@ -297,6 +299,10 @@ const handleApplyBulkAction = async () => {
     const result = await applyBulkAction();
     if (result.success && result.type !== 'export') {
       closeMultiEditDialog();
+      // Reload orders after product updates to ensure data consistency
+      if (result.type === 'product') {
+        await loadOrders();
+      }
     }
   } catch (error) {
     alert('Fehler beim Anwenden der Massenbearbeitung');

@@ -1,11 +1,12 @@
 import { ref } from 'vue';
-import { bulkUpdateOrders, exportOrdersCsv } from '@/services/api';
+import { bulkUpdateOrders, exportOrdersCsv, getProducts } from '@/services/api';
 
 export const useOrdersMultiEdit = (orders) => {
   // Multi-edit state
   const selectedOrderIds = ref([]);
   const selectedAction = ref('');
   const notesValue = ref('');
+  const productValue = ref('');
   const exportResult = ref(null);
 
   // Selection operations
@@ -22,6 +23,7 @@ export const useOrdersMultiEdit = (orders) => {
     selectedOrderIds.value = [];
     selectedAction.value = '';
     notesValue.value = '';
+    productValue.value = '';
     exportResult.value = null;
   };
 
@@ -70,6 +72,14 @@ export const useOrdersMultiEdit = (orders) => {
         
         clearMultiEditState();
         return { success: true, type: 'notes' };
+      } else if (selectedAction.value === 'update-product') {
+        // Handle product update
+        await bulkUpdateOrders(selectedOrderIds.value, { product_id: productValue.value });
+        
+        // Note: Local data will be refreshed from server by the calling component
+        
+        clearMultiEditState();
+        return { success: true, type: 'product' };
       } else {
         // Handle status updates
         let newStatus = '';
@@ -100,6 +110,7 @@ export const useOrdersMultiEdit = (orders) => {
     selectedOrderIds,
     selectedAction,
     notesValue,
+    productValue,
     exportResult,
     toggleSelectAll,
     clearMultiEditState,

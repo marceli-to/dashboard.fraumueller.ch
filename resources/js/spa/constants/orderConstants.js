@@ -3,6 +3,7 @@ export const bulkActions = [
   { value: 'status-fulfilled', label: 'Status erledigt' },
   { value: 'notes', label: 'Bemerkungen' },
   { value: 'export-csv', label: 'Export CSV' },
+  { value: 'update-product', label: 'Produkt aktualisieren' },
   // { value: 'generate-labels', label: 'Etiketten generieren' }
 ];
 
