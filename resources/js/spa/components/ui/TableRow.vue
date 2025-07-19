@@ -27,7 +27,7 @@
     </td>
     <td v-if="actions.length > 0" class="py-12 text-right space-x-6 whitespace-nowrap">
       <component
-        v-for="action in actions"
+        v-for="action in visibleActions"
         :key="action.key"
         :is="action.component"
         v-bind="getActionProps(action)"
@@ -77,7 +77,11 @@ const getCellClasses = (column) => {
   const baseClasses = ['py-12']
   
   if (column.cellClasses) {
-    baseClasses.push(column.cellClasses)
+    if (typeof column.cellClasses === 'function') {
+      baseClasses.push(column.cellClasses(props.item))
+    } else {
+      baseClasses.push(column.cellClasses)
+    }
   }
   
   return baseClasses.join(' ')
@@ -115,6 +119,15 @@ const getActionProps = (action) => {
   
   return baseProps
 }
+
+const visibleActions = computed(() => {
+  return props.actions.filter(action => {
+    if (typeof action.visible === 'function') {
+      return action.visible(props.item)
+    }
+    return true // Show action if no visible function is defined
+  })
+})
 
 const handleCellClick = (column) => {
   if (column.clickable) {

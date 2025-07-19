@@ -1,5 +1,5 @@
 import { ref } from 'vue';
-import IconEdit from '@/components/icons/Edit.vue';
+import IconEdit from '@/components/icons/Pencil.vue';
 import IconTrash from '@/components/icons/Trash.vue';
 import IconMagnifyingGlass from '@/components/icons/MagnifyingGlass.vue';
 import StatusBadge from '@/components/ui/StatusBadge.vue';

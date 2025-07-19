@@ -18,7 +18,7 @@ class Confirmation
         ->whereNull('confirmed_at')
         ->where('merchant', 'twint')
         ->whereNotNull('email')
-        ->limit(3)
+        ->limit(100)
         ->get();
 
     foreach ($orders as $order) {
@@ -32,7 +32,7 @@ class Confirmation
             ['order_id' => $order->order_id],
             [
               'email' => $order->email,
-              'info' => 'Ungültiges Produkt',
+              'info' => 'Kein Template für «'.$order->product->name.'» gefunden',
               'status' => 'error'
             ]
           );
