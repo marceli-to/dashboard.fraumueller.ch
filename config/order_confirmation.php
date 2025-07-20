@@ -25,6 +25,10 @@ return [
         'name' => 'Erste Ausgabe',
         'subject' => 'Erstausgabe - fraumueller.ch'
       ],
+      'jahresabo' => [
+        'name' => 'Jahresabo',
+        'subject' => 'Jahresabo - fraumueller.ch'
+      ],
       'jahresabo-erstausgabe' => [
         'name' => 'Jahresabo Erstausgabe',
         'subject' => 'Jahresabo Erstausgabe - fraumueller.ch'
@@ -40,6 +44,10 @@ return [
       'trikot-m-l' => [
         'name' => 'Trikot_M/L',
         'subject' => 'Original Frau Müller Trikot - fraumueller.ch'
+      ],
+      'fankurve' => [
+        'name' => 'Fankurve',
+        'subject' => 'Fankurve - fraumueller.ch'
       ],
   ],
 

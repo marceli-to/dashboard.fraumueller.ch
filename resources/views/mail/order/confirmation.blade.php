@@ -21,12 +21,22 @@
     www.fraumueller.ch<br><br>
     Nun wünschen wir dir eine tolle EM – hoffentlich sehen wir uns vor, im oder neben dem Stadion!<br><br>
     @endif
+    @if ($template['key'] === 'jahresabo')
+    Danke, dass du das Jahresabo von Frau Müller bestellt hast. Du bekommst das Magazin in den nächsten Tagen per Post zugeschickt.<br><br>
+    Wenn du Fragen hast, kannst du dich jederzeit gern an uns wenden oder auf unserer Webseite über Frau Müller informieren:<br>
+    www.fraumueller.ch<br><br>
+    Nun wünschen wir dir eine tolle EM – hoffentlich sehen wir uns vor, im oder neben dem Stadion!<br><br>
+    @endif
     @if ($template['key'] === 'trikot' || $template['key'] === 'trikot-xs-s' || $template['key'] === 'trikot-m-l')
     Danke, dass du das Original Frau Müller Trikot bestellt hast und willkommen im Fanclub von Frau Müller.<br><br> 
     Wie du bereits bei der Bestellung gesehen hast, wird das Trikot erst im September geliefert. Du musst dich leider noch etwas gedulden.<br><br>
     Wenn du ein Abo von Frau Müller lösen möchtest (oder dich sonst auf unserer Webseite umschauen willst), kannst du das hier tun:<br>
     www.fraumueller.ch<br><br>
     Wir wünschen dir trotzdem weiterhin eine tolle EM – hoffentlich sehen wir uns vor, im oder neben dem Stadion!<br><br>
+    @endif
+    @if ($template['key'] === 'fankurve')
+    Danke, dass du das Fankurven-Abo bestellt hast und willkommen in der Fankurve von Frau Müller! Du bekommst die erste Ausgabe des Magazins in den nächsten Tagen zugeschickt.<br><br> 
+    Wir geben dir zudem rechtzeitig Bescheid, wann der nächste Fankurven-Anlass stattfindet. Be prepared!<br><br>
     @endif
     Und vergiss nicht: Frau Müller ♥️ you<br><br>
     Beste Grüsse<br>Frau Müller
