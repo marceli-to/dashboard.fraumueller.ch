@@ -31,9 +31,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-      Mail::alwaysTo('m@marceli.to');
-      // if (!app()->environment('production')) {
-      //   Mail::alwaysTo('m@marceli.to');
-      // }
+      if (!app()->environment('production')) {
+        Mail::alwaysTo('m@marceli.to');
+      }
     }
 }
