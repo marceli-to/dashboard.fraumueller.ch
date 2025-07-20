@@ -44,6 +44,7 @@ class OrderConfirmation extends Notification
     
     return (new MailMessage)
       ->from(env('MAIL_FROM_ADDRESS'))
+      ->bcc(env('MAIL_BCC'))
       ->replyTo(env('MAIL_TO'))
       ->subject($subject)
       ->markdown('mail.order.confirmation', [
