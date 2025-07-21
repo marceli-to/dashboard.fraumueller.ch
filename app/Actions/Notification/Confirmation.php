@@ -13,16 +13,22 @@ class Confirmation
    */
   public function execute(): void
   {
-    // Get all orders where confirmed_at is NULL
+    // Get all orders where confirmed_at is NULL and haven't been attempted since last update
     $orders = Order::with('product')
-        ->whereNull('confirmed_at')
-        ->where('merchant', 'twint')
-        ->whereNotNull('email')
-        ->limit(3)
-        ->get();
+      ->whereNull('confirmed_at')
+      ->where('merchant', 'twint')
+      ->whereNotNull('email')
+      ->where(function ($query) {
+        $query->whereNull('last_confirmation_attempt_at')->orWhereColumn('last_confirmation_attempt_at', '<', 'updated_at');
+      })
+      ->limit(3)
+      ->get();
 
     foreach ($orders as $order) {
       try {
+        // Update attempt timestamp at the start of processing
+        $order->update(['last_confirmation_attempt_at' => now()]);
+        
         // Check if product has a valid template key
         $productKey = $this->getProductKey($order);
         

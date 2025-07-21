@@ -43,6 +43,7 @@ class Order extends Model
     'notes',
     'paid_at',
     'confirmed_at',
+    'last_confirmation_attempt_at',
     'order_status',
     'merchant',
   ];
@@ -56,6 +57,7 @@ class Order extends Model
     'quantity' => 'integer',
     'paid_at' => 'datetime',
     'confirmed_at' => 'datetime',
+    'last_confirmation_attempt_at' => 'datetime',
     'order_status' => OrderStatus::class,
   ];
 
