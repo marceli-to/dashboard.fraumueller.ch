@@ -84,6 +84,13 @@ class OrderController extends Controller
       'billing_city' => 'sometimes|required|string|max:255',
       'billing_zip' => 'sometimes|required|string|max:255',
       'billing_country' => 'sometimes|nullable|string|max:255',
+      'shipping_name' => 'nullable|string|max:255',
+      'shipping_address_1' => 'nullable|string|max:255',
+      'shipping_address_2' => 'nullable|string|max:255',
+      'shipping_city' => 'nullable|string|max:255',
+      'shipping_zip' => 'nullable|string|max:255',
+      'shipping_province' => 'nullable|string|max:255',
+      'shipping_country' => 'nullable|string|max:255',
       'notes' => 'sometimes|nullable|string',
     ]);
 
