@@ -106,8 +106,13 @@ class Export
 
   private function saveCsv(string $filename, string $csvContent): string
   {
-    // Ensure the directory exists
-    Storage::makeDirectory('public/csv/export');
+    // Ensure the directory exists with proper permissions
+    if (!Storage::exists('public/csv/export')) {
+        Storage::makeDirectory('public/csv/export');
+        // Fix permissions after creation
+        $fullPath = storage_path('app/public/csv/export');
+        chmod($fullPath, 0755);
+    }
 
     // Save the CSV file
     $filePath = 'public/csv/export/' . $filename;
