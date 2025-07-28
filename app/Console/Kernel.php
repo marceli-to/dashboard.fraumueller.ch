@@ -11,6 +11,7 @@ class Kernel extends ConsoleKernel
   protected function schedule(Schedule $schedule): void
   {
     $schedule->command('orders:send-confirmations')->everyMinute();
+    $schedule->command('db:backup')->everyHour();
     // $schedule->command('mail:testmail')->everyMinute();
   }
 
