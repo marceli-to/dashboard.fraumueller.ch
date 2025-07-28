@@ -75,6 +75,7 @@ class OrderController extends Controller
   public function update(Request $request, Order $order)
   {
     $validated = $request->validate([
+      'order_status' => 'sometimes|in:open,fulfilled',
       'product_id' => 'sometimes|required|exists:products,id',
       'email' => 'sometimes|required|email|max:255',
       'phone' => 'sometimes|nullable|string|max:255',
