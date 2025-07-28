@@ -85,12 +85,12 @@ class Process
             try {
                 $data = array_combine($headers, $row);
 
-                // Skip if order already exists
-                if (Order::where('order_id', $data['Order ID'])->exists()) {
+                // Skip if order already exists (check by payment_reference)
+                if (Order::where('payment_reference', $data['Payment Reference'])->exists()) {
                     $this->skipped++;
                     $this->skippedRows[] = [
                         'order_id' => $data['Order ID'],
-                        'reason' => 'Order already exists',
+                        'reason' => 'Order already exists (payment reference match)',
                         'email' => $data['Email'] ?? 'N/A',
                     ];
 
@@ -257,12 +257,12 @@ class Process
 
                 $orderId = 'TW'.str_pad($orderCounter, 5, '0', STR_PAD_LEFT);
 
-                // Skip if order already exists
-                if (Order::where('order_id', $orderId)->exists()) {
+                // Skip if order already exists (check by payment_reference)
+                if (Order::where('payment_reference', $data[9])->exists()) {
                     $this->skipped++;
                     $this->skippedRows[] = [
                         'order_id' => $orderId,
-                        'reason' => 'Order already exists',
+                        'reason' => 'Order already exists (payment reference match)',
                         'email' => $data[18] ?? 'N/A',
                     ];
                     $orderCounter++;
