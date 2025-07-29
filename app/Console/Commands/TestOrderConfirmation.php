@@ -29,7 +29,6 @@ class TestOrderConfirmation extends Command
      */
     public function handle()
     {
-      dd(env('RESEND_API_KEY'));
       $order = Order::first();
       $template = config("order_confirmation.templates.erste-ausgabe");
       $template['key'] = 'erste-ausgabe';
