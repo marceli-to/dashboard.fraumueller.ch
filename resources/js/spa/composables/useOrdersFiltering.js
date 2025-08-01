@@ -53,6 +53,9 @@ export const useOrdersFiltering = (orders, sortKey, sortDirection) => {
       } else if (sortKey.value === 'product_id') {
         aValue = a.product_name?.toLowerCase() || '';
         bValue = b.product_name?.toLowerCase() || '';
+      } else if (sortKey.value === 'billing_name') {
+        aValue = a.billing_name?.toLowerCase() || '';
+        bValue = b.billing_name?.toLowerCase() || '';
       } else if (sortKey.value === 'order_status') {
         // Sort order: open first, then fulfilled
         const statusOrder = { 'open': 0, 'fulfilled': 1 };

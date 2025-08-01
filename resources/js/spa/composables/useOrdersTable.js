@@ -32,7 +32,9 @@ export const useOrdersTable = () => {
     {
       key: 'billing_name',
       label: 'Name',
-      cellClasses: 'pr-12 max-w-[250px]'
+      cellClasses: 'pr-12 max-w-[250px]',
+      sortable: true,
+      sortKey: 'billing_name'
     },
     {
       key: 'email',
