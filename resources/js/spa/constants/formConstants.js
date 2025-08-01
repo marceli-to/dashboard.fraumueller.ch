@@ -1,7 +1,8 @@
 export const paymentMethodOptions = [
   { value: 'twint', label: 'TWINT' },
   { value: 'invoice', label: 'Rechnung' },
-  { value: 'creditcard', label: 'Kreditkarte' }
+  { value: 'creditcard', label: 'Kreditkarte' },
+  { value: 'other', label: 'Andere' }
 ];
 
 export const merchantOptions = [
@@ -16,7 +17,7 @@ export const defaultFormData = {
   phone: '',
   payment_method: '',
   merchant: '',
-  total: '',
+  total: '0.00',
   paid_at: '',
   billing_name: '',
   billing_address_1: '',

@@ -25,7 +25,7 @@ class OrderController extends Controller
       'product_id' => 'required|exists:products,id',
       'email' => 'required|email|max:255',
       'phone' => 'nullable|string|max:255',
-      'payment_method' => 'required|in:stripe,paypal,twint,invoice,creditcard',
+      'payment_method' => 'required|in:stripe,paypal,twint,invoice,creditcard,other',
       'merchant' => 'required|in:twint,squarespace,other',
       'total' => 'required|numeric|min:0',
       'paid_at' => 'nullable|date',
