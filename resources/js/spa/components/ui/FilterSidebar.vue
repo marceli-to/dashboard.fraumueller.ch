@@ -167,7 +167,10 @@ const loadProducts = async () => {
     const products = await getProducts()
     productOptions.value = [
       { value: '', label: 'Alle' },
-      ...products.data
+      ...products.data.map(product => ({
+        value: product.id,
+        label: product.name
+      }))
     ]
   } catch (err) {
     console.error('Error loading products:', err)
