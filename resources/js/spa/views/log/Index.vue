@@ -185,7 +185,7 @@ const handlePageChange = (page) => {
 
 const handleActionClick = ({ action, item }) => {
   // Handle action clicks if needed
-  console.log('Action clicked:', action, item);
+  // console.log('Action clicked:', action, item);
 };
 
 // Load logs on mount

@@ -69,13 +69,6 @@ const loadProducts = async () => {
     isLoading.value = true;
     const response = await getProducts();
     products.value = response.data;
-    console.log('Products loaded:', response.data);
-    // Debug: Check specific product
-    const laLiga = response.data.find(p => p.name === 'La Liga Rosa');
-    if (laLiga) {
-      console.log('La Liga Rosa product:', laLiga);
-      console.log('confirmation_text:', laLiga.confirmation_text);
-    }
   } catch (error) {
     console.error(error);
     products.value = [];

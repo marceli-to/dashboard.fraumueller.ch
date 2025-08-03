@@ -24,7 +24,6 @@ const props = defineProps({
 
 const hasConfirmationText = computed(() => {
   const text = props.status;
-  console.log('ConfirmationTextIcon - status prop:', text);
   
   if (!text) return false;
   if (typeof text !== 'string') return false;

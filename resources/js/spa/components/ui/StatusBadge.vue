@@ -48,15 +48,6 @@ const props = defineProps({
   }
 })
 
-// Debug logging
-console.log('StatusBadge props:', {
-  status: props.status,
-  order_status: props.order_status,
-  value: props.value,
-  item: props.item,
-  allProps: Object.keys(props)
-})
-
 defineEmits(['click'])
 
 const displayStatus = computed(() => {
