@@ -13,7 +13,10 @@ export const useOrderData = () => {
   const loadProducts = async () => {
     try {
       const products = await getProducts();
-      productOptions.value = products.data;
+      productOptions.value = products.data.map(product => ({
+        value: product.id,
+        label: product.name
+      }));
     } catch (err) {
       throw new Error('Fehler beim Laden der Produkte: ' + (err.response?.data?.message || err.message));
     }
@@ -29,7 +32,10 @@ export const useOrderData = () => {
         getProducts()
       ]);
       
-      productOptions.value = products.data;
+      productOptions.value = products.data.map(product => ({
+        value: product.id,
+        label: product.name
+      }));
       
       return order;
     } catch (err) {
