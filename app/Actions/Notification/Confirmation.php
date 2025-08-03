@@ -29,28 +29,22 @@ class Confirmation
         // Update attempt timestamp at the start of processing
         $order->update(['last_confirmation_attempt_at' => now()]);
         
-        // Check if product has a valid template key
-        $productKey = $this->getProductKey($order);
-        
-        if (!$productKey) {
-          // Log invalid product (update if exists, create if not)
+        // Check if product has confirmation text
+        if (!$order->product || empty($order->product->confirmation_text)) {
+          // Log missing confirmation text
           OrderLog::updateOrCreate(
             ['order_id' => $order->order_id],
             [
               'email' => $order->email,
-              'info' => 'Kein Template für «'.$order->product->name.'» gefunden',
+              'info' => 'Kein Bestätigungstext für «'.$order->product->name.'» hinterlegt',
               'status' => 'error'
             ]
           );
           continue; // Skip this order
         }
-
-        // Get template config and add the key for mail template conditional logic
-        $template = config("order_confirmation.templates.{$productKey}");
-        $template['key'] = $productKey;
         
-        // Send confirmation notification with template
-        Notification::route('mail', $order->email)->notify(new OrderConfirmation($order, $template));
+        // Send confirmation notification with order
+        Notification::route('mail', $order->email)->notify(new OrderConfirmation($order));
 
         // Only update confirmed_at and log success if notification was sent successfully
         $order->update(['confirmed_at' => now()]);
@@ -85,26 +79,4 @@ class Confirmation
     }
   }
 
-  /**
-   * Get the template key for the order's product
-   */
-  private function getProductKey(Order $order): ?string
-  {
-    if (!$order->product || !$order->product->name) {
-      return null;
-    }
-
-    $productName = $order->product->name;
-    $templates = config('order_confirmation.templates', []);
-    
-    // Find matching template key based on product name
-    foreach ($templates as $key => $template)
-    {
-      if (strtolower($productName) === strtolower($template['name'])) {
-        return $key;
-      }
-    }
-
-    return null;
-  }
 }
