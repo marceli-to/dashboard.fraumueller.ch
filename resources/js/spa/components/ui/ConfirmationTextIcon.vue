@@ -1,11 +1,11 @@
 <template>
   <IconCheckmark 
     v-if="hasConfirmationText" 
-    class="size-16 text-green-600" 
+    class="text-green-600" 
   />
   <IconShield 
     v-else 
-    class="size-16 text-red-600" 
+    class="text-red-600" 
   />
 </template>
 
