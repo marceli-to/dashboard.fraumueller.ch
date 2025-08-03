@@ -98,7 +98,8 @@ class Confirmation
     $templates = config('order_confirmation.templates', []);
     
     // Find matching template key based on product name
-    foreach ($templates as $key => $template) {
+    foreach ($templates as $key => $template)
+    {
       if (strtolower($productName) === strtolower($template['name'])) {
         return $key;
       }

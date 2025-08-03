@@ -15,8 +15,7 @@
         <button
           v-if="column.sortable"
           @click="handleSort(column)"
-          class="flex items-center gap-x-4 hover:text-gray-600 transition-colors group"
-        >
+          class="inline-flex items-center gap-x-4 hover:text-gray-600 transition-colors group">
           {{ column.label }}
           <CaretUpDown class="text-gray-400 group-hover:text-gray-600" />
         </button>

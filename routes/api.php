@@ -28,6 +28,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/orders/{order}', [OrderController::class, 'destroy']);
     Route::get('/order-logs', [OrderLogController::class, 'index']);
     Route::get('/products', [ProductController::class, 'index']);
+    Route::get('/products/{product}', [ProductController::class, 'show']);
+    Route::post('/products', [ProductController::class, 'store']);
+    Route::put('/products/{product}', [ProductController::class, 'update']);
+    Route::delete('/products/{product}', [ProductController::class, 'destroy']);
     Route::post('/upload', [UploadController::class, 'store']);
     Route::post('/upload/process', [UploadController::class, 'process']);
     Route::post('/export/orders/csv', [ExportController::class, 'exportOrdersCsv']);

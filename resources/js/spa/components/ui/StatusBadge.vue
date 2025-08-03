@@ -32,7 +32,29 @@ const props = defineProps({
   clickable: {
     type: Boolean,
     default: false
+  },
+  // Add some debug props to see what else might be passed
+  order_status: {
+    type: String,
+    default: null
+  },
+  value: {
+    type: String,
+    default: null
+  },
+  item: {
+    type: Object,
+    default: null
   }
+})
+
+// Debug logging
+console.log('StatusBadge props:', {
+  status: props.status,
+  order_status: props.order_status,
+  value: props.value,
+  item: props.item,
+  allProps: Object.keys(props)
 })
 
 defineEmits(['click'])

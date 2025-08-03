@@ -16,6 +16,14 @@
           </li>
           <li>
             <router-link
+              :to="{ name: 'products' }"
+              class="p-12 block w-full text-white hover:bg-white hover:text-black transition-colors duration-150"
+              :class="{ '!text-black bg-white border-b-black': $route.name === 'products' }">
+              Produkte
+            </router-link>
+          </li>
+          <li>
+            <router-link
               :to="{ name: 'import' }"
               class="p-12 block w-full text-white hover:bg-white hover:text-black transition-colors duration-150"
               :class="{ '!text-black bg-white border-b-black': $route.name === 'import' }">

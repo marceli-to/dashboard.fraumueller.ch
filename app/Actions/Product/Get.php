@@ -9,12 +9,15 @@ class Get
 {
   public function execute(): Collection
   {
-    return Product::whereHas('orders')
+    return Product::withCount('orders')
       ->orderBy('name')
       ->get()
       ->map(fn($product) => [
-        'value' => $product->id,
-        'label' => $product->name
+        'id' => $product->id,
+        'name' => $product->name,
+        'confirmation_text' => $product->confirmation_text,
+        'orders_count' => $product->orders_count,
+        'created_at' => $product->created_at->format('d.m.Y H:i')
       ]);
   }
 }

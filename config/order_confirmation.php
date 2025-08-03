@@ -49,6 +49,18 @@ return [
         'name' => 'Fankurve',
         'subject' => 'Fankurve - fraumueller.ch'
       ],
+      'la-liga-rosa' => [
+        'name' => 'La Liga Rosa',
+        'subject' => 'La Liga Rosa - fraumueller.ch'
+      ],
+      'original-plakat' => [
+        'name' => 'Original Plakat',
+        'subject' => 'Original Plakat - fraumueller.ch'
+      ],
+      'plakat-frau-mueller-loves-you' => [
+        'name' => 'Plakat «Frau Müller Loves You»',
+        'subject' => 'Plakat «Frau Müller Loves You» - fraumueller.ch'
+      ]
   ],
 
   /*

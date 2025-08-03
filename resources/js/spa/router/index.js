@@ -1,6 +1,9 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import Home from '@/views/home/Index.vue';
 import Orders from '@/views/orders/Index.vue';
+import Products from '@/views/products/Index.vue';
+import ProductCreateForm from '@/views/products/CreateForm.vue';
+import ProductUpdateForm from '@/views/products/UpdateForm.vue';
 import UpdateForm from '@/views/orders/UpdateForm.vue';
 import CreateForm from '@/views/orders/CreateForm.vue';
 import Import from '@/views/import/Index.vue';
@@ -17,6 +20,9 @@ const routes = [
   { path: '/dashboard/bestellungen', name: 'orders', component: Orders },
   { path: '/dashboard/bestellungen/erstellen', name: 'orders.create', component: CreateForm },
   { path: '/dashboard/bestellungen/bearbeiten/:id', name: 'orders.edit', component: UpdateForm },
+  { path: '/dashboard/produkte', name: 'products', component: Products },
+  { path: '/dashboard/produkte/erstellen', name: 'products.create', component: ProductCreateForm },
+  { path: '/dashboard/produkte/bearbeiten/:id', name: 'products.edit', component: ProductUpdateForm },
   { path: '/dashboard/import', name: 'import', component: Import },
   { path: '/dashboard/log', name: 'logs', component: Logs },
 
