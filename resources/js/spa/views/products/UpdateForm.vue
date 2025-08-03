@@ -33,7 +33,7 @@
               id="confirmation_text"
               v-model="form.confirmation_text"
               placeholder="Text für die Bestellbestätigung..."
-              rows="4"
+              class="min-h-[240px]"
             />
           </div>
         </div>
