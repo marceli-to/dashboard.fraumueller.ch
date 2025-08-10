@@ -87,7 +87,7 @@ const tableColumns = [
     cellClasses: (item) => item.status === 'error' ? 'text-red-500' : ''
   },
   {
-    key: 'created_at',
+    key: 'updated_at',
     label: 'Erstellt am',
     sortable: false,
     formatter: (value) => {

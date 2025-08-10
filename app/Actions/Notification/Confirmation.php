@@ -21,14 +21,11 @@ class Confirmation
       ->where(function ($query) {
         $query->whereNull('last_confirmation_attempt_at')->orWhereColumn('last_confirmation_attempt_at', '<', 'updated_at');
       })
-      ->limit(3)
+      ->limit(100)
       ->get();
 
     foreach ($orders as $order) {
       try {
-        // Update attempt timestamp at the start of processing
-        $order->update(['last_confirmation_attempt_at' => now()]);
-        
         // Check if product has confirmation text
         if (!$order->product || empty($order->product->confirmation_text)) {
           // Log missing confirmation text
@@ -46,8 +43,11 @@ class Confirmation
         // Send confirmation notification with order
         Notification::route('mail', $order->email)->notify(new OrderConfirmation($order));
 
-        // Only update confirmed_at and log success if notification was sent successfully
-        $order->update(['confirmed_at' => now()]);
+        // Only update confirmed_at, attempt timestamp and log success if notification was sent successfully
+        $order->update([
+          'confirmed_at' => now(),
+          'last_confirmation_attempt_at' => now()
+        ]);
 
         // Log successful confirmation
         OrderLog::updateOrCreate(
@@ -66,7 +66,7 @@ class Confirmation
           'error' => $e->getMessage()
         ]);
 
-        // Log failed confirmation attempt
+        // Log failed confirmation attempt (but don't update last_confirmation_attempt_at to allow retries)
         OrderLog::updateOrCreate(
           ['order_id' => $order->order_id],
           [
