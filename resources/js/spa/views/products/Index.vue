@@ -33,7 +33,7 @@
 
 <script setup>
 import { ref, onMounted, computed } from 'vue';
-import { getProducts, deleteProduct } from '@/services/api';
+import { getProducts, deleteProduct, sendTestNotification } from '@/services/api';
 import { usePageTitle } from '@/composables/usePageTitle';
 
 // Composables
@@ -139,6 +139,18 @@ const handleCellClick = ({ column, item }) => {
 const handleActionClick = async ({ action, item }) => {
   if (action.key === 'edit') {
     // Router link handles this
+  } else if (action.key === 'send-test-notification') {
+    try {
+      const result = await sendTestNotification(item.id);
+      if (result.success) {
+        alert(result.message);
+      } else {
+        alert('Fehler beim Senden der Test-E-Mail: ' + result.message);
+      }
+    } catch (error) {
+      console.error('Error sending test notification:', error);
+      alert(error.response?.data?.message || 'Fehler beim Senden der Test-E-Mail');
+    }
   } else if (action.key === 'delete') {
     // Check if product has orders (frontend check)
     if (item.orders_count > 0) {

@@ -1,6 +1,7 @@
 import { ref } from 'vue';
 import IconEdit from '@/components/icons/Pencil.vue';
 import IconTrash from '@/components/icons/Trash.vue';
+import IconPaperPlane from '@/components/icons/PaperPlane.vue';
 import ConfirmationTextIcon from '@/components/ui/ConfirmationTextIcon.vue';
 
 export const useProductsTable = () => {
@@ -51,6 +52,23 @@ export const useProductsTable = () => {
   ];
 
   const tableActions = [
+    {
+      key: 'send-test-notification',
+      component: 'button',
+      componentProps: (item) => ({
+        class: `inline-block text-right transition-all ${
+          !item.confirmation_text 
+            ? 'text-gray-400 cursor-not-allowed' 
+            : 'hover:text-blue-500'
+        }`,
+        disabled: !item.confirmation_text,
+        title: !item.confirmation_text 
+          ? 'Kein Bestätigungstext vorhanden' 
+          : 'Test-E-Mail senden'
+      }),
+      icon: IconPaperPlane,
+      visible: (item) => !!item.confirmation_text
+    },
     {
       key: 'edit',
       component: 'router-link',

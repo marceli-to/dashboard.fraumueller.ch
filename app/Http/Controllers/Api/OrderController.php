@@ -43,6 +43,8 @@ class OrderController extends Controller
       'shipping_province' => 'nullable|string|max:255',
       'shipping_country' => 'nullable|string|max:255',
       'notes' => 'nullable|string',
+      'size' => 'nullable|string|max:255',
+      'quantity' => 'nullable|numeric|min:1',
     ]);
 
     // Generate order_id for manually created orders
@@ -93,6 +95,8 @@ class OrderController extends Controller
       'shipping_province' => 'nullable|string|max:255',
       'shipping_country' => 'nullable|string|max:255',
       'notes' => 'sometimes|nullable|string',
+      'size' => 'nullable|string|max:255',
+      'quantity' => 'nullable|numeric|min:1',
     ]);
 
     $updatedOrder = (new UpdateOrderAction)->execute($order, $validated);

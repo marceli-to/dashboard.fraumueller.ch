@@ -19,14 +19,36 @@
         <h2 class="text-sm font-medium mb-20">
           Produkt
         </h2>
-        <div>
-          <Label for="product_id" label="Produkt" :required="true" />
-          <Select
-            id="product_id"
-            v-model="form.product_id"
-            :options="productOptions"
-            placeholder="Produkt wählen..."
-          />
+        <div class="flex flex-col gap-y-20">
+          <div>
+            <Label for="product_id" label="Produkt" :required="true" />
+            <Select
+              id="product_id"
+              v-model="form.product_id"
+              :options="productOptions"
+              placeholder="Produkt wählen..."
+            />
+          </div>
+          <div class="grid grid-cols-2 gap-x-16">
+            <div>
+              <Label for="quantity" label="Anzahl" :required="true" />
+              <Input
+                id="quantity"
+                v-model="form.quantity"
+                type="number"
+                min="1"
+                :required="true"
+              />
+            </div>
+            <div>
+              <Label for="size" label="Grösse" />
+              <Input
+                id="size"
+                v-model="form.size"
+                placeholder="z.B. 36-40, L, XL"
+              />
+            </div>
+          </div>
         </div>
       </section>
 

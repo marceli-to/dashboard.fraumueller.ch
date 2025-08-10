@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Actions\Product\Get as GetProductsAction;
+use App\Actions\Product\SendTestNotification;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use Illuminate\Http\Request;
@@ -89,5 +90,19 @@ class ProductController extends Controller
     return response()->json([
       'message' => 'Produkt wurde erfolgreich gelöscht.'
     ]);
+  }
+
+  public function sendTestNotification($id)
+  {
+    try {
+      $result = (new SendTestNotification)->execute($id);
+      
+      return response()->json($result);
+    } catch (\Exception $e) {
+      return response()->json([
+        'success' => false,
+        'message' => $e->getMessage()
+      ], 400);
+    }
   }
 }

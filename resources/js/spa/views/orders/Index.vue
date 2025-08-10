@@ -1,8 +1,10 @@
 <template>
   <template v-if="!isLoading">
+
     <h1 class="text-lg leading-[1.25]">
       Bestellungen
     </h1>
+
     <div class="absolute right-16 top-16 flex gap-x-16">
       <button
         v-if="selectedOrderIds.length > 0"
@@ -117,7 +119,17 @@
           <Label for="product" label="Produkt" class="!mb-4" />
           <div>{{ selectedOrder.product_name || '-' }}</div>
         </div>
-        <div>
+        <div class="grid grid-cols-2 gap-x-20">
+          <div>
+            <Label for="size" label="Grösse" class="!mb-4" />
+            <div>{{ selectedOrder.size || '-' }}</div>
+          </div>
+          <div>
+            <Label for="quantity" label="Anzahl" class="!mb-4" />
+            <div>{{ selectedOrder.quantity || '-' }}</div>
+          </div>
+        </div>
+        <div class="border-t pt-16">
           <Label for="email" label="E-Mail" class="!mb-4" />
           <div>{{ selectedOrder.email || '-' }}</div>
         </div>

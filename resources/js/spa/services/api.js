@@ -102,6 +102,11 @@ export const deleteProduct = async (id) => {
   return response.data;
 };
 
+export const sendTestNotification = async (id) => {
+  const response = await api.post(`/products/${id}/send-test-notification`);
+  return response.data;
+};
+
 export const getOrderLogs = async () => {
   const response = await api.get('/order-logs');
   return response.data;

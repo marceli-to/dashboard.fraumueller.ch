@@ -154,6 +154,7 @@ class Process
                         'product_sku' => $product['sku'],
                         'product_price' => (float) $product['price'],
                         'quantity' => (int) $product['quantity'],
+                        'size' => $product['size'],
                         'notes' => $data['Private Notes'] ?? null,
                         'paid_at' => $data['Paid at'] ? Carbon::parse($data['Paid at']) : null,
                         'confirmed_at' => now(),
@@ -193,6 +194,7 @@ class Process
                     'sku' => $data['Lineitem sku'],
                     'price' => $data['Lineitem price'],
                     'quantity' => $data['Lineitem quantity'],
+                    'size' => $data['Lineitem variant'] ?? null,
                 ];
             } else {
                 // Create new order or update existing one with main order data
@@ -203,6 +205,7 @@ class Process
                         'sku' => $data['Lineitem sku'],
                         'price' => $data['Lineitem price'],
                         'quantity' => $data['Lineitem quantity'],
+                        'size' => $data['Lineitem variant'] ?? null,
                     ]],
                 ];
             }

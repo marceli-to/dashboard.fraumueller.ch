@@ -13,6 +13,8 @@ export const merchantOptions = [
 
 export const defaultFormData = {
   product_id: '',
+  quantity: 1,
+  size: '',
   email: '',
   phone: '',
   payment_method: '',
@@ -37,6 +39,8 @@ export const defaultFormData = {
 
 export const updateFormFields = [
   'product_id',
+  'quantity',
+  'size',
   'email', 
   'phone',
   'billing_name',

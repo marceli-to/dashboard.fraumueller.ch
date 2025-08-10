@@ -40,6 +40,7 @@ class Order extends Model
     'product_sku',
     'product_price',
     'quantity',
+    'size',
     'notes',
     'paid_at',
     'confirmed_at',

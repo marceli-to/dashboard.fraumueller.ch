@@ -37,6 +37,7 @@ class OrderResource extends JsonResource
             'product_id' => $this->product_id,
             'product_name' => $this->product?->name,
             'quantity' => $this->quantity,
+            'size' => $this->size,
             'notes' => $this->notes,
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
             'paid_at' => $this->paid_at ? $this->paid_at->format('Y-m-d H:i:s') : null,
