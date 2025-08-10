@@ -9,7 +9,9 @@ class OrderLogController extends Controller
 {
   public function index()
   {
-    $logs = OrderLog::with('order:id,order_id')->orderBy('status', 'asc')->get();
+    $logs = OrderLog::with('order:id,order_id')
+      ->orderBy('status', 'asc')
+      ->get();
     return response()->json($logs);
   }
 }

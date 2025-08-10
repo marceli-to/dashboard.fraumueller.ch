@@ -18,7 +18,7 @@ class Process
 
     protected array $errors = [];
 
-    public function execute(string $filePath, string $merchant = null): array
+    public function execute(string $filePath, ?string $merchant = null): array
     {
         $this->resetCounters();
 
@@ -81,84 +81,134 @@ class Process
 
         $headers = fgetcsv($handle);
 
+        // Read all CSV data into memory
+        $allRows = [];
         while (($row = fgetcsv($handle)) !== false) {
-            try {
-                $data = array_combine($headers, $row);
+            $allRows[] = $row;
+        }
+        fclose($handle);
 
-                // Skip if order already exists (check by payment_reference)
-                if (Order::where('payment_reference', $data['Payment Reference'])->exists()) {
-                    $this->skipped++;
-                    $this->skippedRows[] = [
-                        'order_id' => $data['Order ID'],
-                        'reason' => 'Order already exists (payment reference match)',
-                        'email' => $data['Email'] ?? 'N/A',
-                    ];
+        // Group rows by Order ID
+        $groupedOrders = $this->groupOrderRows($headers, $allRows);
 
-                    continue;
-                }
+        // Process each grouped order
+        foreach ($groupedOrders as $orderData) {
+            $data = $orderData['main_data'];
 
-                // Skip if financial status is refunded
-                if (strtolower($data['Financial Status']) === 'refunded') {
-                    $this->skipped++;
-                    $this->skippedRows[] = [
-                        'order_id' => $data['Order ID'],
-                        'reason' => 'Order refunded',
-                        'email' => $data['Email'] ?? 'N/A',
-                    ];
-
-                    continue;
-                }
-
-                Order::create([
-                    'order_id' => $data['Order ID'],
-                    'payment_method' => strtolower($data['Payment Method']),
-                    'email' => $data['Email'],
-                    'currency' => $data['Currency'],
-                    'subtotal' => (float) $data['Subtotal'],
-                    'taxes' => (float) $data['Taxes'],
-                    'shipping' => (float) $data['Shipping'],
-                    'total' => (float) $data['Total'],
-                    'financial_status' => strtolower($data['Financial Status']),
-                    'fulfillment_status' => strtolower($data['Fulfillment Status']),
-                    'payment_reference' => $data['Payment Reference'],
-                    'billing_name' => $data['Billing Name'],
-                    'billing_address_1' => $data['Billing Address1'],
-                    'billing_address_2' => $data['Billing Address2'],
-                    'billing_city' => $data['Billing City'],
-                    'billing_zip' => $data['Billing Zip'],
-                    'billing_country' => $data['Billing Country'],
-                    'phone' => $data['Billing Phone'],
-                    'shipping_name' => $data['Shipping Name'],
-                    'shipping_address_1' => $data['Shipping Address1'],
-                    'shipping_address_2' => $data['Shipping Address2'],
-                    'shipping_city' => $data['Shipping City'],
-                    'shipping_zip' => $data['Shipping Zip'],
-                    'shipping_province' => $data['Shipping Province'],
-                    'shipping_country' => $data['Shipping Country'],
-                    'product_id' => Product::findOrCreateByName($data['Lineitem name'])->id,
-                    'product_sku' => $data['Lineitem sku'],
-                    'product_price' => (float) $data['Lineitem price'],
-                    'quantity' => (int) $data['Lineitem quantity'],
-                    'notes' => $data['Private Notes'] ?? null,
-                    'paid_at' => $data['Paid at'] ? Carbon::parse($data['Paid at']) : null,
-                    'confirmed_at' => now(),
-                    'created_at' => Carbon::parse($data['Created at']),
-                    'merchant' => $merchant,
-                ]);
-
-                $this->imported++;
-            } catch (\Exception $e) {
+            // Skip if financial status is refunded
+            if (strtolower($data['Financial Status']) === 'refunded') {
                 $this->skipped++;
                 $this->skippedRows[] = [
-                    'order_id' => $data['Order ID'] ?? 'Unknown',
-                    'reason' => 'Import error: '.$e->getMessage(),
+                    'order_id' => $data['Order ID'],
+                    'reason' => 'Order refunded',
                     'email' => $data['Email'] ?? 'N/A',
                 ];
-                $this->errors[] = $e->getMessage();
+
+                continue;
+            }
+
+            // Create separate Order record for each product
+            foreach ($orderData['products'] as $product) {
+                // Skip if this specific product already exists for this payment reference
+                if (Order::where('payment_reference', $data['Payment Reference'])
+                    ->where('product_sku', $product['sku'])
+                    ->exists()) {
+                    $this->skipped++;
+                    $this->skippedRows[] = [
+                        'order_id' => $data['Order ID'],
+                        'reason' => 'Product already exists for this payment reference (SKU: '.$product['sku'].')',
+                        'email' => $data['Email'] ?? 'N/A',
+                    ];
+
+                    continue;
+                }
+
+                try {
+                    Order::create([
+                        'order_id' => $data['Order ID'],
+                        'payment_method' => strtolower($data['Payment Method']),
+                        'email' => $data['Email'],
+                        'currency' => $data['Currency'],
+                        'subtotal' => (float) $data['Subtotal'],
+                        'taxes' => (float) $data['Taxes'],
+                        'shipping' => (float) $data['Shipping'],
+                        'total' => (float) $data['Total'],
+                        'financial_status' => strtolower($data['Financial Status']),
+                        'fulfillment_status' => strtolower($data['Fulfillment Status']),
+                        'payment_reference' => $data['Payment Reference'],
+                        'billing_name' => $data['Billing Name'],
+                        'billing_address_1' => $data['Billing Address1'],
+                        'billing_address_2' => $data['Billing Address2'],
+                        'billing_city' => $data['Billing City'],
+                        'billing_zip' => $data['Billing Zip'],
+                        'billing_country' => $data['Billing Country'],
+                        'phone' => $data['Billing Phone'],
+                        'shipping_name' => $data['Shipping Name'],
+                        'shipping_address_1' => $data['Shipping Address1'],
+                        'shipping_address_2' => $data['Shipping Address2'],
+                        'shipping_city' => $data['Shipping City'],
+                        'shipping_zip' => $data['Shipping Zip'],
+                        'shipping_province' => $data['Shipping Province'],
+                        'shipping_country' => $data['Shipping Country'],
+                        'product_id' => Product::findOrCreateByName($product['name'])->id,
+                        'product_sku' => $product['sku'],
+                        'product_price' => (float) $product['price'],
+                        'quantity' => (int) $product['quantity'],
+                        'notes' => $data['Private Notes'] ?? null,
+                        'paid_at' => $data['Paid at'] ? Carbon::parse($data['Paid at']) : null,
+                        'confirmed_at' => now(),
+                        'created_at' => Carbon::parse($data['Created at']),
+                        'merchant' => $merchant,
+                    ]);
+
+                    $this->imported++;
+                } catch (\Exception $e) {
+                    $this->skipped++;
+                    $this->skippedRows[] = [
+                        'order_id' => $data['Order ID'] ?? 'Unknown',
+                        'reason' => 'Import error: '.$e->getMessage(),
+                        'email' => $data['Email'] ?? 'N/A',
+                    ];
+                    $this->errors[] = $e->getMessage();
+                }
+            }
+        }
+    }
+
+    protected function groupOrderRows(array $headers, array $allRows): array
+    {
+        $groupedOrders = [];
+
+        foreach ($allRows as $row) {
+            $data = array_combine($headers, $row);
+            $orderId = $data['Order ID'];
+
+            // Check if this is a continuation row (same Order ID, empty email)
+            $isContinuationRow = isset($groupedOrders[$orderId]) && empty($data['Email']);
+
+            if ($isContinuationRow) {
+                // Add product data to existing order
+                $groupedOrders[$orderId]['products'][] = [
+                    'name' => $data['Lineitem name'],
+                    'sku' => $data['Lineitem sku'],
+                    'price' => $data['Lineitem price'],
+                    'quantity' => $data['Lineitem quantity'],
+                ];
+            } else {
+                // Create new order or update existing one with main order data
+                $groupedOrders[$orderId] = [
+                    'main_data' => $data,
+                    'products' => [[
+                        'name' => $data['Lineitem name'],
+                        'sku' => $data['Lineitem sku'],
+                        'price' => $data['Lineitem price'],
+                        'quantity' => $data['Lineitem quantity'],
+                    ]],
+                ];
             }
         }
 
-        fclose($handle);
+        return $groupedOrders;
     }
 
     protected function processTwintFile(string $path, string $merchant): void
@@ -186,11 +236,11 @@ class Process
                 $headerLine = $line;
             }
         }
-        
+
         // Parse header to find correct column indices
         $statusIndex = 20; // default
         $typeIndex = 2;    // default
-        if (!empty($headerLine)) {
+        if (! empty($headerLine)) {
             $headers = str_getcsv($headerLine, ';');
             foreach ($headers as $index => $header) {
                 $trimmedHeader = trim($header, '"');
@@ -202,10 +252,10 @@ class Process
                 }
             }
             // Log the detected indices for debugging
-            Log::info("TWINT CSV column indices detected", [
+            Log::info('TWINT CSV column indices detected', [
                 'statusIndex' => $statusIndex,
                 'typeIndex' => $typeIndex,
-                'headerLine' => $headerLine
+                'headerLine' => $headerLine,
             ]);
         }
 
@@ -239,6 +289,7 @@ class Process
                         'email' => $data[18] ?? 'N/A',
                     ];
                     $orderCounter++;
+
                     continue;
                 }
 
@@ -248,10 +299,11 @@ class Process
                     $this->skipped++;
                     $this->skippedRows[] = [
                         'order_id' => 'TW'.str_pad($orderCounter, 5, '0', STR_PAD_LEFT),
-                        'reason' => 'Not a payment transaction (Typ: ' . trim($type) . ')',
+                        'reason' => 'Not a payment transaction (Typ: '.trim($type).')',
                         'email' => $data[18] ?? 'N/A',
                     ];
                     $orderCounter++;
+
                     continue;
                 }
 
