@@ -24,6 +24,8 @@ class Confirmation
       ->limit(3)
       ->get();
 
+    dd($orders);
+
     foreach ($orders as $order) {
       try {
         // Check if product has confirmation text
