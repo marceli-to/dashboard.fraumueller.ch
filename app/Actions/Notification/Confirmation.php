@@ -21,7 +21,7 @@ class Confirmation
       ->where(function ($query) {
         $query->whereNull('last_confirmation_attempt_at')->orWhereColumn('last_confirmation_attempt_at', '<', 'updated_at');
       })
-      ->limit(100)
+      ->limit(3)
       ->get();
 
     foreach ($orders as $order) {
