@@ -37,6 +37,11 @@ class Confirmation
               'status' => 'error'
             ]
           );
+
+          $order->update([
+            'last_confirmation_attempt_at' => now()
+          ]);
+
           continue; // Skip this order
         }
         
@@ -75,6 +80,11 @@ class Confirmation
             'status' => 'error'
           ]
         );
+
+        $order->update([
+          'last_confirmation_attempt_at' => now()
+        ]);
+        
       }
     }
   }
