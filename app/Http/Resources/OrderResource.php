@@ -38,6 +38,8 @@ class OrderResource extends JsonResource
             'product_name' => $this->product?->name,
             'quantity' => $this->quantity,
             'size' => $this->size,
+            'subscription_start_at' => $this->subscription_start_at ? $this->subscription_start_at->format('Y-m-d') : null,
+            'subscription_end_at' => $this->subscription_end_at ? $this->subscription_end_at->format('Y-m-d') : null,
             'notes' => $this->notes,
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
             'paid_at' => $this->paid_at ? $this->paid_at->format('Y-m-d H:i:s') : null,

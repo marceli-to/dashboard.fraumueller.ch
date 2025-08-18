@@ -21,6 +21,8 @@ export const defaultFormData = {
   merchant: '',
   total: '0.00',
   paid_at: '',
+  subscription_start_at: '',
+  subscription_end_at: '',
   billing_name: '',
   billing_address_1: '',
   billing_address_2: '',
@@ -56,5 +58,7 @@ export const updateFormFields = [
   'shipping_zip',
   'shipping_province',
   'shipping_country',
-  'notes'
+  'notes',
+  'subscription_start_at',
+  'subscription_end_at'
 ];

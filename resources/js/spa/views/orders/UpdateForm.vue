@@ -29,6 +29,22 @@
               placeholder="Produkt wählen..."
             />
           </div>
+          <div>
+            <Label for="subscription_start_at" label="Abonnement Start" />
+            <Input
+              id="subscription_start_at"
+              v-model="form.subscription_start_at"
+              type="date"
+            />
+          </div>
+          <div>
+            <Label for="subscription_end_at" label="Abonnement Ende" />
+            <Input
+              id="subscription_end_at"
+              v-model="form.subscription_end_at"
+              type="date"
+            />
+          </div>
           <div class="grid grid-cols-2 gap-x-16">
             <div>
               <Label for="quantity" label="Anzahl" :required="true" />

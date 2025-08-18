@@ -94,7 +94,8 @@
           :selected-action="selectedAction"
           @action-selected="selectedAction = $event"
           @notes-changed="notesValue = $event"
-          @product-changed="productValue = $event" />
+          @product-changed="productValue = $event"
+          @subscription-changed="subscriptionValue = $event" />
         
         <div class="flex gap-x-16">
           <ButtonPrimary
@@ -127,6 +128,16 @@
           <div>
             <Label for="quantity" label="Anzahl" class="!mb-4" />
             <div>{{ selectedOrder.quantity || '-' }}</div>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-x-20">
+          <div>
+            <Label for="subscription_start_at" label="Abonnement Start" class="!mb-4" />
+            <div>{{ formatDateOnly(selectedOrder.subscription_start_at) || '-' }}</div>
+          </div>
+          <div>
+            <Label for="subscription_end_at" label="Abonnement Ende" class="!mb-4" />
+            <div>{{ formatDateOnly(selectedOrder.subscription_end_at) || '-' }}</div>
           </div>
         </div>
         <div class="border-t pt-16">
@@ -231,6 +242,7 @@ const {
   selectedAction, 
   notesValue, 
   productValue,
+  subscriptionValue,
   exportResult, 
   toggleSelectAll, 
   clearMultiEditState, 
@@ -340,4 +352,15 @@ const handlePageChange = (page) => {
 watch(filters, () => {
   currentPage.value = 1;
 }, { deep: true });
+
+// Utility function to format date as d.m.Y
+const formatDateOnly = (dateString) => {
+  if (!dateString) return '';
+  const date = new Date(dateString);
+  return date.toLocaleDateString('de-CH', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit'
+  });
+};
 </script>

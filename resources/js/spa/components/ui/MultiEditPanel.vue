@@ -31,6 +31,25 @@
           placeholder="Produkt wählen..."
           @update:model-value="handleProductChange" />
       </div>
+
+      <div v-if="selectedAction === 'update-subscription'" class="space-y-16">
+        <div>
+          <Label for="bulk-subscription-start" label="Abonnement Start" />
+          <Input
+            id="bulk-subscription-start"
+            v-model="subscriptionStartValue"
+            type="date"
+            @update:model-value="handleSubscriptionChange" />
+        </div>
+        <div>
+          <Label for="bulk-subscription-end" label="Abonnement Ende" />
+          <Input
+            id="bulk-subscription-end"
+            v-model="subscriptionEndValue"
+            type="date"
+            @update:model-value="handleSubscriptionChange" />
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -41,6 +60,7 @@ import { getProducts } from '@/services/api'
 import Select from '@/components/input/Select.vue'
 import Label from '@/components/input/Label.vue'
 import Textarea from '@/components/input/Textarea.vue'
+import Input from '@/components/input/Input.vue'
 
 const props = defineProps({
   selectedCount: {
@@ -61,10 +81,12 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['action-selected', 'notes-changed', 'product-changed'])
+const emit = defineEmits(['action-selected', 'notes-changed', 'product-changed', 'subscription-changed'])
 
 const notesValue = ref('')
 const productValue = ref('')
+const subscriptionStartValue = ref('')
+const subscriptionEndValue = ref('')
 const productOptions = ref([])
 
 const entityLabel = computed(() => {
@@ -84,6 +106,11 @@ const handleActionChange = (action) => {
     if (action !== 'update-product') {
       productValue.value = ''
     }
+    // Clear subscription dates when switching away from update-subscription action
+    if (action !== 'update-subscription') {
+      subscriptionStartValue.value = ''
+      subscriptionEndValue.value = ''
+    }
   }
 }
 
@@ -95,10 +122,20 @@ const handleProductChange = (value) => {
   emit('product-changed', value)
 }
 
+const handleSubscriptionChange = () => {
+  emit('subscription-changed', {
+    subscription_start_at: subscriptionStartValue.value,
+    subscription_end_at: subscriptionEndValue.value
+  })
+}
+
 const loadProducts = async () => {
   try {
     const products = await getProducts()
-    productOptions.value = products.data
+    productOptions.value = products.data.map(product => ({
+      value: product.id,
+      label: product.name
+    }));
   } catch (err) {
     console.error('Error loading products:', err)
   }

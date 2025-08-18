@@ -20,7 +20,7 @@ defineProps({
     default: 'text'
   },
   modelValue: {
-    type: String,
+    type: [String, Date, Number],
     default: ''
   },
   required: {

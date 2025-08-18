@@ -19,6 +19,11 @@ class OrderController extends Controller
     );
   }
 
+  public function show(Order $order)
+  {
+    return response()->json(new OrderResource($order));
+  }
+
   public function store(Request $request)
   {
     $validated = $request->validate([
@@ -45,6 +50,8 @@ class OrderController extends Controller
       'notes' => 'nullable|string',
       'size' => 'nullable|string|max:255',
       'quantity' => 'nullable|numeric|min:1',
+      'subscription_start_at' => 'nullable|date',
+      'subscription_end_at' => 'nullable|date',
     ]);
 
     // Generate order_id for manually created orders
@@ -67,11 +74,6 @@ class OrderController extends Controller
     $order = Order::create($validated);
 
     return response()->json(new OrderResource($order), 201);
-  }
-
-  public function show(Order $order)
-  {
-    return response()->json(new OrderResource($order));
   }
 
   public function update(Request $request, Order $order)
@@ -97,6 +99,8 @@ class OrderController extends Controller
       'notes' => 'sometimes|nullable|string',
       'size' => 'nullable|string|max:255',
       'quantity' => 'nullable|numeric|min:1',
+      'subscription_start_at' => 'nullable|date',
+      'subscription_end_at' => 'nullable|date',
     ]);
 
     $updatedOrder = (new UpdateOrderAction)->execute($order, $validated);
@@ -112,6 +116,8 @@ class OrderController extends Controller
       'order_status' => 'sometimes|in:open,fulfilled',
       'notes' => 'sometimes|nullable|string',
       'product_id' => 'sometimes|required|exists:products,id',
+      'subscription_start_at' => 'sometimes|nullable|date',
+      'subscription_end_at' => 'sometimes|nullable|date',
     ]);
 
     try {
@@ -124,6 +130,14 @@ class OrderController extends Controller
       
       if (isset($validated['product_id'])) {
         $updateData['product_id'] = $validated['product_id'];
+      }
+
+      if (array_key_exists('subscription_start_at', $validated)) {
+        $updateData['subscription_start_at'] = $validated['subscription_start_at'];
+      }
+
+      if (array_key_exists('subscription_end_at', $validated)) {
+        $updateData['subscription_end_at'] = $validated['subscription_end_at'];
       }
       
       if (array_key_exists('notes', $validated)) {

@@ -7,6 +7,7 @@ export const useOrdersMultiEdit = (orders) => {
   const selectedAction = ref('');
   const notesValue = ref('');
   const productValue = ref('');
+  const subscriptionValue = ref({ subscription_start_at: '', subscription_end_at: '' });
   const exportResult = ref(null);
 
   // Selection operations
@@ -24,6 +25,7 @@ export const useOrdersMultiEdit = (orders) => {
     selectedAction.value = '';
     notesValue.value = '';
     productValue.value = '';
+    subscriptionValue.value = { subscription_start_at: '', subscription_end_at: '' };
     exportResult.value = null;
   };
 
@@ -80,6 +82,15 @@ export const useOrdersMultiEdit = (orders) => {
         
         clearMultiEditState();
         return { success: true, type: 'product' };
+      } else if (selectedAction.value === 'update-subscription') {
+        // Handle subscription update
+        await bulkUpdateOrders(selectedOrderIds.value, subscriptionValue.value);
+        
+        // Update local order data
+        updateLocalOrderData(selectedOrderIds.value, subscriptionValue.value);
+        
+        clearMultiEditState();
+        return { success: true, type: 'subscription' };
       } else {
         // Handle status updates
         let newStatus = '';
@@ -111,6 +122,7 @@ export const useOrdersMultiEdit = (orders) => {
     selectedAction,
     notesValue,
     productValue,
+    subscriptionValue,
     exportResult,
     toggleSelectAll,
     clearMultiEditState,

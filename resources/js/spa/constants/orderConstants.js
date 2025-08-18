@@ -4,6 +4,7 @@ export const bulkActions = [
   { value: 'notes', label: 'Bemerkungen' },
   { value: 'export-csv', label: 'Export CSV' },
   { value: 'update-product', label: 'Produkt aktualisieren' },
+  { value: 'update-subscription', label: 'Abonnement aktualisieren' },
   // { value: 'generate-labels', label: 'Etiketten generieren' }
 ];
 

@@ -45,6 +45,8 @@ class Order extends Model
     'paid_at',
     'confirmed_at',
     'last_confirmation_attempt_at',
+    'subscription_start_at',
+    'subscription_end_at',
     'order_status',
     'merchant',
   ];
@@ -58,6 +60,8 @@ class Order extends Model
     'quantity' => 'integer',
     'paid_at' => 'datetime',
     'confirmed_at' => 'datetime',
+    'subscription_start_at' => 'datetime',
+    'subscription_end_at' => 'datetime',
     'last_confirmation_attempt_at' => 'datetime',
     'order_status' => OrderStatus::class,
   ];
