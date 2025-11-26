@@ -37,6 +37,7 @@ class Export
       $headers = [
         'Order ID',
         'Product',
+        'Quantity',
         'Email',
         'Phone',
         'Payment Method',
@@ -68,6 +69,7 @@ class Export
         $csvData[] = [
           $order->order_id,
           $order->product ? $order->product->name : '',
+          $order->quantity,
           $order->email,
           $order->phone,
           $order->payment_method,
