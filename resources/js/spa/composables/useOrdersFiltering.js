@@ -32,12 +32,14 @@ export const useOrdersFiltering = (orders, sortKey, sortDirection) => {
         const phone = order.phone?.toLowerCase() || '';
         const product = order.product_name?.toLowerCase() || '';
         const billingName = order.billing_name?.toLowerCase() || '';
+        const shippingName = order.shipping_name?.toLowerCase() || '';
         
         return orderId.includes(searchTerm) ||
                email.includes(searchTerm) || 
                phone.includes(searchTerm) || 
                product.includes(searchTerm) ||
-               billingName.includes(searchTerm);
+               billingName.includes(searchTerm) ||
+               shippingName.includes(searchTerm);
       });
     }
     
