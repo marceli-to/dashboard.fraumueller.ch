@@ -237,33 +237,33 @@ const {
   updateFilters 
 } = useOrdersFiltering(orders, sortKey, sortDirection);
 
-const { 
-  selectedOrderIds, 
-  selectedAction, 
-  notesValue, 
+const {
+  selectedOrderIds,
+  selectedAction,
+  notesValue,
   productValue,
   subscriptionValue,
-  exportResult, 
-  toggleSelectAll, 
-  clearMultiEditState, 
-  applyBulkAction 
+  exportResult,
+  toggleSelectAll,
+  clearMultiEditState,
+  applyBulkAction
 } = useOrdersMultiEdit(orders);
 
-const { 
-  selectedOrder, 
-  newOrderStatus, 
-  showMultiEditDialog, 
-  showOrderDetail, 
-  openStatusDialog, 
-  updateOrderStatus, 
-  cancelStatusUpdate, 
-  openMultiEditDialog, 
-  closeMultiEditDialog, 
-  toggleMultiEditDialog, 
-  showOrderDetails, 
-  handleDeleteOrder, 
-  handleCellClick, 
-  handleActionClick: dialogHandleActionClick 
+const {
+  selectedOrder,
+  newOrderStatus,
+  showMultiEditDialog,
+  showOrderDetail,
+  openStatusDialog,
+  updateOrderStatus,
+  cancelStatusUpdate,
+  openMultiEditDialog,
+  closeMultiEditDialog,
+  toggleMultiEditDialog,
+  showOrderDetails,
+  handleDeleteOrder,
+  handleCellClick,
+  handleActionClick: dialogHandleActionClick
 } = useOrdersDialogs(orders);
 
 // Load orders function

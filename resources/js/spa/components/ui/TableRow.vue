@@ -96,15 +96,19 @@ const getCellContent = (column) => {
 
 const getComponentProps = (column) => {
   const baseProps = column.componentProps || {}
-  
+
   if (column.component === 'router-link') {
     return {
       ...baseProps,
       to: column.to ? column.to(props.item) : baseProps.to
     }
   }
-  
-  return baseProps
+
+  // Pass item to component for context-aware rendering
+  return {
+    ...baseProps,
+    item: props.item
+  }
 }
 
 const getActionProps = (action) => {

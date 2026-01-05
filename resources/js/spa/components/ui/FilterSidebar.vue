@@ -43,7 +43,8 @@
               :options="[
                 { value: '', label: 'Alle' },
                 { value: 'open', label: 'Offen' },
-                { value: 'fulfilled', label: 'Erledigt' }
+                { value: 'fulfilled', label: 'Erledigt' },
+                { value: 'cancelled', label: 'Gekündigt' }
               ]"
               @update:modelValue="updateFilters"
             />

@@ -16,7 +16,7 @@ export const useOrdersDialogs = (orders) => {
     selectedOrder.value = order;
     newOrderStatus.value = order.order_status || 'open';
     showMultiEditDialog.value = false;
-    
+
     dialogStore.show({
       title: 'Status ändern',
       size: 'small',
@@ -31,13 +31,13 @@ export const useOrdersDialogs = (orders) => {
       await updateOrder(selectedOrder.value.id, {
         order_status: newOrderStatus.value
       });
-      
+
       // Update the order in the local array
       const orderIndex = orders.value.findIndex(o => o.id === selectedOrder.value.id);
       if (orderIndex !== -1) {
         orders.value[orderIndex].order_status = newOrderStatus.value;
       }
-      
+
       dialogStore.hide();
     } catch (error) {
       console.error('Error updating order status:', error);

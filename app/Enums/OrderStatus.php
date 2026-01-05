@@ -6,12 +6,14 @@ enum OrderStatus: string
 {
     case OPEN = 'open';
     case FULFILLED = 'fulfilled';
+    case CANCELLED = 'cancelled';
 
     public function label(): string
     {
         return match($this) {
             self::OPEN => 'offen',
             self::FULFILLED => 'erledigt',
+            self::CANCELLED => 'gekündigt',
         };
     }
 

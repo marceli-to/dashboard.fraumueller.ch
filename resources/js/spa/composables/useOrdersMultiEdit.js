@@ -85,10 +85,10 @@ export const useOrdersMultiEdit = (orders) => {
       } else if (selectedAction.value === 'update-subscription') {
         // Handle subscription update
         await bulkUpdateOrders(selectedOrderIds.value, subscriptionValue.value);
-        
+
         // Update local order data
         updateLocalOrderData(selectedOrderIds.value, subscriptionValue.value);
-        
+
         clearMultiEditState();
         return { success: true, type: 'subscription' };
       } else {
@@ -99,6 +99,8 @@ export const useOrdersMultiEdit = (orders) => {
           newStatus = 'open';
         } else if (selectedAction.value === 'status-fulfilled') {
           newStatus = 'fulfilled';
+        } else if (selectedAction.value === 'status-cancelled') {
+          newStatus = 'cancelled';
         }
         
         if (newStatus) {

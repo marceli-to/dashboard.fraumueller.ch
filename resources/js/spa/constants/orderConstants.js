@@ -1,6 +1,7 @@
 export const bulkActions = [
   { value: 'status-open', label: 'Status offen' },
   { value: 'status-fulfilled', label: 'Status erledigt' },
+  { value: 'status-cancelled', label: 'Status gekündigt' },
   { value: 'notes', label: 'Bemerkungen' },
   { value: 'export-csv', label: 'Export CSV' },
   { value: 'update-product', label: 'Produkt aktualisieren' },
@@ -10,7 +11,8 @@ export const bulkActions = [
 
 export const statusOptions = [
   { value: 'open', label: 'offen' },
-  { value: 'fulfilled', label: 'erledigt' }
+  { value: 'fulfilled', label: 'erledigt' },
+  { value: 'cancelled', label: 'gekündigt' }
 ];
 
 export const defaultSortKey = 'paid_at';

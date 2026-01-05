@@ -79,7 +79,7 @@ class OrderController extends Controller
   public function update(Request $request, Order $order)
   {
     $validated = $request->validate([
-      'order_status' => 'sometimes|in:open,fulfilled',
+      'order_status' => 'sometimes|in:open,fulfilled,cancelled',
       'product_id' => 'sometimes|required|exists:products,id',
       'email' => 'sometimes|required|email|max:255',
       'phone' => 'sometimes|nullable|string|max:255',
@@ -113,7 +113,7 @@ class OrderController extends Controller
     $validated = $request->validate([
       'order_ids' => 'required|array|min:1',
       'order_ids.*' => 'required|exists:orders,id',
-      'order_status' => 'sometimes|in:open,fulfilled',
+      'order_status' => 'sometimes|in:open,fulfilled,cancelled',
       'notes' => 'sometimes|nullable|string',
       'product_id' => 'sometimes|required|exists:products,id',
       'subscription_start_at' => 'sometimes|nullable|date',
@@ -139,7 +139,7 @@ class OrderController extends Controller
       if (array_key_exists('subscription_end_at', $validated)) {
         $updateData['subscription_end_at'] = $validated['subscription_end_at'];
       }
-      
+
       if (array_key_exists('notes', $validated)) {
         // For notes, we need to append to existing content instead of overwriting
         $newNote = $validated['notes'];

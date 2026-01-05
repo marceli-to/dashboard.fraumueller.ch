@@ -52,11 +52,12 @@ defineEmits(['click'])
 
 const displayStatus = computed(() => {
   const status = props.status || (props.statusType === 'order' ? 'open' : 'pending')
-  
+
   if (props.statusType === 'order') {
     const orderStatusLabels = {
       'open': 'offen',
-      'fulfilled': 'erledigt'
+      'fulfilled': 'erledigt',
+      'cancelled': 'gekündigt'
     }
     return orderStatusLabels[status] || status
   } else {
@@ -74,7 +75,8 @@ const statusClasses = computed(() => {
   if (props.statusType === 'order') {
     const classes = {
       'open': 'bg-blue-100 text-blue-800',
-      'fulfilled': 'bg-green-100 text-green-800'
+      'fulfilled': 'bg-green-100 text-green-800',
+      'cancelled': 'bg-red-100 text-red-800'
     }
     return classes[props.status] || 'bg-blue-100 text-blue-800'
   } else {
