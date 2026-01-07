@@ -224,13 +224,18 @@ class Process
         }
 
         $lines = explode("\n", $content);
-        $orderCounter = 1;
+
+        // Get the highest existing TW order number to continue from
+        $lastOrder = Order::where('order_id', 'like', 'TW%')
+            ->orderByRaw('CAST(SUBSTRING(order_id, 3) AS UNSIGNED) DESC')
+            ->first();
+        $orderCounter = $lastOrder ? (int) substr($lastOrder->order_id, 2) + 1 : 1;
 
         // Skip header lines and find data start
         $dataStartIndex = 0;
         $headerLine = '';
         foreach ($lines as $index => $line) {
-            if (str_contains($line, '"2025.') && str_contains($line, '"Zahlung"')) {
+            if (preg_match('/^"20\d{2}\./', $line) && str_contains($line, '"Zahlung"')) {
                 $dataStartIndex = $index;
                 break;
             }
