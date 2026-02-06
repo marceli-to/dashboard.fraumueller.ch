@@ -25,7 +25,6 @@
 <meta name="apple-mobile-web-app-title" content="Dashboard Frau Müller" />
 <link rel="manifest" href="/site.webmanifest" />
 @vite('resources/css/app.css')
-@livewireStyles
 </head>
 <body 
   class="antialiased font-sans bg-white text-sm md:text-md xl:text-lg text-black flex flex-col min-h-screen"
