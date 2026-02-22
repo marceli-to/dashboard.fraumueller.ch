@@ -77,7 +77,7 @@ class Export
           $order->payment_method,
           $order->merchant,
           $order->total,
-          $order->paid_at ? $order->paid_at->format('Y-m-d H:i:s') : '',
+          $order->paid_at ? $order->paid_at->format('d.m.Y H:i:s') : '',
           $order->order_status->value ?? $order->order_status,
           $order->billing_name,
           $order->billing_address_1,
