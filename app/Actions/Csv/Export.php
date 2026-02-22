@@ -93,8 +93,8 @@ class Export
           $order->shipping_province,
           $order->shipping_country,
           $order->notes,
-          $order->subscription_start_at ? $order->subscription_start_at->format('Y-m-d H:i:s') : '',
-          $order->subscription_end_at ? $order->subscription_end_at->format('Y-m-d H:i:s') : '',
+          $order->subscription_start_at ? $order->subscription_start_at->format('d.m.Y') : '',
+          $order->subscription_end_at ? $order->subscription_end_at->format('d.m.Y') : '',
         ];
       }
 
