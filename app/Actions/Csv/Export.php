@@ -58,7 +58,9 @@ class Export
         'Shipping ZIP',
         'Shipping Province',
         'Shipping Country',
-        'Notes'
+        'Notes',
+        'Abonnement Start',
+        'Abonnement Ende'
       ];
 
       // Create CSV data array
@@ -90,7 +92,9 @@ class Export
           $order->shipping_zip,
           $order->shipping_province,
           $order->shipping_country,
-          $order->notes
+          $order->notes,
+          $order->subscription_start_at ? $order->subscription_start_at->format('Y-m-d H:i:s') : '',
+          $order->subscription_end_at ? $order->subscription_end_at->format('Y-m-d H:i:s') : '',
         ];
       }
 
