@@ -23,3 +23,6 @@ INSTALL.txt
 /.nova
 /composer.lock
 /public/.htaccess
+dashboard.sql
+renewals.csv
+renewals.json
