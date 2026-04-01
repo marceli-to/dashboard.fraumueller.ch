@@ -13,7 +13,11 @@ export const useOrdersFiltering = (orders, sortKey, sortDirection) => {
     
     // Apply filters
     if (filters.value.order_status) {
-      filtered = filtered.filter(order => order.order_status === filters.value.order_status);
+      if (filters.value.order_status === 'renewed') {
+        filtered = filtered.filter(order => order.renewed_at !== null);
+      } else {
+        filtered = filtered.filter(order => order.order_status === filters.value.order_status);
+      }
     }
     
     if (filters.value.merchant) {
@@ -58,6 +62,9 @@ export const useOrdersFiltering = (orders, sortKey, sortDirection) => {
       } else if (sortKey.value === 'billing_name') {
         aValue = a.billing_name?.toLowerCase() || '';
         bValue = b.billing_name?.toLowerCase() || '';
+      } else if (sortKey.value === 'renewed_at') {
+        aValue = a.renewed_at ? new Date(a.renewed_at) : new Date(0);
+        bValue = b.renewed_at ? new Date(b.renewed_at) : new Date(0);
       } else if (sortKey.value === 'order_status') {
         // Sort order: open first, then fulfilled
         const statusOrder = { 'open': 0, 'fulfilled': 1 };

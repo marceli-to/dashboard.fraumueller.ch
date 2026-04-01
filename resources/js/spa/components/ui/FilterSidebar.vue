@@ -44,7 +44,8 @@
                 { value: '', label: 'Alle' },
                 { value: 'open', label: 'Offen' },
                 { value: 'fulfilled', label: 'Erledigt' },
-                { value: 'cancelled', label: 'Gekündigt' }
+                { value: 'cancelled', label: 'Gekündigt' },
+                { value: 'renewed', label: 'Erneuert' }
               ]"
               @update:modelValue="updateFilters"
             />

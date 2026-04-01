@@ -60,7 +60,9 @@ class Export
         'Shipping Country',
         'Notes',
         'Abonnement Start',
-        'Abonnement Ende'
+        'Abonnement Ende',
+        'Erneuert am',
+        'Erneuerung bestätigt am'
       ];
 
       // Create CSV data array
@@ -95,6 +97,8 @@ class Export
           $order->notes,
           $order->subscription_start_at ? $order->subscription_start_at->format('d.m.Y') : '',
           $order->subscription_end_at ? $order->subscription_end_at->format('d.m.Y') : '',
+          $order->renewed_at ? $order->renewed_at->format('d.m.Y H:i:s') : '',
+          $order->renewal_confirmed_at ? $order->renewal_confirmed_at->format('d.m.Y H:i:s') : '',
         ];
       }
 

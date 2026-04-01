@@ -50,6 +50,14 @@ export const useOrdersTable = () => {
       sortKey: 'paid_at'
     },
     {
+      key: 'renewed_at',
+      label: 'Erneuert',
+      cellClasses: 'pr-12',
+      formatter: (value) => formatDate(value),
+      sortable: true,
+      sortKey: 'renewed_at'
+    },
+    {
       key: 'order_status',
       label: 'Status',
       align: 'center',

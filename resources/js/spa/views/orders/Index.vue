@@ -140,6 +140,10 @@
             <div>{{ formatDateOnly(selectedOrder.subscription_end_at) || '-' }}</div>
           </div>
         </div>
+        <div>
+          <Label for="renewed_at" label="Erneuert am" class="!mb-4" />
+          <div>{{ formatDateOnly(selectedOrder.renewed_at) || '-' }}</div>
+        </div>
         <div class="border-t pt-16">
           <Label for="email" label="E-Mail" class="!mb-4" />
           <div>{{ selectedOrder.email || '-' }}</div>
