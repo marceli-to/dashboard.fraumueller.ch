@@ -15,7 +15,7 @@ class ProcessRenewals
     $fullPath = Storage::disk('public')->path($filePath);
 
     $handle = fopen($fullPath, 'r');
-    $header = fgetcsv($handle, 0, ';');
+    $header = fgetcsv($handle, 0, ',');
 
     // Find column indices
     $emailIndex = array_search('Customer Email', $header);
@@ -31,7 +31,7 @@ class ProcessRenewals
     $skippedRows = [];
     $errors = [];
 
-    while (($row = fgetcsv($handle, 0, ';')) !== false) {
+    while (($row = fgetcsv($handle, 0, ',')) !== false) {
       $email = trim($row[$emailIndex] ?? '');
       $createdAt = trim($row[$createdIndex] ?? '');
       $description = $descriptionIndex !== false ? trim($row[$descriptionIndex] ?? '') : '';
