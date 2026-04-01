@@ -117,5 +117,10 @@ export const getOrderLogs = async () => {
 export const processCsv = async (filePath, merchant) => {
   const response = await api.post(`/upload/process`, { file_path: filePath, merchant: merchant });
   return response.data;
-}; 
+};
+
+export const processRenewals = async (filePath) => {
+  const response = await api.post(`/upload/process-renewals`, { file_path: filePath });
+  return response.data;
+};
 

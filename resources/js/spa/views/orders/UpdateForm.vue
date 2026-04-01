@@ -45,6 +45,14 @@
               type="date"
             />
           </div>
+          <div>
+            <Label for="renewed_at" label="Erneuert am" />
+            <Input
+              id="renewed_at"
+              v-model="form.renewed_at"
+              type="date"
+            />
+          </div>
           <div class="grid grid-cols-2 gap-x-16">
             <div>
               <Label for="quantity" label="Anzahl" :required="true" />

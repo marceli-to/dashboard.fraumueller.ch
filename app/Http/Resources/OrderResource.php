@@ -44,7 +44,7 @@ class OrderResource extends JsonResource
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
             'paid_at' => $this->paid_at ? $this->paid_at->format('Y-m-d H:i:s') : null,
             'confirmed_at' => $this->confirmed_at ? $this->confirmed_at->format('d.m.Y H:i:s') : null,
-            'renewed_at' => $this->renewed_at ? $this->renewed_at->format('Y-m-d H:i:s') : null,
+            'renewed_at' => $this->renewed_at ? $this->renewed_at->format('Y-m-d') : null,
             'renewal_confirmed_at' => $this->renewal_confirmed_at ? $this->renewal_confirmed_at->format('Y-m-d H:i:s') : null,
         ];
     }

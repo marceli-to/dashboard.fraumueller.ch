@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Actions\Csv\Process as ProcessCsvAction;
+use App\Actions\Csv\ProcessRenewals as ProcessRenewalsAction;
 use App\Actions\Csv\Store as StoreCsvAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreUploadRequest;
@@ -35,6 +36,28 @@ class UploadController extends Controller
       return response()->json([
         'success' => false,
         'message' => 'Error processing CSV: '.$e->getMessage(),
+      ], 422);
+    }
+  }
+
+  public function processRenewals(Request $request)
+  {
+    $request->validate([
+      'file_path' => 'required|string',
+    ]);
+
+    try {
+      $result = (new ProcessRenewalsAction)->execute($request->file_path);
+
+      return response()->json([
+        'success' => true,
+        'message' => 'Renewals processed successfully',
+        'data' => $result,
+      ]);
+    } catch (\Exception $e) {
+      return response()->json([
+        'success' => false,
+        'message' => 'Error processing renewals: '.$e->getMessage(),
       ], 422);
     }
   }

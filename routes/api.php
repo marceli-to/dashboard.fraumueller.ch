@@ -35,5 +35,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/products/{product}/send-test-notification', [ProductController::class, 'sendTestNotification']);
     Route::post('/upload', [UploadController::class, 'store']);
     Route::post('/upload/process', [UploadController::class, 'process']);
+    Route::post('/upload/process-renewals', [UploadController::class, 'processRenewals']);
     Route::post('/export/orders/csv', [ExportController::class, 'exportOrdersCsv']);
 });

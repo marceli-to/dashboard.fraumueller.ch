@@ -101,6 +101,7 @@ class OrderController extends Controller
       'quantity' => 'nullable|numeric|min:1',
       'subscription_start_at' => 'nullable|date',
       'subscription_end_at' => 'nullable|date',
+      'renewed_at' => 'nullable|date',
     ]);
 
     $updatedOrder = (new UpdateOrderAction)->execute($order, $validated);

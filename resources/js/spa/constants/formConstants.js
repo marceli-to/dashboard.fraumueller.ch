@@ -23,6 +23,7 @@ export const defaultFormData = {
   paid_at: '',
   subscription_start_at: '',
   subscription_end_at: '',
+  renewed_at: '',
   billing_name: '',
   billing_address_1: '',
   billing_address_2: '',
@@ -60,5 +61,6 @@ export const updateFormFields = [
   'shipping_country',
   'notes',
   'subscription_start_at',
-  'subscription_end_at'
+  'subscription_end_at',
+  'renewed_at'
 ];

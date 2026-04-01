@@ -27,7 +27,15 @@
               :to="{ name: 'import' }"
               class="p-12 block w-full text-white hover:bg-white hover:text-black transition-colors duration-150"
               :class="{ '!text-black bg-white border-b-black': $route.name === 'import' }">
-              Import
+              Import Bestellungen
+            </router-link>
+          </li>
+          <li>
+            <router-link
+              :to="{ name: 'import-renewals' }"
+              class="p-12 block w-full text-white hover:bg-white hover:text-black transition-colors duration-150"
+              :class="{ '!text-black bg-white border-b-black': $route.name === 'import-renewals' }">
+              Import Erneuerungen
             </router-link>
           </li>
           <li>

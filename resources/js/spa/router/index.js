@@ -7,6 +7,7 @@ import ProductUpdateForm from '@/views/products/UpdateForm.vue';
 import UpdateForm from '@/views/orders/UpdateForm.vue';
 import CreateForm from '@/views/orders/CreateForm.vue';
 import Import from '@/views/import/Index.vue';
+import ImportRenewals from '@/views/import/Renewals.vue';
 import Logs from '@/views/log/Index.vue';
 
 // Error pages
@@ -24,6 +25,7 @@ const routes = [
   { path: '/dashboard/produkte/erstellen', name: 'products.create', component: ProductCreateForm },
   { path: '/dashboard/produkte/bearbeiten/:id', name: 'products.edit', component: ProductUpdateForm },
   { path: '/dashboard/import', name: 'import', component: Import },
+  { path: '/dashboard/import-erneuerungen', name: 'import-renewals', component: ImportRenewals },
   { path: '/dashboard/log', name: 'logs', component: Logs },
 
   // Error pages

@@ -53,7 +53,7 @@ export const useOrdersTable = () => {
       key: 'renewed_at',
       label: 'Erneuert',
       cellClasses: 'pr-12',
-      formatter: (value) => formatDate(value),
+      formatter: (value) => formatDateOnly(value),
       sortable: true,
       sortKey: 'renewed_at'
     },
@@ -102,6 +102,15 @@ export const useOrdersTable = () => {
   ];
 
   // Utility functions
+  const formatDateOnly = (dateString) => {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}.${month}.${year}`;
+  };
+
   const formatDate = (dateString) => {
     if (!dateString) return '';
     const date = new Date(dateString);
